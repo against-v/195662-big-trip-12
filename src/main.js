@@ -8,7 +8,7 @@ const createMenuTemplate = () => {
       <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
       <a class="trip-tabs__btn" href="#">Stats</a>
     </nav>`
-  )
+  );
 };
 const createFilterTemplate = () => {
   return (
@@ -30,7 +30,7 @@ const createFilterTemplate = () => {
 
       <button class="visually-hidden" type="submit">Accept filter</button>
     </form>`
-  )
+  );
 };
 const createInfoTemplate = () => {
   return (
@@ -45,7 +45,7 @@ const createInfoTemplate = () => {
         Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
       </p>
     </section>`
-  )
+  );
 };
 const createSortTemplate = () => {
   return (
@@ -73,7 +73,7 @@ const createSortTemplate = () => {
 
       <span class="trip-sort__item  trip-sort__item--offers">Offers</span>
     </form>`
-  )
+  );
 };
 const createEventEditTemplate = () => {
   return (
@@ -263,13 +263,13 @@ const createEventEditTemplate = () => {
               </section>
       </section>
     </form>`
-  )
+  );
 };
 const createDaysListTemplate = () => {
   return (
     `<ul class="trip-days">
     </ul>`
-  )
+  );
 };
 const createDayTemplate = () => {
   return (
@@ -282,7 +282,7 @@ const createDayTemplate = () => {
       <ul class="trip-events__list">
       </ul>
     </li>`
-  )
+  );
 };
 const createEventTemplate = () => {
   return (
@@ -320,7 +320,7 @@ const createEventTemplate = () => {
         </button>
       </div>
     </li>`
-  )
+  );
 };
 
 const render = (container, template, place) => {
