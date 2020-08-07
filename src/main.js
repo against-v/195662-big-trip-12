@@ -7,6 +7,10 @@ import {createDaysListTemplate} from "./view/days-list.js";
 import {createDayTemplate} from "./view/day.js";
 import {createEventTemplate} from "./view/event.js";
 
+import {generateEvent} from "./mock/event.js";
+
+console.log(generateEvent());
+
 const EVENT_COUNT = 3;
 
 const render = (container, template, place) => {
