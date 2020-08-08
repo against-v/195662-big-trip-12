@@ -1,7 +1,3 @@
-
-
-
-
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -221,13 +217,38 @@ const generateOffers = (eventType) => {
   return [];
 
 };
+const generatePrice = () => {
+  const MIN_VALUE = 1;
+  const MAX_VALUE = 99;
+  const COEFFICIENT = 10;
+  return getRandomInteger(MIN_VALUE, MAX_VALUE) * COEFFICIENT;
+};
+
+const generateDateTime = (date = new Date(), nearestDayIndex = 1, latterDayIndex = 7) => {
+  const randomIndex = getRandomInteger(nearestDayIndex, latterDayIndex);
+  date.setDate(date.getDate() + randomIndex);
+  if (!randomIndex) {
+    date.setHours(getRandomInteger(date.getHours(), 23), getRandomInteger(0, 59));
+  } else {
+    date.setHours(getRandomInteger(0, 23), getRandomInteger(0, 59));
+  }
+  return date;
+};
 
 const type = generateType();
+const dateTimeStart = generateDateTime();
+
+// почему эта переменная будет всегда совпадать с dateTimeStart?
+// const dateTimeEnd = generateDateTime(dateTimeStart, 0, 1);
+
 
 export const generateEvent = () => {
   return {
     type,
     city: generateCity(),
     offers: generateOffers(type),
+    price: generatePrice(),
+    dateTimeStart,
+    dateTimeEnd: generateDateTime(dateTimeStart, 0, 1),
   };
 };

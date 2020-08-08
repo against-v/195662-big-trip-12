@@ -10,6 +10,8 @@ import {createEventTemplate} from "./view/event.js";
 import {generateEvent} from "./mock/event.js";
 
 console.log(generateEvent());
+console.log(generateEvent().dateTimeStart);
+console.log(generateEvent().dateTimeEnd);
 
 const EVENT_COUNT = 3;
 
