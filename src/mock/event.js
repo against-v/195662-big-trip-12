@@ -1,3 +1,5 @@
+import {EVENT_OFFERS} from "../const.js";
+
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -96,134 +98,8 @@ const generateCity = () => {
 };
 const generateOffers = (eventType) => {
   if (eventType) {
-    const eventOffers = {
-      taxi: [
-        {
-          name: `Comfort tariff`,
-          price: 50,
-        },
-        {
-          name: `Business tariff`,
-          price: 100,
-        },
-        {
-          name: `Preorder`,
-          price: 10,
-        },
-      ],
-      bus: [
-        {
-          name: `Comfort tariff`,
-          price: 30,
-        },
-        {
-          name: `Business tariff`,
-          price: 50,
-        },
-        {
-          name: `Add luggage`,
-          price: 5,
-        },
-      ],
-      train: [
-        {
-          name: `Comfort tariff`,
-          price: 150,
-        },
-        {
-          name: `Business tariff`,
-          price: 200,
-        },
-        {
-          name: `Transfer to the station`,
-          price: 40,
-        },
-        {
-          name: `Add luggage`,
-          price: 20,
-        },
-      ],
-      ship: [
-        {
-          name: `Comfort tariff`,
-          price: 250,
-        },
-        {
-          name: `Business tariff`,
-          price: 400,
-        },
-        {
-          name: `Transfer to the port`,
-          price: 40,
-        },
-        {
-          name: `Add luggage`,
-          price: 50,
-        },
-      ],
-      transport: [
-        {
-          name: `Add luggage`,
-          price: 3,
-        },
-      ],
-      drive: [
-        {
-          name: `Rent a car`,
-          price: 50,
-        },
-      ],
-      flight: [
-        {
-          name: `Business tariff`,
-          price: 500,
-        },
-        {
-          name: `Add luggage`,
-          price: 150,
-        },
-        {
-          name: `Transfer to the airport`,
-          price: 80,
-        },
-      ],
-      checkIn: [
-        {
-          name: `Breakfast`,
-          price: 25,
-        },
-        {
-          name: `Laundry`,
-          price: 5,
-        },
-      ],
-      sightseeing: [
-        {
-          name: `Souvenirs`,
-          price: 15,
-        },
-        {
-          name: `Museum tickets`,
-          price: 5,
-        },
-        {
-          name: `Food and drinks`,
-          price: 15,
-        },
-      ],
-      restaurant: [
-        {
-          name: `Wine`,
-          price: 30,
-        },
-        {
-          name: `Delicacies`,
-          price: 30,
-        },
-      ],
-    };
-    const shuffledEventOffers = shuffleArray(eventOffers);
-    const count = getRandomInteger(0, eventOffers[eventType.id].length);
+    const shuffledEventOffers = shuffleArray(EVENT_OFFERS);
+    const count = getRandomInteger(0, EVENT_OFFERS[eventType.id].length);
     if (count === 0) {
       return [];
     }

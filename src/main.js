@@ -30,7 +30,7 @@ render(siteHeaderMainElement, createInfoTemplate(), `afterbegin`);
 render(siteMenuTitleElement, createMenuTemplate(), `afterend`);
 render(siteFilterTitleElement, createFilterTemplate(), `afterend`);
 render(siteMainElement, createSortTemplate(), `beforeend`);
-render(siteMainElement, createEventEditTemplate(), `beforeend`);
+render(siteMainElement, createEventEditTemplate(days[0].events[0]), `beforeend`);
 render(siteMainElement, createDaysListTemplate(events), `beforeend`);
 
 const siteDaysListElement = siteMainElement.querySelector(`.trip-days`);
