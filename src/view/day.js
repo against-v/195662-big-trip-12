@@ -1,3 +1,5 @@
+import {dateFormatting} from "../utils.js";
+
 export const createDayTemplate = (day, i) => {
   const _date = new Date(day);
   const createDateAttribute = (date) => {
@@ -7,25 +9,6 @@ export const createDayTemplate = (day, i) => {
     return `${_year}-${_month}-${_day}`;
   };
   const dateAttribute = createDateAttribute(_date);
-  const dateFormatting = (date) => {
-    const MONTHS = [
-      `JAN`,
-      `FEB`,
-      `MAR`,
-      `APR`,
-      `MAY`,
-      `JUNE`,
-      `JULY`,
-      `AUG`,
-      `SEPT`,
-      `OCT`,
-      `NOV`,
-      `DEC`,
-    ];
-    const _day = date.getDate();
-    const _month = MONTHS[date.getMonth()];
-    return `${_month} ${_day}`;
-  };
   const formattedDate = dateFormatting(_date);
 
   return (

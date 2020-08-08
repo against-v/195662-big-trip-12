@@ -26,7 +26,7 @@ const siteMenuTitleElement = siteHeaderControlsElement.querySelector(`h2:first-c
 const siteFilterTitleElement = siteHeaderControlsElement.querySelector(`h2:last-child`);
 const siteMainElement = document.querySelector(`.trip-events`);
 
-render(siteHeaderMainElement, createInfoTemplate(), `afterbegin`);
+render(siteHeaderMainElement, createInfoTemplate(events), `afterbegin`);
 render(siteMenuTitleElement, createMenuTemplate(), `afterend`);
 render(siteFilterTitleElement, createFilterTemplate(), `afterend`);
 render(siteMainElement, createSortTemplate(), `beforeend`);
