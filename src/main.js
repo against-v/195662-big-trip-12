@@ -9,11 +9,9 @@ import {createEventTemplate} from "./view/event.js";
 
 import {generateEvent} from "./mock/event.js";
 
-console.log(generateEvent());
-// console.log(generateEvent().dateTimeStart);
-// console.log(generateEvent().dateTimeEnd);
+const EVENT_COUNT = 10;
 
-const EVENT_COUNT = 3;
+const events = new Array(EVENT_COUNT).fill().map(generateEvent);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -39,6 +37,6 @@ render(siteDaysListElement, createDayTemplate(), `beforeend`);
 const siteEventList = siteDaysListElement.querySelector(`.trip-events__list`);
 
 for (let i = 0; i < EVENT_COUNT; i++) {
-  render(siteEventList, createEventTemplate(), `beforeend`);
+  render(siteEventList, createEventTemplate(events[i]), `beforeend`);
 }
 

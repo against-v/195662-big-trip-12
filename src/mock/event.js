@@ -4,7 +4,7 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const shuffleArray = (array) => {
+const shuffleArray = (array = []) => {
   for (let i = array.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
@@ -16,51 +16,61 @@ const generateType = () => {
   const eventTypes = [
     {
       name: `Taxi`,
+      icon: `taxi`,
       id: `taxi`,
       type: `trip`,
     },
     {
       name: `Bus`,
+      icon: `bus`,
       id: `bus`,
       type: `trip`,
     },
     {
       name: `Train`,
+      icon: `train`,
       id: `train`,
       type: `trip`,
     },
     {
       name: `Ship`,
+      icon: `ship`,
       id: `ship`,
       type: `trip`,
     },
     {
       name: `Transport`,
+      icon: `transport`,
       id: `transport`,
       type: `trip`,
     },
     {
       name: `Drive`,
+      icon: `drive`,
       id: `drive`,
       type: `trip`,
     },
     {
       name: `Flight`,
+      icon: `flight`,
       id: `flight`,
       type: `trip`,
     },
     {
-      name: `Check`,
-      id: `check`,
+      name: `Check-in`,
+      icon: `check-in`,
+      id: `checkIn`,
       type: `stop`,
     },
     {
       name: `Sightseeing`,
+      icon: `sightseeing`,
       id: `sightseeing`,
       type: `stop`,
     },
     {
       name: `Restaurant`,
+      icon: `restaurant`,
       id: `restaurant`,
       type: `stop`,
     },
@@ -177,7 +187,7 @@ const generateOffers = (eventType) => {
           price: 80,
         },
       ],
-      check: [
+      checkIn: [
         {
           name: `Breakfast`,
           price: 25,
@@ -219,7 +229,7 @@ const generateOffers = (eventType) => {
     }
     const offers = [];
     for (let i = 0; i < count; i++) {
-      offers.push(eventOffers[eventType.id][i]);
+      offers.push(shuffledEventOffers[eventType.id][i]);
     }
     return offers;
   }
@@ -261,14 +271,9 @@ const generateDestinationPhotos = () => {
   return destinationPhotos;
 };
 
-const type = generateType();
-const dateTimeStart = generateDateTime();
-
-// почему эта переменная будет всегда совпадать с dateTimeStart?
-// const dateTimeEnd = generateDateTime(dateTimeStart, 0, 1);
-
-
 export const generateEvent = () => {
+  const type = generateType();
+  const dateTimeStart = generateDateTime();
   return {
     type,
     city: generateCity(),
