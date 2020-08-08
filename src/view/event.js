@@ -6,8 +6,6 @@ export const createEventTemplate = (event) => {
     price,
     dateTimeStart,
     dateTimeEnd,
-    destinationDescription,
-    photos
   } = event;
 
   const title = `${type.name} ${type.type === `trip` ? `to` : `in`} ${city}`;
@@ -30,6 +28,43 @@ export const createEventTemplate = (event) => {
   };
   const offersTemplate = createOffersTemplate(offers);
 
+  const createDateTimeAttribute = (dateTime) => {
+    const year = dateTime.getFullYear();
+    const month = `0${dateTime.getMonth() + 1}`;
+    const day = dateTime.getDate();
+    const hours = dateTime.getHours();
+    const minutes = dateTime.getMinutes();
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+  const createTime = (dateTime) => {
+    const hours = (`0${dateTime.getHours()}`).slice(-2);
+    const minutes = (`0${dateTime.getMinutes()}`).slice(-2);
+    return `${hours}:${minutes}`;
+  };
+
+  const calcTimeGap = (timeStart, timeEnd) => {
+    const MS_IN_MINUTE = 60000;
+    const MS_IN_HOUR = 3600000;
+    const MS_IN_DAY = 86400000;
+    const HOURS_IN_DAY = 24;
+    const MINUTES_IN_HOUR = 60;
+    const gap = timeEnd - timeStart;
+    const gapInDay = Math.floor(gap / MS_IN_DAY);
+    const gapInHours = Math.floor(gap / MS_IN_HOUR % HOURS_IN_DAY);
+    const gapInMinutes = Math.floor(gap / MS_IN_MINUTE % MINUTES_IN_HOUR);
+    const formatting = (day, hours, minutes) => {
+      if (day > 0) {
+        return `${day}D ${hours}H ${minutes}M`;
+      }
+      if (hours > 0) {
+        return `${hours}H ${minutes}M`;
+      }
+      return `${minutes}M`;
+    };
+    return formatting(gapInDay, gapInHours, gapInMinutes);
+  };
+  const timeGap = calcTimeGap(dateTimeStart, dateTimeEnd);
+
   return (
     `<li class="trip-events__item">
       <div class="event">
@@ -40,11 +75,11 @@ export const createEventTemplate = (event) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+            <time class="event__start-time" datetime="${createDateTimeAttribute(dateTimeStart)}">${createTime(dateTimeStart)}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+            <time class="event__end-time" datetime="${createDateTimeAttribute(dateTimeEnd)}">${createTime(dateTimeEnd)}</time>
           </p>
-          <p class="event__duration">30M</p>
+          <p class="event__duration">${timeGap}</p>
         </div>
 
         <p class="event__price">
