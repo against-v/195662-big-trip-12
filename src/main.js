@@ -8,32 +8,11 @@ import {createDayTemplate} from "./view/day.js";
 import {createEventTemplate} from "./view/event.js";
 
 import {generateEvent} from "./mock/event.js";
+import {generateDays} from "./mock/day.js";
 
 const EVENT_COUNT = 10;
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
-
-const generateDays = (eventsList) => {
-  const eventsDates = eventsList.map((event) => {
-    return event.dateStart;
-  });
-  eventsDates.sort((a, b) => a - b);
-  let days = new Set();
-  eventsDates.forEach((date) => {
-    days.add(date);
-  });
-  days = Array.from(days).map((day) => {
-    const _events = eventsList.filter((event) => {
-      return event.dateStart === day;
-    });
-    return {
-      day,
-      _events,
-    };
-  });
-  return days;
-
-};
 const days = generateDays(events);
 
 
@@ -59,13 +38,10 @@ const siteDaysListElement = siteMainElement.querySelector(`.trip-days`);
 for (let i = 0; i < days.length; i++) {
   render(siteDaysListElement, createDayTemplate(days[i].day, i), `beforeend`);
   const siteEventList = siteDaysListElement.querySelectorAll(`.trip-events__list`)[i];
-  for (let j = 0; j < days[i]._events.length; j++) {
-    render(siteEventList, createEventTemplate(days[i]._events[j]), `beforeend`);
+  const _events = days[i].events;
+  for (let j = 0; j < _events.length; j++) {
+    render(siteEventList, createEventTemplate(_events[j]), `beforeend`);
   }
-
-
 }
-
-
 
 
