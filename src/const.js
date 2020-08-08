@@ -1,3 +1,77 @@
+export const EVENT_TYPES = [
+  {
+    name: `Taxi`,
+    icon: `taxi`,
+    id: `taxi`,
+    type: `trip`,
+  },
+  {
+    name: `Bus`,
+    icon: `bus`,
+    id: `bus`,
+    type: `trip`,
+  },
+  {
+    name: `Train`,
+    icon: `train`,
+    id: `train`,
+    type: `trip`,
+  },
+  {
+    name: `Ship`,
+    icon: `ship`,
+    id: `ship`,
+    type: `trip`,
+  },
+  {
+    name: `Transport`,
+    icon: `transport`,
+    id: `transport`,
+    type: `trip`,
+  },
+  {
+    name: `Drive`,
+    icon: `drive`,
+    id: `drive`,
+    type: `trip`,
+  },
+  {
+    name: `Flight`,
+    icon: `flight`,
+    id: `flight`,
+    type: `trip`,
+  },
+  {
+    name: `Check-in`,
+    icon: `check-in`,
+    id: `checkIn`,
+    type: `stop`,
+  },
+  {
+    name: `Sightseeing`,
+    icon: `sightseeing`,
+    id: `sightseeing`,
+    type: `stop`,
+  },
+  {
+    name: `Restaurant`,
+    icon: `restaurant`,
+    id: `restaurant`,
+    type: `stop`,
+  },
+];
+export const CITIES = [
+  `The Hague`,
+  `Delft`,
+  `Leiden`,
+  `Rotterdam`,
+  `Helmond`,
+  `Eindhoven`,
+  `Tilburg`,
+  `Venlo`,
+  `Gouda`,
+  `Breda`,
+];
 export const EVENT_OFFERS = {
   taxi: [
     {

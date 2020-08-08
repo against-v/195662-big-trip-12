@@ -1,4 +1,4 @@
-import {EVENT_OFFERS} from "../const.js";
+import {CITIES, EVENT_OFFERS} from "../const.js";
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -81,20 +81,8 @@ const generateType = () => {
   return eventTypes[randomIndex];
 };
 const generateCity = () => {
-  const cities = [
-    `The Hague`,
-    `Delft`,
-    `Leiden`,
-    `Rotterdam`,
-    `Helmond`,
-    `Eindhoven`,
-    `Tilburg`,
-    `Venlo`,
-    `Gouda`,
-    `Breda`,
-  ];
-  const randomIndex = getRandomInteger(0, cities.length - 1);
-  return cities[randomIndex];
+  const randomIndex = getRandomInteger(0, CITIES.length - 1);
+  return CITIES[randomIndex];
 };
 const generateOffers = (eventType) => {
   if (eventType) {

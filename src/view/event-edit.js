@@ -1,8 +1,9 @@
-import {EVENT_OFFERS} from "../const.js";
+import {EVENT_TYPES, CITIES, EVENT_OFFERS} from "../const.js";
 
 export const createEventEditTemplate = (event = {}) => {
   const {
-    type,
+    type = {},
+    city = ``,
     dateTimeStart = new Date(),
     dateTimeEnd = new Date(),
     offers = [],
@@ -10,6 +11,7 @@ export const createEventEditTemplate = (event = {}) => {
     destinationDescription = ``,
     photos = [],
   } = event;
+
   const dateTimeFormatting = (dateTime) => {
     const _day = (`0${dateTime.getDate()}`).slice(-2);
     const _month = (`0${dateTime.getMonth() + 1}`).slice(-2);
@@ -19,7 +21,6 @@ export const createEventEditTemplate = (event = {}) => {
   };
   const dateTimeStartValue = dateTimeFormatting(dateTimeStart);
   const dateTimeEndValue = dateTimeFormatting(dateTimeEnd);
-
   const eventDestinationTemplate = (
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -67,6 +68,67 @@ export const createEventEditTemplate = (event = {}) => {
     );
   };
   const eventOffersTemplate = generateEventOffersTemplate(offers);
+  const eventDestinationListTemplate = (
+    `<datalist id="destination-list-1">
+      ${CITIES.map((_city) => `<option value="${_city}"></option>`)}
+    </datalist>`
+  );
+  const typeTitle = `${type.name} ${type.type === `trip` ? `to` : `in`}`;
+  const generateEventTypeListTemplate = (_type) => {
+    const tripsTypes = EVENT_TYPES.filter((eventType) => {
+      return eventType.type === `trip`;
+    });
+    const stopsTypes = EVENT_TYPES.filter((eventType) => {
+      return eventType.type === `stop`;
+    });
+    const setChecked = (currentType) => {
+      return currentType.id === _type.id ? `checked` : ``;
+    };
+    return (
+      `<div class="event__type-list">
+        <fieldset class="event__type-group">
+          <legend class="visually-hidden">Transfer</legend>
+        ${tripsTypes.map((currentType) => {
+        return (
+          `<div class="event__type-item">
+                  <input
+                  id="event-type-${currentType.icon}-1"
+                  class="event__type-input  visually-hidden"
+                  type="radio" name="event-type"
+                  value="${currentType.id}"
+                  ${setChecked(currentType)}>
+                  <label
+                  class="event__type-label  event__type-label--${currentType.icon}"
+                  for="event-type-${currentType.icon}-1">${currentType.name}
+                  </label>
+                </div>`
+        );
+      }).join(``)}
+        </fieldset>
+
+        <fieldset class="event__type-group">
+          <legend class="visually-hidden">Activity</legend>
+          ${stopsTypes.map((currentType) => {
+        return (
+          `<div class="event__type-item">
+                  <input
+                  id="event-type-${currentType.icon}-1"
+                  class="event__type-input  visually-hidden"
+                  type="radio" name="event-type"
+                  value="${currentType.id}"
+                  ${setChecked(currentType)}>
+                  <label
+                  class="event__type-label  event__type-label--${currentType.icon}"
+                  for="event-type-${currentType.icon}-1">${currentType.name}
+                  </label>
+                </div>`
+        );
+      }).join(``)}
+        </fieldset>
+      </div>`
+    );
+  };
+  const eventTypeListTemplate = generateEventTypeListTemplate(type);
 
   return (
     `<form class="event  event--edit trip-events__item" action="#" method="post">
@@ -74,81 +136,18 @@ export const createEventEditTemplate = (event = {}) => {
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+            <img class="event__type-icon" width="17" height="17" src="img/icons/${type.icon}.png" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
-
-            <div class="event__type-list">
-              <fieldset class="event__type-group">
-                <legend class="visually-hidden">Transfer</legend>
-
-                <div class="event__type-item">
-                  <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-                    <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
-                    <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-                    <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-                    <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-transport-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="transport">
-                    <label class="event__type-label  event__type-label--transport" for="event-type-transport-1">Transport</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-                    <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
-                    <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-                </div>
-              </fieldset>
-
-              <fieldset class="event__type-group">
-                <legend class="visually-hidden">Activity</legend>
-
-                <div class="event__type-item">
-                  <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-                    <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-                    <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-                </div>
-
-                <div class="event__type-item">
-                  <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
-                    <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-                </div>
-              </fieldset>
-            </div>
+          ${eventTypeListTemplate}
         </div>
 
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination-1">
-            Flight to
+            ${typeTitle}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Chamonix" list="destination-list-1">
-            <datalist id="destination-list-1">
-              <option value="Amsterdam"></option>
-              <option value="Geneva"></option>
-              <option value="Chamonix"></option>
-            </datalist>
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
+            ${eventDestinationListTemplate}
         </div>
 
         <div class="event__field-group  event__field-group--time">
