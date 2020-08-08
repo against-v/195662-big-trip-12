@@ -88,7 +88,6 @@ export const createEventTemplate = (event) => {
 
         <h4 class="visually-hidden">Offers:</h4>
         ${offersTemplate}
-
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
         </button>
