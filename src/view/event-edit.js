@@ -7,9 +7,9 @@ const dateTimeFormatting = (dateTime) => {
   const date = `${day}/${month}/${year}`;
   return `${date}`;
 };
-const generateEventOffersTemplate = (offersList, type) => {
+const generateEventOffersTemplate = (offers, type) => {
   const setChecked = (offer) => {
-    const isChecked = offersList.some((currentEventOffer) => {
+    const isChecked = offers.some((currentEventOffer) => {
       return currentEventOffer.name === offer.name;
     });
     return isChecked ? `checked` : ``;
