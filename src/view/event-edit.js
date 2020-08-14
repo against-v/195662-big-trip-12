@@ -1,5 +1,101 @@
 import {EVENT_TYPES, CITIES, EVENT_OFFERS} from "../const.js";
 
+const dateTimeFormatting = (dateTime) => {
+  const day = (`0${dateTime.getDate()}`).slice(-2);
+  const month = (`0${dateTime.getMonth() + 1}`).slice(-2);
+  const year = dateTime.getFullYear();
+  const date = `${day}/${month}/${year}`;
+  return `${date}`;
+};
+const generateEventOffersTemplate = (offersList, type) => {
+  const setChecked = (offer) => {
+    const isChecked = offersList.some((currentEventOffer) => {
+      return currentEventOffer.name === offer.name;
+    });
+    return isChecked ? `checked` : ``;
+  };
+  return (
+    `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+
+      <div class="event__available-offers">
+      ${EVENT_OFFERS[type.id].map((offer, index) => {
+      return (
+        `<div class="event__offer-selector">
+          <input
+          class="event__offer-checkbox
+          visually-hidden"
+          id="event-offer-luggage-${index + 1}"
+          type="checkbox"
+          name="event-offer-luggage"
+          ${setChecked(offer)}>
+          <label class="event__offer-label" for="event-offer-luggage-1">
+            <span class="event__offer-title">${offer.name}</span>
+            &plus;
+            &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+          </label>
+        </div>`
+      );
+    }).join(``)}
+      </div>
+    </section>`
+  );
+};
+const generateEventTypeListTemplate = (type) => {
+  const tripsTypes = EVENT_TYPES.filter((eventType) => {
+    return eventType.type === `trip`;
+  });
+  const stopsTypes = EVENT_TYPES.filter((eventType) => {
+    return eventType.type === `stop`;
+  });
+  const setChecked = (currentType) => {
+    return currentType.id === type.id ? `checked` : ``;
+  };
+  return (
+    `<div class="event__type-list">
+        <fieldset class="event__type-group">
+          <legend class="visually-hidden">Transfer</legend>
+        ${tripsTypes.map((currentType) => {
+      return (
+        `<div class="event__type-item">
+                  <input
+                  id="event-type-${currentType.icon}-1"
+                  class="event__type-input  visually-hidden"
+                  type="radio" name="event-type"
+                  value="${currentType.id}"
+                  ${setChecked(currentType)}>
+                  <label
+                  class="event__type-label  event__type-label--${currentType.icon}"
+                  for="event-type-${currentType.icon}-1">${currentType.name}
+                  </label>
+                </div>`
+      );
+    }).join(``)}
+        </fieldset>
+
+        <fieldset class="event__type-group">
+          <legend class="visually-hidden">Activity</legend>
+          ${stopsTypes.map((currentType) => {
+      return (
+        `<div class="event__type-item">
+                  <input
+                  id="event-type-${currentType.icon}-1"
+                  class="event__type-input  visually-hidden"
+                  type="radio" name="event-type"
+                  value="${currentType.id}"
+                  ${setChecked(currentType)}>
+                  <label
+                  class="event__type-label  event__type-label--${currentType.icon}"
+                  for="event-type-${currentType.icon}-1">${currentType.name}
+                  </label>
+                </div>`
+      );
+    }).join(``)}
+        </fieldset>
+      </div>`
+  );
+};
+
 export const createEventEditTemplate = (event = {}) => {
   const {
     type = {},
@@ -12,13 +108,6 @@ export const createEventEditTemplate = (event = {}) => {
     photos = [],
   } = event;
 
-  const dateTimeFormatting = (dateTime) => {
-    const _day = (`0${dateTime.getDate()}`).slice(-2);
-    const _month = (`0${dateTime.getMonth() + 1}`).slice(-2);
-    const _year = dateTime.getFullYear();
-    const _date = `${_day}/${_month}/${_year}`;
-    return `${_date}`;
-  };
   const dateTimeStartValue = dateTimeFormatting(dateTimeStart);
   const dateTimeEndValue = dateTimeFormatting(dateTimeEnd);
   const eventDestinationTemplate = (
@@ -33,101 +122,13 @@ export const createEventEditTemplate = (event = {}) => {
       </div>
     </section>`
   );
-  const generateEventOffersTemplate = (_offers) => {
-    const setChecked = (offer) => {
-      const isChecked = _offers.some((currentEventOffer) => {
-        return currentEventOffer.name === offer.name;
-      });
-      return isChecked ? `checked` : ``;
-    };
-    return (
-      `<section class="event__section  event__section--offers">
-      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-      <div class="event__available-offers">
-      ${EVENT_OFFERS[type.id].map((offer, index) => {
-        return (
-          `<div class="event__offer-selector">
-          <input
-          class="event__offer-checkbox
-          visually-hidden"
-          id="event-offer-luggage-${index + 1}"
-          type="checkbox"
-          name="event-offer-luggage"
-          ${setChecked(offer)}>
-          <label class="event__offer-label" for="event-offer-luggage-1">
-            <span class="event__offer-title">${offer.name}</span>
-            &plus;
-            &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-          </label>
-        </div>`
-        );
-      }).join(``)}
-      </div>
-    </section>`
-    );
-  };
-  const eventOffersTemplate = generateEventOffersTemplate(offers);
+  const eventOffersTemplate = generateEventOffersTemplate(offers, type);
   const eventDestinationListTemplate = (
     `<datalist id="destination-list-1">
       ${CITIES.map((_city) => `<option value="${_city}"></option>`)}
     </datalist>`
   );
   const typeTitle = `${type.name} ${type.type === `trip` ? `to` : `in`}`;
-  const generateEventTypeListTemplate = (_type) => {
-    const tripsTypes = EVENT_TYPES.filter((eventType) => {
-      return eventType.type === `trip`;
-    });
-    const stopsTypes = EVENT_TYPES.filter((eventType) => {
-      return eventType.type === `stop`;
-    });
-    const setChecked = (currentType) => {
-      return currentType.id === _type.id ? `checked` : ``;
-    };
-    return (
-      `<div class="event__type-list">
-        <fieldset class="event__type-group">
-          <legend class="visually-hidden">Transfer</legend>
-        ${tripsTypes.map((currentType) => {
-        return (
-          `<div class="event__type-item">
-                  <input
-                  id="event-type-${currentType.icon}-1"
-                  class="event__type-input  visually-hidden"
-                  type="radio" name="event-type"
-                  value="${currentType.id}"
-                  ${setChecked(currentType)}>
-                  <label
-                  class="event__type-label  event__type-label--${currentType.icon}"
-                  for="event-type-${currentType.icon}-1">${currentType.name}
-                  </label>
-                </div>`
-        );
-      }).join(``)}
-        </fieldset>
-
-        <fieldset class="event__type-group">
-          <legend class="visually-hidden">Activity</legend>
-          ${stopsTypes.map((currentType) => {
-        return (
-          `<div class="event__type-item">
-                  <input
-                  id="event-type-${currentType.icon}-1"
-                  class="event__type-input  visually-hidden"
-                  type="radio" name="event-type"
-                  value="${currentType.id}"
-                  ${setChecked(currentType)}>
-                  <label
-                  class="event__type-label  event__type-label--${currentType.icon}"
-                  for="event-type-${currentType.icon}-1">${currentType.name}
-                  </label>
-                </div>`
-        );
-      }).join(``)}
-        </fieldset>
-      </div>`
-    );
-  };
   const eventTypeListTemplate = generateEventTypeListTemplate(type);
 
   return (
