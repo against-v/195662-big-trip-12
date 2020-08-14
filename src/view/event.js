@@ -1,3 +1,54 @@
+const createOffersTemplate = (items) => {
+  const trimmedItems = items.slice(0, 3);
+  return (
+    `<ul class="event__selected-offers">
+        ${trimmedItems.map((offer) => {
+      return (
+        `<li class="event__offer">
+                <span class="event__offer-title">${offer.name}</span>
+                &plus;
+                &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+           </li>`
+      );
+    }).join(``)}
+      </ul>`
+  );
+};
+const createDateTimeAttribute = (dateTime) => {
+  const year = dateTime.getFullYear();
+  const month = `0${dateTime.getMonth() + 1}`;
+  const day = dateTime.getDate();
+  const hours = dateTime.getHours();
+  const minutes = dateTime.getMinutes();
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+const createTime = (dateTime) => {
+  const hours = (`0${dateTime.getHours()}`).slice(-2);
+  const minutes = (`0${dateTime.getMinutes()}`).slice(-2);
+  return `${hours}:${minutes}`;
+};
+const calcTimeGap = (timeStart, timeEnd) => {
+  const MS_IN_MINUTE = 60000;
+  const MS_IN_HOUR = 3600000;
+  const MS_IN_DAY = 86400000;
+  const HOURS_IN_DAY = 24;
+  const MINUTES_IN_HOUR = 60;
+  const gap = timeEnd - timeStart;
+  const gapInDay = Math.floor(gap / MS_IN_DAY);
+  const gapInHours = Math.floor(gap / MS_IN_HOUR % HOURS_IN_DAY);
+  const gapInMinutes = Math.floor(gap / MS_IN_MINUTE % MINUTES_IN_HOUR);
+  const formatting = (day, hours, minutes) => {
+    if (day > 0) {
+      return `${day}D ${hours}H ${minutes}M`;
+    }
+    if (hours > 0) {
+      return `${hours}H ${minutes}M`;
+    }
+    return `${minutes}M`;
+  };
+  return formatting(gapInDay, gapInHours, gapInMinutes);
+};
+
 export const createEventTemplate = (event) => {
   const {
     type,
@@ -9,60 +60,7 @@ export const createEventTemplate = (event) => {
   } = event;
 
   const title = `${type.name} ${type.type === `trip` ? `to` : `in`} ${city}`;
-
-  const createOffersTemplate = (items) => {
-    const trimmedItems = items.slice(0, 3);
-    return (
-      `<ul class="event__selected-offers">
-        ${trimmedItems.map((offer) => {
-        return (
-          `<li class="event__offer">
-                <span class="event__offer-title">${offer.name}</span>
-                &plus;
-                &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-           </li>`
-        );
-      }).join(``)}
-      </ul>`
-    );
-  };
   const offersTemplate = createOffersTemplate(offers);
-
-  const createDateTimeAttribute = (dateTime) => {
-    const year = dateTime.getFullYear();
-    const month = `0${dateTime.getMonth() + 1}`;
-    const day = dateTime.getDate();
-    const hours = dateTime.getHours();
-    const minutes = dateTime.getMinutes();
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-  };
-  const createTime = (dateTime) => {
-    const hours = (`0${dateTime.getHours()}`).slice(-2);
-    const minutes = (`0${dateTime.getMinutes()}`).slice(-2);
-    return `${hours}:${minutes}`;
-  };
-
-  const calcTimeGap = (timeStart, timeEnd) => {
-    const MS_IN_MINUTE = 60000;
-    const MS_IN_HOUR = 3600000;
-    const MS_IN_DAY = 86400000;
-    const HOURS_IN_DAY = 24;
-    const MINUTES_IN_HOUR = 60;
-    const gap = timeEnd - timeStart;
-    const gapInDay = Math.floor(gap / MS_IN_DAY);
-    const gapInHours = Math.floor(gap / MS_IN_HOUR % HOURS_IN_DAY);
-    const gapInMinutes = Math.floor(gap / MS_IN_MINUTE % MINUTES_IN_HOUR);
-    const formatting = (day, hours, minutes) => {
-      if (day > 0) {
-        return `${day}D ${hours}H ${minutes}M`;
-      }
-      if (hours > 0) {
-        return `${hours}H ${minutes}M`;
-      }
-      return `${minutes}M`;
-    };
-    return formatting(gapInDay, gapInHours, gapInMinutes);
-  };
   const timeGap = calcTimeGap(dateTimeStart, dateTimeEnd);
 
   return (
