@@ -1,15 +1,9 @@
-import {dateFormatting} from "../utils.js";
+import {dateFormatting, createDateInAttributeFormat} from "../utils.js";
 
 export const createDayTemplate = (day, i) => {
-  const _date = new Date(day);
-  const createDateAttribute = (date) => {
-    const _year = date.getFullYear();
-    const _month = `0${date.getMonth() + 1}`;
-    const _day = date.getDate();
-    return `${_year}-${_month}-${_day}`;
-  };
-  const dateAttribute = createDateAttribute(_date);
-  const formattedDate = dateFormatting(_date);
+  const date = new Date(day);
+  const dateAttribute = createDateInAttributeFormat(date);
+  const formattedDate = dateFormatting(date);
 
   return (
     `<li class="trip-days__item  day">

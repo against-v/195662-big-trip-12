@@ -17,3 +17,10 @@ export const dateFormatting = (date) => {
   const _month = MONTHS[date.getMonth()];
   return `${_month} ${_day}`;
 };
+
+export const createDateInAttributeFormat = (date) => {
+  const year = date.getFullYear();
+  const month = `0${date.getMonth() + 1}`;
+  const day = date.getDate();
+  return `${year}-${month}-${day}`;
+};
