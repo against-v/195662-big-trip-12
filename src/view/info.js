@@ -1,18 +1,18 @@
 import {dateFormatting} from "../utils.js";
+const calcCost = (events) => {
+  let cost = 0;
+  events.forEach((event) => {
+    cost += event.price;
+    event.offers.forEach((offer) => {
+      cost += offer.price;
+    });
+  });
+  return cost;
+};
 
 export const createInfoTemplate = (events) => {
   events.sort((a, b) => a.dateStart - b.dateStart);
-  const calcCost = () => {
-    let _cost = 0;
-    events.forEach((event) => {
-      _cost += event.price;
-      event.offers.forEach((offer) => {
-        _cost += offer.price;
-      });
-    });
-    return _cost;
-  };
-  const cost = calcCost();
+  const cost = calcCost(events);
   const dateStart = dateFormatting(events[0].dateTimeStart);
   const dateEnd = dateFormatting(events[events.length - 1].dateTimeEnd);
   return (
