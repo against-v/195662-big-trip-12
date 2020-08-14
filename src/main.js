@@ -38,9 +38,9 @@ const siteDaysListElement = siteMainElement.querySelector(`.trip-days`);
 for (let i = 0; i < days.length; i++) {
   render(siteDaysListElement, createDayTemplate(days[i].day, i), `beforeend`);
   const siteEventList = siteDaysListElement.querySelectorAll(`.trip-events__list`)[i];
-  const _events = days[i].events;
-  for (let j = 0; j < _events.length; j++) {
-    render(siteEventList, createEventTemplate(_events[j]), `beforeend`);
+  const dayEvents = days[i].events;
+  for (let j = 0; j < dayEvents.length; j++) {
+    render(siteEventList, createEventTemplate(dayEvents[j]), `beforeend`);
   }
 }
 
