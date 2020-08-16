@@ -7,7 +7,14 @@ import {createDaysListTemplate} from "./view/days-list.js";
 import {createDayTemplate} from "./view/day.js";
 import {createEventTemplate} from "./view/event.js";
 
-const EVENT_COUNT = 3;
+import {generateEvent} from "./mock/event.js";
+import {generateDays} from "./mock/day.js";
+
+const EVENT_COUNT = 10;
+
+const events = new Array(EVENT_COUNT).fill().map(generateEvent);
+const days = generateDays(events);
+
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -19,20 +26,22 @@ const siteMenuTitleElement = siteHeaderControlsElement.querySelector(`h2:first-c
 const siteFilterTitleElement = siteHeaderControlsElement.querySelector(`h2:last-child`);
 const siteMainElement = document.querySelector(`.trip-events`);
 
-render(siteHeaderMainElement, createInfoTemplate(), `afterbegin`);
+render(siteHeaderMainElement, createInfoTemplate(events), `afterbegin`);
 render(siteMenuTitleElement, createMenuTemplate(), `afterend`);
 render(siteFilterTitleElement, createFilterTemplate(), `afterend`);
 render(siteMainElement, createSortTemplate(), `beforeend`);
-render(siteMainElement, createEventEditTemplate(), `beforeend`);
-render(siteMainElement, createDaysListTemplate(), `beforeend`);
+render(siteMainElement, createEventEditTemplate(days[0].events[0]), `beforeend`);
+render(siteMainElement, createDaysListTemplate(events), `beforeend`);
 
 const siteDaysListElement = siteMainElement.querySelector(`.trip-days`);
 
-render(siteDaysListElement, createDayTemplate(), `beforeend`);
-
-const siteEventList = siteDaysListElement.querySelector(`.trip-events__list`);
-
-for (let i = 0; i < EVENT_COUNT; i++) {
-  render(siteEventList, createEventTemplate(), `beforeend`);
+for (let i = 0; i < days.length; i++) {
+  render(siteDaysListElement, createDayTemplate(days[i].day, i), `beforeend`);
+  const siteEventList = siteDaysListElement.querySelectorAll(`.trip-events__list`)[i];
+  const dayEvents = days[i].events;
+  for (let j = 0; j < dayEvents.length; j++) {
+    render(siteEventList, createEventTemplate(dayEvents[j]), `beforeend`);
+  }
 }
+
 
