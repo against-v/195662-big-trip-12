@@ -10,6 +10,8 @@ import {createEventTemplate} from "./view/event.js";
 import {generateEvent} from "./mock/event.js";
 import {generateDays} from "./mock/day.js";
 
+import {renderTemplate, renderElement, RenderPosition} from "./utils.js";
+
 const EVENT_COUNT = 10;
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
