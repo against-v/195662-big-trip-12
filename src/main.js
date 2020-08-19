@@ -1,4 +1,3 @@
-// классы
 import InfoView from "./view/info.js";
 import MenuView from "./view/menu.js";
 import FilterView from "./view/filter.js";
@@ -12,9 +11,8 @@ import EventView from "./view/event.js";
 
 
 import {generateEvent} from "./mock/event.js";
-import {generateDays} from "./mock/day.js";
 
-import {renderTemplate, renderElement, RenderPosition} from "./utils.js";
+import {render, RenderPosition, generateDays} from "./utils.js";
 
 const EVENT_COUNT = 10;
 
@@ -31,24 +29,24 @@ const siteMainElement = document.querySelector(`.trip-events`);
 // const siteHeaderControlsElement = siteHeaderMainElement.querySelector(`.trip-controls`);
 
 
-renderElement(siteHeaderMainElement, new InfoView(events).getElement(), RenderPosition.AFTERBEGIN);
-renderElement(siteMenuTitleElement, new MenuView().getElement(), RenderPosition.AFTEREND);
-renderElement(siteFilterTitleElement, new FilterView().getElement(), RenderPosition.AFTEREND);
-renderElement(siteMainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
+render(siteHeaderMainElement, new InfoView(events).getElement(), RenderPosition.AFTERBEGIN);
+render(siteMenuTitleElement, new MenuView().getElement(), RenderPosition.AFTEREND);
+render(siteFilterTitleElement, new FilterView().getElement(), RenderPosition.AFTEREND);
+render(siteMainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
 
 const daysListComponent = new DaysListView();
-renderElement(siteMainElement, daysListComponent.getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, daysListComponent.getElement(), RenderPosition.BEFOREEND);
 
 // renderTemplate(siteMainElement, createEventEditTemplate(days[0].events[0]), `beforeend`);
 
 for (let i = 0; i < days.length; i++) {
   const dayComponent = new DayView(days[i].day, i);
   const eventsListComponent = new EventsListView();
-  renderElement(daysListComponent.getElement(), dayComponent.getElement(), RenderPosition.BEFOREEND);
-  renderElement(dayComponent.getElement(), eventsListComponent.getElement(), RenderPosition.BEFOREEND);
+  render(daysListComponent.getElement(), dayComponent.getElement(), RenderPosition.BEFOREEND);
+  render(dayComponent.getElement(), eventsListComponent.getElement(), RenderPosition.BEFOREEND);
   const dayEvents = days[i].events;
   for (let j = 0; j < dayEvents.length; j++) {
-    renderElement(eventsListComponent.getElement(), new EventView(dayEvents[j]).getElement(), RenderPosition.BEFOREEND);
+    render(eventsListComponent.getElement(), new EventView(dayEvents[j]).getElement(), RenderPosition.BEFOREEND);
   }
 }
 
