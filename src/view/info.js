@@ -1,4 +1,4 @@
-import {dateFormatting} from "../utils.js";
+import {createElement, dateFormatting} from "../utils.js";
 const calcCost = (events) => {
   let cost = 0;
   events.forEach((event) => {
@@ -10,7 +10,7 @@ const calcCost = (events) => {
   return cost;
 };
 
-export const createInfoTemplate = (events) => {
+const createInfoTemplate = (events) => {
   events.sort((a, b) => a.dateStart - b.dateStart);
   const cost = calcCost(events);
   const dateStart = dateFormatting(events[0].dateTimeStart);
@@ -29,3 +29,25 @@ export const createInfoTemplate = (events) => {
     </section>`
   );
 };
+
+export default class Info {
+  constructor(events) {
+    this._element = null;
+    this._events = events;
+  }
+
+  getTemplate() {
+    return createInfoTemplate(this._events);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

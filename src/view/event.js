@@ -1,3 +1,5 @@
+import {createElement} from "../utils";
+
 const createOffersTemplate = (items) => {
   const trimmedItems = items.slice(0, 3);
   return (
@@ -49,7 +51,7 @@ const calcTimeGap = (timeStart, timeEnd) => {
   return formatting(gapInDay, gapInHours, gapInMinutes);
 };
 
-export const createEventTemplate = (event) => {
+const createEventTemplate = (event) => {
   const {
     type,
     city,
@@ -93,3 +95,25 @@ export const createEventTemplate = (event) => {
     </li>`
   );
 };
+
+export default class Event {
+  constructor(events) {
+    this._element = null;
+    this._events = events;
+  }
+
+  getTemplate() {
+    return createEventTemplate(this._events);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
