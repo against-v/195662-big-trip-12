@@ -11,9 +11,6 @@ export const createDayTemplate = (day, i) => {
         <span class="day__counter">${i + 1}</span>
         <time class="day__date" datetime="${dateAttribute}">${formattedDate}</time>
       </div>
-
-      <ul class="trip-events__list">
-      </ul>
     </li>`
   );
 };

@@ -1,15 +1,14 @@
-//классы
-import DaysListView from "./view/days-list.js";
+// классы
+import InfoView from "./view/info.js";
 import MenuView from "./view/menu.js";
 import FilterView from "./view/filter.js";
 import SortView from "./view/sort.js";
-import InfoView from "./view/info.js";
+import DaysListView from "./view/days-list.js";
 import DayView from "./view/day.js";
+import EventsListView from "./view/events-list.js";
 import EventView from "./view/event.js";
 
-import {createEventEditTemplate} from "./view/event-edit.js";
-
-
+// import {createEventEditTemplate} from "./view/event-edit.js";
 
 
 import {generateEvent} from "./mock/event.js";
@@ -28,24 +27,28 @@ const siteMenuTitleElement = siteHeaderControlsElement.querySelector(`h2:first-c
 const siteFilterTitleElement = siteHeaderControlsElement.querySelector(`h2:last-child`);
 const siteMainElement = document.querySelector(`.trip-events`);
 
+
+// const siteHeaderControlsElement = siteHeaderMainElement.querySelector(`.trip-controls`);
+
+
+renderElement(siteHeaderMainElement, new InfoView(events).getElement(), RenderPosition.AFTERBEGIN);
 renderElement(siteMenuTitleElement, new MenuView().getElement(), RenderPosition.AFTEREND);
 renderElement(siteFilterTitleElement, new FilterView().getElement(), RenderPosition.AFTEREND);
 renderElement(siteMainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
-renderElement(siteMainElement, new DaysListView().getElement(), RenderPosition.BEFOREEND);
-renderElement(siteHeaderMainElement, new InfoView(events).getElement(), RenderPosition.AFTERBEGIN);
 
+const daysListComponent = new DaysListView();
+renderElement(siteMainElement, daysListComponent.getElement(), RenderPosition.BEFOREEND);
 
 // renderTemplate(siteMainElement, createEventEditTemplate(days[0].events[0]), `beforeend`);
 
-
-const siteDaysListElement = siteMainElement.querySelector(`.trip-days`);
-
 for (let i = 0; i < days.length; i++) {
-  renderElement(siteDaysListElement, new DayView(days[i].day, i).getElement(), RenderPosition.BEFOREEND);
-  const siteEventList = siteDaysListElement.querySelectorAll(`.trip-events__list`)[i];
+  const dayComponent = new DayView(days[i].day, i);
+  const eventsListComponent = new EventsListView();
+  renderElement(daysListComponent.getElement(), dayComponent.getElement(), RenderPosition.BEFOREEND);
+  renderElement(dayComponent.getElement(), eventsListComponent.getElement(), RenderPosition.BEFOREEND);
   const dayEvents = days[i].events;
   for (let j = 0; j < dayEvents.length; j++) {
-    renderElement(siteEventList, new EventView(dayEvents[j]).getElement(), RenderPosition.BEFOREEND);
+    renderElement(eventsListComponent.getElement(), new EventView(dayEvents[j]).getElement(), RenderPosition.BEFOREEND);
   }
 }
 
