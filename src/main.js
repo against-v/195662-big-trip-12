@@ -6,8 +6,7 @@ import DaysListView from "./view/days-list.js";
 import DayView from "./view/day.js";
 import EventsListView from "./view/events-list.js";
 import EventView from "./view/event.js";
-
-// import {createEventEditTemplate} from "./view/event-edit.js";
+import EventEditView from "./view/event-edit.js";
 
 
 import {generateEvent} from "./mock/event.js";
@@ -25,9 +24,11 @@ const siteMenuTitleElement = siteHeaderControlsElement.querySelector(`h2:first-c
 const siteFilterTitleElement = siteHeaderControlsElement.querySelector(`h2:last-child`);
 const siteMainElement = document.querySelector(`.trip-events`);
 
-
-// const siteHeaderControlsElement = siteHeaderMainElement.querySelector(`.trip-controls`);
-
+const renderEvent = (eventsListElement, event) => {
+  const eventComponent = new EventView(event);
+  const eventEditComponent = new EventEditView();
+  render(eventsListElement, eventComponent.getElement(), RenderPosition.BEFOREEND);
+};
 
 render(siteHeaderMainElement, new InfoView(events).getElement(), RenderPosition.AFTERBEGIN);
 render(siteMenuTitleElement, new MenuView().getElement(), RenderPosition.AFTEREND);
@@ -37,8 +38,6 @@ render(siteMainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
 const daysListComponent = new DaysListView();
 render(siteMainElement, daysListComponent.getElement(), RenderPosition.BEFOREEND);
 
-// renderTemplate(siteMainElement, createEventEditTemplate(days[0].events[0]), `beforeend`);
-
 for (let i = 0; i < days.length; i++) {
   const dayComponent = new DayView(days[i].day, i);
   const eventsListComponent = new EventsListView();
@@ -46,7 +45,7 @@ for (let i = 0; i < days.length; i++) {
   render(dayComponent.getElement(), eventsListComponent.getElement(), RenderPosition.BEFOREEND);
   const dayEvents = days[i].events;
   for (let j = 0; j < dayEvents.length; j++) {
-    render(eventsListComponent.getElement(), new EventView(dayEvents[j]).getElement(), RenderPosition.BEFOREEND);
+    renderEvent(eventsListComponent.getElement(), dayEvents[j]);
   }
 }
 

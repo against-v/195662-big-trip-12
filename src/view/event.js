@@ -97,13 +97,13 @@ const createEventTemplate = (event) => {
 };
 
 export default class Event {
-  constructor(events) {
+  constructor(event) {
     this._element = null;
-    this._events = events;
+    this._event = event;
   }
 
   getTemplate() {
-    return createEventTemplate(this._events);
+    return createEventTemplate(this._event);
   }
 
   getElement() {
