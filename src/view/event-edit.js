@@ -1,4 +1,5 @@
 import {EVENT_TYPES, CITIES, EVENT_OFFERS} from "../const.js";
+import {createElement} from "../utils";
 
 const dateTimeFormatting = (dateTime) => {
   const day = (`0${dateTime.getDate()}`).slice(-2);
@@ -7,6 +8,18 @@ const dateTimeFormatting = (dateTime) => {
   const date = `${day}/${month}/${year}`;
   return `${date}`;
 };
+
+const BLANK_EVENT = {
+  type: EVENT_TYPES[0],
+  city: ``,
+  dateTimeStart: new Date(),
+  dateTimeEnd: new Date(),
+  offers: [],
+  price: ``,
+  destinationDescription: ``,
+  photos: [],
+};
+
 const generateEventOffersTemplate = (offers, type) => {
   const setChecked = (offer) => {
     const isChecked = offers.some((currentEventOffer) => {
@@ -95,17 +108,16 @@ const generateEventTypeListTemplate = (type) => {
       </div>`
   );
 };
-
-export const createEventEditTemplate = (event = {}) => {
+const createEventEditTemplate = (event) => {
   const {
-    type = {},
-    city = ``,
-    dateTimeStart = new Date(),
-    dateTimeEnd = new Date(),
-    offers = [],
-    price = ``,
-    destinationDescription = ``,
-    photos = [],
+    type,
+    city,
+    dateTimeStart,
+    dateTimeEnd,
+    offers,
+    price,
+    destinationDescription,
+    photos,
   } = event;
 
   const dateTimeStartValue = dateTimeFormatting(dateTimeStart);
@@ -132,65 +144,89 @@ export const createEventEditTemplate = (event = {}) => {
   const eventTypeListTemplate = generateEventTypeListTemplate(type);
 
   return (
-    `<form class="event  event--edit trip-events__item" action="#" method="post">
-      <header class="event__header">
-        <div class="event__type-wrapper">
-          <label class="event__type  event__type-btn" for="event-type-toggle-1">
-            <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${type.icon}.png" alt="Event type icon">
-          </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
-          ${eventTypeListTemplate}
-        </div>
-
-        <div class="event__field-group  event__field-group--destination">
-          <label class="event__label  event__type-output" for="event-destination-1">
-            ${typeTitle}
-          </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
-            ${eventDestinationListTemplate}
-        </div>
-
-        <div class="event__field-group  event__field-group--time">
-          <label class="visually-hidden" for="event-start-time-1">
-            From
-          </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateTimeStartValue}">
-            &mdash;
-            <label class="visually-hidden" for="event-end-time-1">
-              To
+    `<li class="trip-events__item">
+      <form class="event  event--edit" action="#" method="post">
+        <header class="event__header">
+          <div class="event__type-wrapper">
+            <label class="event__type  event__type-btn" for="event-type-toggle-1">
+              <span class="visually-hidden">Choose event type</span>
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${type.icon}.png" alt="Event type icon">
             </label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTimeEndValue}">
-        </div>
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+            ${eventTypeListTemplate}
+          </div>
 
-        <div class="event__field-group  event__field-group--price">
-          <label class="event__label" for="event-price-1">
-            <span class="visually-hidden">Price</span>
-            &euro;
-          </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
-        </div>
+          <div class="event__field-group  event__field-group--destination">
+            <label class="event__label  event__type-output" for="event-destination-1">
+              ${typeTitle}
+            </label>
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
+              ${eventDestinationListTemplate}
+          </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
+          <div class="event__field-group  event__field-group--time">
+            <label class="visually-hidden" for="event-start-time-1">
+              From
+            </label>
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateTimeStartValue}">
+              &mdash;
+              <label class="visually-hidden" for="event-end-time-1">
+                To
+              </label>
+              <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTimeEndValue}">
+          </div>
 
-        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
-          <label class="event__favorite-btn" for="event-favorite-1">
-            <span class="visually-hidden">Add to favorite</span>
-            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
-              <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
-            </svg>
-          </label>
+          <div class="event__field-group  event__field-group--price">
+            <label class="event__label" for="event-price-1">
+              <span class="visually-hidden">Price</span>
+              &euro;
+            </label>
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+          </div>
 
-          <button class="event__rollup-btn" type="button">
-            <span class="visually-hidden">Open event</span>
-          </button>
-      </header>
+          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+          <button class="event__reset-btn" type="reset">Delete</button>
 
-      <section class="event__details">
-        ${eventOffersTemplate}
-        ${eventDestinationTemplate}
-      </section>
-    </form>`
+          <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
+            <label class="event__favorite-btn" for="event-favorite-1">
+              <span class="visually-hidden">Add to favorite</span>
+              <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+                <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+              </svg>
+            </label>
+
+            <button class="event__rollup-btn" type="button">
+              <span class="visually-hidden">Open event</span>
+            </button>
+        </header>
+
+        <section class="event__details">
+          ${eventOffersTemplate}
+          ${eventDestinationTemplate}
+        </section>
+      </form>
+    </li>`
   );
 };
+
+export default class EventEdit {
+  constructor(event = BLANK_EVENT) {
+    this._element = null;
+    this._event = event;
+  }
+
+  getTemplate() {
+    return createEventEditTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
