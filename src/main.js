@@ -25,13 +25,9 @@ const siteFilterTitleElement = siteHeaderControlsElement.querySelector(`h2:last-
 const siteMainElement = document.querySelector(`.trip-events`);
 
 const renderEvent = (eventsListElement, event) => {
-  //todo вопросы:
-  // 1. почему бы не добавить removeEventListenner? 2.
   const eventComponent = new EventView(event);
 
-  //todo Здесь должна быть вторая структура данных - offers,
-  // еще с третьей домашки, но я реализвал это по другому,
-  // очень интересно: а как же изначально задумывалось?
+  //todo Здесь должна быть вторая структура данных - offers, пофиксить, когда подрубим данные с бэка
   const eventEditComponent = new EventEditView(event);
 
   const replaceEventToForm = () => {
