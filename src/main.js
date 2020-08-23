@@ -7,13 +7,14 @@ import DayView from "./view/day.js";
 import EventsListView from "./view/events-list.js";
 import EventView from "./view/event.js";
 import EventEditView from "./view/event-edit.js";
+import NoEventView from "./view/no-event.js";
 
 
 import {generateEvent} from "./mock/event.js";
 
 import {render, RenderPosition, generateDays} from "./utils.js";
 
-const EVENT_COUNT = 10;
+const EVENT_COUNT = 0;
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
 const days = generateDays(events);
@@ -64,7 +65,12 @@ const renderEvent = (eventsListElement, event) => {
 render(siteHeaderMainElement, new InfoView(events).getElement(), RenderPosition.AFTERBEGIN);
 render(siteMenuTitleElement, new MenuView().getElement(), RenderPosition.AFTEREND);
 render(siteFilterTitleElement, new FilterView().getElement(), RenderPosition.AFTEREND);
-render(siteMainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
+if (days.length === 0) {
+  render(siteMainElement, new NoEventView().getElement(), RenderPosition.BEFOREEND);
+} else {
+  render(siteMainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
+}
+
 
 const daysListComponent = new DaysListView();
 render(siteMainElement, daysListComponent.getElement(), RenderPosition.BEFOREEND);

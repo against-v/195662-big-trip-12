@@ -10,19 +10,28 @@ const calcCost = (events) => {
   return cost;
 };
 
+const createMainTemplate = (events) => {
+  if (events.length > 0) {
+    events.sort((a, b) => a.dateStart - b.dateStart);
+    const dateStart = dateFormatting(events[0].dateTimeStart);
+    const dateEnd = dateFormatting(events[events.length - 1].dateTimeEnd);
+    return (
+      `<div class="trip-info__main">
+        <h1 class="trip-info__title">${events[0].city} &mdash; ${events[events.length - 1].city}</h1>
+        <p class="trip-info__dates">${dateStart}&nbsp;&mdash;&nbsp;${dateEnd}</p>
+      </div>`
+    );
+  } else {
+    return (``);
+  }
+};
+
 const createInfoTemplate = (events) => {
-  events.sort((a, b) => a.dateStart - b.dateStart);
   const cost = calcCost(events);
-  const dateStart = dateFormatting(events[0].dateTimeStart);
-  const dateEnd = dateFormatting(events[events.length - 1].dateTimeEnd);
+  const mainTemplate = createMainTemplate(events);
   return (
     `<section class="trip-main__trip-info  trip-info">
-      <div class="trip-info__main">
-        <h1 class="trip-info__title">${events[0].city} &mdash; ${events[events.length - 1].city}</h1>
-
-        <p class="trip-info__dates">${dateStart}&nbsp;&mdash;&nbsp;${dateEnd}</p>
-      </div>
-
+     ${mainTemplate}
       <p class="trip-info__cost">
         Total: &euro;&nbsp;<span class="trip-info__cost-value">${cost}</span>
       </p>
