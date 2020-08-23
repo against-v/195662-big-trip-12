@@ -38,13 +38,24 @@ const renderEvent = (eventsListElement, event) => {
     eventsListElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
   };
 
+  const onEscKeyDown = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
+      replaceFormToEvent();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
   eventComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
     replaceEventToForm();
+    eventEditComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, replaceFormToEvent);
+    document.addEventListener(`keydown`, onEscKeyDown);
   });
 
   eventEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
     evt.preventDefault();
     replaceFormToEvent();
+    document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
   render(eventsListElement, eventComponent.getElement(), RenderPosition.BEFOREEND);
