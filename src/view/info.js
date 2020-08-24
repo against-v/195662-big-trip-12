@@ -1,4 +1,5 @@
-import {createElement, dateFormatting} from "../utils.js";
+import AbstractView from "./abstract.js";
+import {dateFormatting} from "../utils.js";
 const calcCost = (events) => {
   let cost = 0;
   events.forEach((event) => {
@@ -39,24 +40,13 @@ const createInfoTemplate = (events) => {
   );
 };
 
-export default class Info {
+export default class Info extends AbstractView {
   constructor(events) {
-    this._element = null;
+    super();
     this._events = events;
   }
 
   getTemplate() {
     return createInfoTemplate(this._events);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

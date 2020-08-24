@@ -1,5 +1,5 @@
+import AbstractView from "./abstract.js";
 import {EVENT_TYPES, CITIES, EVENT_OFFERS} from "../const.js";
-import {createElement} from "../utils";
 
 const dateTimeFormatting = (dateTime) => {
   const day = (`0${dateTime.getDate()}`).slice(-2);
@@ -209,24 +209,13 @@ const createEventEditTemplate = (event) => {
   );
 };
 
-export default class EventEdit {
+export default class EventEdit extends AbstractView {
   constructor(event = BLANK_EVENT) {
-    this._element = null;
+    super();
     this._event = event;
   }
 
   getTemplate() {
     return createEventEditTemplate(this._event);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
