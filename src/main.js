@@ -13,7 +13,7 @@ import NoEventView from "./view/no-event.js";
 import {generateEvent} from "./mock/event.js";
 
 import {generateDays} from "./utils/common.js";
-import {render, RenderPosition} from "./utils/render.js";
+import {render, replace, RenderPosition} from "./utils/render.js";
 
 const EVENT_COUNT = 10;
 
@@ -29,15 +29,15 @@ const siteMainElement = document.querySelector(`.trip-events`);
 const renderEvent = (eventsListElement, event) => {
   const eventComponent = new EventView(event);
 
-  //todo Здесь должна быть вторая структура данных - offers, пофиксить, когда подрубим данные с бэка
+  // todo Здесь должна быть вторая структура данных - offers, пофиксить, когда подрубим данные с бэка
   const eventEditComponent = new EventEditView(event);
 
   const replaceEventToForm = () => {
-    eventsListElement.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+    replace(eventEditComponent, eventComponent);
   };
 
   const replaceFormToEvent = () => {
-    eventsListElement.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+    replace(eventComponent, eventEditComponent);
   };
 
   const onEscKeyDown = (evt) => {
@@ -59,36 +59,33 @@ const renderEvent = (eventsListElement, event) => {
     document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
-  render(eventsListElement, eventComponent.getElement(), RenderPosition.BEFOREEND);
+  render(eventsListElement, eventComponent, RenderPosition.BEFOREEND);
 };
 
 const renderBoard = (boardDays) => {
   if (boardDays.length === 0) {
-    render(siteMainElement, new NoEventView().getElement(), RenderPosition.BEFOREEND);
+    render(siteMainElement, new NoEventView(), RenderPosition.BEFOREEND);
     return;
   }
-  render(siteMainElement, new SortView().getElement(), RenderPosition.BEFOREEND);
+  render(siteMainElement, new SortView(), RenderPosition.BEFOREEND);
   const daysListComponent = new DaysListView();
-  render(siteMainElement, daysListComponent.getElement(), RenderPosition.BEFOREEND);
+  render(siteMainElement, daysListComponent, RenderPosition.BEFOREEND);
 
   for (let i = 0; i < boardDays.length; i++) {
     const dayComponent = new DayView(boardDays[i].day, i);
     const eventsListComponent = new EventsListView();
-    render(daysListComponent.getElement(), dayComponent.getElement(), RenderPosition.BEFOREEND);
-    render(dayComponent.getElement(), eventsListComponent.getElement(), RenderPosition.BEFOREEND);
+    render(daysListComponent, dayComponent, RenderPosition.BEFOREEND);
+    render(dayComponent, eventsListComponent, RenderPosition.BEFOREEND);
     const dayEvents = boardDays[i].events;
     for (let j = 0; j < dayEvents.length; j++) {
-      renderEvent(eventsListComponent.getElement(), dayEvents[j]);
+      renderEvent(eventsListComponent, dayEvents[j]);
     }
   }
 };
 
-render(siteHeaderMainElement, new InfoView(events).getElement(), RenderPosition.AFTERBEGIN);
-render(siteMenuTitleElement, new MenuView().getElement(), RenderPosition.AFTEREND);
-render(siteFilterTitleElement, new FilterView().getElement(), RenderPosition.AFTEREND);
+render(siteHeaderMainElement, new InfoView(events), RenderPosition.AFTERBEGIN);
+render(siteMenuTitleElement, new MenuView(), RenderPosition.AFTEREND);
+render(siteFilterTitleElement, new FilterView(), RenderPosition.AFTEREND);
 renderBoard(days);
-
-
-
 
 
