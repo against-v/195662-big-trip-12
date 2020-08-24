@@ -12,7 +12,8 @@ import NoEventView from "./view/no-event.js";
 
 import {generateEvent} from "./mock/event.js";
 
-import {render, RenderPosition, generateDays} from "./utils.js";
+import {generateDays} from "./utils/common.js";
+import {render, RenderPosition} from "./utils/render.js";
 
 const EVENT_COUNT = 10;
 

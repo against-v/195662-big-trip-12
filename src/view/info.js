@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {dateFormatting} from "../utils.js";
+import {dateFormatting} from "../utils/common.js";
 const calcCost = (events) => {
   let cost = 0;
   events.forEach((event) => {
