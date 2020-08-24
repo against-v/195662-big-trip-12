@@ -213,9 +213,41 @@ export default class EventEdit extends AbstractView {
   constructor(event = BLANK_EVENT) {
     super();
     this._event = event;
+
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formCloseHandler = this._formCloseHandler.bind(this);
+
+    // this._formEventHandler = this._formEventHandler.bind(this);
   }
 
   getTemplate() {
     return createEventEditTemplate(this._event);
+  }
+
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  }
+
+  _formCloseHandler(evt) {
+    evt.preventDefault();
+    this._callback.formClose();
+  }
+  // todo при попытке написать общий хендлер для событий, задваивается клик
+  // _formEventHandler(callback, evt) {
+  //   evt.preventDefault();
+  //   this._callback[callback]();
+  // }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    // this.getElement().querySelector(`form`).addEventListener(`submit`, this._formEventHandler.bind(null, `formSubmit`));
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setFormCloseHandler(callback) {
+    this._callback.formClose = callback;
+    // this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formEventHandler.bind(null, `formClose`));
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formCloseHandler);
   }
 }
