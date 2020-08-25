@@ -1,4 +1,4 @@
-import TripView from "./view/trip.js";
+import TripView from "../view/trip.js";
 import SortView from "../view/sort.js";
 import DaysListView from "../view/days-list.js";
 import DayView from "../view/day.js";
@@ -6,7 +6,7 @@ import EventsListView from "../view/events-list.js";
 import EventView from "../view/event.js";
 import EventEditView from "../view/event-edit.js";
 import NoEventView from "../view/no-event.js";
-import {render, replace, RenderPosition} from "./utils/render.js";
+import {render, replace, RenderPosition} from "../utils/render.js";
 
 export default class Trip {
   constructor(tripContainer) {
