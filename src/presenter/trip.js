@@ -14,38 +14,90 @@ export default class Trip {
     this._tripComponent = new TripView();
     this._sortComponent = new SortView();
     this._daysListComponent = new DaysListView();
-    this._dayComponent = new DayView();
-    this._eventsListComponent = new EventsListView();
-    this._eventComponent = new EventView();
-    this._eventEditComponent = new EventEditView();
     this._noEventComponent = new NoEventView();
   }
 
   init(tripDays) {
     this._tripDays = tripDays.slice();
+
+    render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
+    this._renderTrip();
+
   }
 
   _renderSort() {
-
+    render(this._tripComponent, this._sortComponent, RenderPosition.BEFOREEND);
+  }
+  _renderDaysList() {
+    render(this._tripComponent, this._daysListComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderDay() {
-
+  _renderDay(tripDay, index) {
+    const dayComponent = new DayView(tripDay.day, index);
+    render(this._daysListComponent, dayComponent, RenderPosition.BEFOREEND);
+    this._renderEventsList(dayComponent, tripDay.events);
   }
 
-  _renderDays() {
-
+  _renderEventsList(dayComponent, dayEvents) {
+    const eventsListComponent = new EventsListView();
+    render(dayComponent, eventsListComponent, RenderPosition.BEFOREEND);
+    for (let i = 0; i < dayEvents.length; i++) {
+      this._renderEvent(eventsListComponent, dayEvents[i]);
+    }
   }
 
-  _renderEvent() {
 
-  }
+  _renderEvent(eventsList, event) {
+    const eventComponent = new EventView(event);
 
-  _renderEvents() {
+    // todo Здесь должна быть вторая структура данных - offers, пофиксить, когда подрубим данные с бэка
+    const eventEditComponent = new EventEditView(event);
 
+    const replaceEventToForm = () => {
+      replace(eventEditComponent, eventComponent);
+    };
+
+    const replaceFormToEvent = () => {
+      replace(eventComponent, eventEditComponent);
+    };
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === `Escape` || evt.key === `Esc`) {
+        evt.preventDefault();
+        replaceFormToEvent();
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      }
+    };
+
+    eventComponent.setEditClickHandler(() => {
+      replaceEventToForm();
+      eventEditComponent.setFormCloseHandler(() => replaceFormToEvent());
+      document.addEventListener(`keydown`, onEscKeyDown);
+    });
+
+    eventEditComponent.setFormSubmitHandler(() => {
+      replaceFormToEvent();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    });
+
+    render(eventsList, eventComponent, RenderPosition.BEFOREEND);
   }
 
   _renderNoEvent() {
+    render(this._tripComponent, this._noEventComponent, RenderPosition.BEFOREEND);
+  }
+
+  _renderTrip() {
+    if (this._tripDays.length === 0) {
+      this._renderNoEvent();
+      return;
+    }
+    this._renderSort();
+    this._renderDaysList();
+
+    for (let i = 0; i < this._tripDays.length; i++) {
+      this._renderDay(this._tripDays[i], i);
+    }
 
   }
 }
