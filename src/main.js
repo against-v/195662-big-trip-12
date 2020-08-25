@@ -63,11 +63,11 @@ const renderEvent = (eventsListElement, event) => {
   render(eventsListElement, eventComponent, RenderPosition.BEFOREEND);
 };
 
-const renderBoard = (boardDays) => {
+const renderTrip = (tripDays) => {
   const tripComponent = new TripView();
   render(siteMainElement, tripComponent, RenderPosition.BEFOREEND);
 
-  if (boardDays.length === 0) {
+  if (tripDays.length === 0) {
     render(tripComponent, new NoEventView(), RenderPosition.BEFOREEND);
     return;
   }
@@ -75,12 +75,12 @@ const renderBoard = (boardDays) => {
   const daysListComponent = new DaysListView();
   render(tripComponent, daysListComponent, RenderPosition.BEFOREEND);
 
-  for (let i = 0; i < boardDays.length; i++) {
-    const dayComponent = new DayView(boardDays[i].day, i);
+  for (let i = 0; i < tripDays.length; i++) {
+    const dayComponent = new DayView(tripDays[i].day, i);
     const eventsListComponent = new EventsListView();
     render(daysListComponent, dayComponent, RenderPosition.BEFOREEND);
     render(dayComponent, eventsListComponent, RenderPosition.BEFOREEND);
-    const dayEvents = boardDays[i].events;
+    const dayEvents = tripDays[i].events;
     for (let j = 0; j < dayEvents.length; j++) {
       renderEvent(eventsListComponent, dayEvents[j]);
     }
@@ -90,6 +90,6 @@ const renderBoard = (boardDays) => {
 render(siteHeaderMainElement, new InfoView(events), RenderPosition.AFTERBEGIN);
 render(siteMenuTitleElement, new MenuView(), RenderPosition.AFTEREND);
 render(siteFilterTitleElement, new FilterView(), RenderPosition.AFTEREND);
-renderBoard(days);
+renderTrip(days);
 
 
