@@ -1,6 +1,7 @@
 import InfoView from "./view/info.js";
 import MenuView from "./view/menu.js";
 import FilterView from "./view/filter.js";
+import TripView from "./view/trip.js";
 import SortView from "./view/sort.js";
 import DaysListView from "./view/days-list.js";
 import DayView from "./view/day.js";
@@ -24,7 +25,7 @@ const siteHeaderMainElement = document.querySelector(`.trip-main`);
 const siteHeaderControlsElement = siteHeaderMainElement.querySelector(`.trip-controls`);
 const siteMenuTitleElement = siteHeaderControlsElement.querySelector(`h2:first-child`);
 const siteFilterTitleElement = siteHeaderControlsElement.querySelector(`h2:last-child`);
-const siteMainElement = document.querySelector(`.trip-events`);
+const siteMainElement = document.querySelector(`.page-main .page-body__container`);
 
 const renderEvent = (eventsListElement, event) => {
   const eventComponent = new EventView(event);
@@ -63,13 +64,16 @@ const renderEvent = (eventsListElement, event) => {
 };
 
 const renderBoard = (boardDays) => {
+  const tripComponent = new TripView();
+  render(siteMainElement, tripComponent, RenderPosition.BEFOREEND);
+
   if (boardDays.length === 0) {
-    render(siteMainElement, new NoEventView(), RenderPosition.BEFOREEND);
+    render(tripComponent, new NoEventView(), RenderPosition.BEFOREEND);
     return;
   }
-  render(siteMainElement, new SortView(), RenderPosition.BEFOREEND);
+  render(tripComponent, new SortView(), RenderPosition.BEFOREEND);
   const daysListComponent = new DaysListView();
-  render(siteMainElement, daysListComponent, RenderPosition.BEFOREEND);
+  render(tripComponent, daysListComponent, RenderPosition.BEFOREEND);
 
   for (let i = 0; i < boardDays.length; i++) {
     const dayComponent = new DayView(boardDays[i].day, i);
