@@ -1,5 +1,5 @@
+import AbstractView from "./abstract.js";
 import {EVENT_TYPES, CITIES, EVENT_OFFERS} from "../const.js";
-import {createElement} from "../utils";
 
 const dateTimeFormatting = (dateTime) => {
   const day = (`0${dateTime.getDate()}`).slice(-2);
@@ -209,24 +209,45 @@ const createEventEditTemplate = (event) => {
   );
 };
 
-export default class EventEdit {
+export default class EventEdit extends AbstractView {
   constructor(event = BLANK_EVENT) {
-    this._element = null;
+    super();
     this._event = event;
+
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formCloseHandler = this._formCloseHandler.bind(this);
+
+    // this._formEventHandler = this._formEventHandler.bind(this);
   }
 
   getTemplate() {
     return createEventEditTemplate(this._event);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  _formCloseHandler(evt) {
+    evt.preventDefault();
+    this._callback.formClose();
+  }
+  // todo при попытке написать общий хендлер для событий, задваивается клик
+  // _formEventHandler(callback, evt) {
+  //   evt.preventDefault();
+  //   this._callback[callback]();
+  // }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    // this.getElement().querySelector(`form`).addEventListener(`submit`, this._formEventHandler.bind(null, `formSubmit`));
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setFormCloseHandler(callback) {
+    this._callback.formClose = callback;
+    // this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formEventHandler.bind(null, `formClose`));
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formCloseHandler);
   }
 }
