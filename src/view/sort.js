@@ -1,11 +1,12 @@
 import AbstractView from "./abstract.js";
+import {sortType} from "../const";
 
-const createSortTemplate = () => {
+const createSortTemplate = (currentSortType) => {
   // todo разобраться с dayTitle
   // Надо выводить dayTitle только в случае сортировки по умолчанию
   // И я не придумал как сделать это поприличнее
   // Возможно в следующих лекциях про связывание данных об этом расскажут
-  const dayTitle = `Day`;
+  const dayTitle = currentSortType === sortType.DEFAULT ? `Day` : ``;
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
       <span class="trip-sort__item  trip-sort__item--day">${dayTitle}</span>
@@ -38,15 +39,17 @@ export default class Sort extends AbstractView {
   constructor() {
     super();
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
+    this._currentSortType = sortType.DEFAULT;
   }
 
   getTemplate() {
-    return createSortTemplate();
+    return createSortTemplate(this._currentSortType);
   }
 
   _sortTypeChangeHandler(evt) {
     evt.preventDefault();
     this._callback.sortTypeChange(evt.target.value);
+    this._currentSortType = evt.target.value;
   }
 
   setSortTypeChangeHandler(callback) {
