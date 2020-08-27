@@ -2,6 +2,12 @@ export const sortByPrice = (eventA, eventB) => {
   return eventB.price - eventA.price;
 };
 
+export const sortByTime = (eventA, eventB) => {
+  const eventADuration = eventA.dateTimeEnd - eventA.dateTimeStart;
+  const eventBDuration = eventB.dateTimeEnd - eventB.dateTimeStart;
+  return eventBDuration - eventADuration;
+};
+
 export const groupEventsByDay = (events) => {
   const eventsDates = events.map((event) => {
     return event.dateStart;
@@ -19,8 +25,8 @@ export const groupEventsByDay = (events) => {
     const eventsInDay = events.filter((event) => {
       return event.dateStart === day;
     });
-    eventsInDay.sort((a, b) => {
-      return Date.parse(a.dateTimeStart) - Date.parse(b.dateTimeStart);
+    eventsInDay.sort((eventA, eventB) => {
+      return Date.parse(eventA.dateTimeStart) - Date.parse(eventB.dateTimeStart);
     });
     return {
       day,

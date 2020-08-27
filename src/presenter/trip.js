@@ -8,7 +8,7 @@ import EventEditView from "../view/event-edit.js";
 import NoEventView from "../view/no-event.js";
 import {render, replace, RenderPosition} from "../utils/render.js";
 import {sortType} from "../const.js";
-import {sortByPrice, groupEventsByDay} from "../utils/trip-board";
+import {sortByPrice, sortByTime, groupEventsByDay} from "../utils/trip-board";
 
 export default class Trip {
   constructor(tripContainer) {
@@ -38,7 +38,7 @@ export default class Trip {
 
     switch (this._currentSortType) {
       case sortType.TIME:
-        // events.sort(sortTime);
+        events.sort(sortByTime);
         groupedEvents.push({events});
         break;
       case sortType.PRICE:
