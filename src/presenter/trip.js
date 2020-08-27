@@ -7,7 +7,8 @@ import EventView from "../view/event.js";
 import EventEditView from "../view/event-edit.js";
 import NoEventView from "../view/no-event.js";
 import {render, replace, RenderPosition} from "../utils/render.js";
-import {SORT_TYPE} from "../const.js";
+import {sortType} from "../const.js";
+import {sortByPrice, groupEventsByDay} from "../utils/trip-board";
 
 export default class Trip {
   constructor(tripContainer) {
@@ -16,7 +17,7 @@ export default class Trip {
     this._sortComponent = new SortView();
     this._daysListComponent = new DaysListView();
     this._noEventComponent = new NoEventView();
-    this._sortType = SORT_TYPE.default;
+    this._currentSortType = sortType.DEFAULT;
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
@@ -26,45 +27,28 @@ export default class Trip {
     this._renderTrip();
   }
 
-  _handleSortTypeChange(sortType) {
-    this._sortType = sortType;
+  _handleSortTypeChange(newSortType) {
+    this._currentSortType = newSortType;
     this._clearDaysList();
     this._renderDaysList();
   }
 
-  _generateDays(events) {
-    if (this._sortType === SORT_TYPE.default) {
-      const eventsDates = events.map((event) => {
-        return event.dateStart;
-      });
+  _sortingEvents(events) {
+    let groupedEvents = [];
 
-      eventsDates.sort((a, b) => a - b);
-
-      let days = new Set();
-
-      eventsDates.forEach((date) => {
-        days.add(date);
-      });
-
-      days = Array.from(days).map((day) => {
-        const eventsInDay = events.filter((event) => {
-          return event.dateStart === day;
-        });
-        eventsInDay.sort((a, b) => {
-          return Date.parse(a.dateTimeStart) - Date.parse(b.dateTimeStart);
-        });
-        return {
-          day,
-          events: eventsInDay,
-        };
-      });
-      return days;
+    switch (this._currentSortType) {
+      case sortType.TIME:
+        // events.sort(sortTime);
+        groupedEvents.push({events});
+        break;
+      case sortType.PRICE:
+        events.sort(sortByPrice);
+        groupedEvents.push({events});
+        break;
+      default:
+        groupedEvents = groupEventsByDay(events);
     }
-    return [
-      {
-        events
-      }
-    ];
+    return groupedEvents;
   }
 
   _clearDaysList() {
@@ -79,10 +63,10 @@ export default class Trip {
   _renderDaysList() {
     render(this._tripComponent, this._daysListComponent, RenderPosition.BEFOREEND);
 
-    const days = this._generateDays(this._tripEvents);
+    const groupedEvents = this._sortingEvents(this._tripEvents);
 
-    for (let i = 0; i < days.length; i++) {
-      this._renderDay(days[i], i);
+    for (let i = 0; i < groupedEvents.length; i++) {
+      this._renderDay(groupedEvents[i], i);
     }
   }
 

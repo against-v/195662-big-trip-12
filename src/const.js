@@ -198,8 +198,8 @@ export const EVENT_OFFERS = {
     },
   ],
 };
-export const SORT_TYPE = {
-  default: `sort-event`,
-  time: `sort-time`,
-  price: `sort-price`,
+export const sortType = {
+  DEFAULT: `sort-event`,
+  TIME: `sort-time`,
+  PRICE: `sort-price`,
 };
