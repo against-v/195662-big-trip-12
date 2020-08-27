@@ -7,6 +7,7 @@ import EventView from "../view/event.js";
 import EventEditView from "../view/event-edit.js";
 import NoEventView from "../view/no-event.js";
 import {render, replace, RenderPosition} from "../utils/render.js";
+import {SORT_TYPE} from "../const.js";
 
 export default class Trip {
   constructor(tripContainer) {
@@ -15,11 +16,8 @@ export default class Trip {
     this._sortComponent = new SortView();
     this._daysListComponent = new DaysListView();
     this._noEventComponent = new NoEventView();
-
-    // todo разобраться с конструктором
-    // вопрос: какие компоненты мы определяем в конструкторе?
-    // сейчас я здесь написал только статичные компоненты
-    // но я не уверен, что это правильный критерий
+    this._sortType = SORT_TYPE.default;
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(tripEvents) {
@@ -28,37 +26,46 @@ export default class Trip {
     this._renderTrip();
   }
 
+  _handleSortTypeChange(sortType) {
+    this._sortType = sortType;
+    this._generateDays()
+  }
+
   _generateDays(events) {
-    const eventsDates = events.map((event) => {
-      return event.dateStart;
-    });
-
-    eventsDates.sort((a, b) => a - b);
-
-    let days = new Set();
-
-    eventsDates.forEach((date) => {
-      days.add(date);
-    });
-
-    days = Array.from(days).map((day) => {
-      const eventsInDay = events.filter((event) => {
-        return event.dateStart === day;
+    if (this._sortType === SORT_TYPE.default) {
+      const eventsDates = events.map((event) => {
+        return event.dateStart;
       });
-      eventsInDay.sort((a, b) => {
-        return Date.parse(a.dateTimeStart) - Date.parse(b.dateTimeStart);
-      });
-      return {
-        day,
-        events: eventsInDay,
-      };
-    });
 
-    return days;
+      eventsDates.sort((a, b) => a - b);
+
+      let days = new Set();
+
+      eventsDates.forEach((date) => {
+        days.add(date);
+      });
+
+      days = Array.from(days).map((day) => {
+        const eventsInDay = events.filter((event) => {
+          return event.dateStart === day;
+        });
+        eventsInDay.sort((a, b) => {
+          return Date.parse(a.dateTimeStart) - Date.parse(b.dateTimeStart);
+        });
+        return {
+          day,
+          events: eventsInDay,
+        };
+      });
+
+      return days;
+    }
+    return null;
   }
 
   _renderSort() {
     render(this._tripComponent, this._sortComponent, RenderPosition.BEFOREEND);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderDaysList() {
