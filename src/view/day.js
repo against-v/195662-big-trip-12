@@ -1,15 +1,15 @@
 import AbstractView from "./abstract.js";
 import {dateFormatting, createDateInAttributeFormat} from "../utils/common.js";
 
-export const createDayTemplate = (day, i) => {
-  let dayInfoTemplate = ``;
-  const createDayInfoTemplate = (index, dateAttribute, formattedDate) => {
-    return (
-      `<span class="day__counter">${i + 1}</span>
+const createDayInfoTemplate = (index, dateAttribute, formattedDate) => {
+  return (
+    `<span class="day__counter">${index + 1}</span>
       <time class="day__date" datetime="${dateAttribute}">${formattedDate}</time>`
-    );
-  };
+  );
+};
 
+const createDayTemplate = (day, i) => {
+  let dayInfoTemplate = ``;
   if (day) {
     const date = new Date(day);
     const dateAttribute = createDateInAttributeFormat(date);
