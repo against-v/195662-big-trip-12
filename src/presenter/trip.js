@@ -22,10 +22,39 @@ export default class Trip {
     // но я не уверен, что это правильный критерий
   }
 
-  init(tripDays) {
-    this._tripDays = tripDays.slice();
+  init(tripEvents) {
+    this._tripEvents = tripEvents.slice();
     render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
+  }
+
+  _generateDays(events) {
+    const eventsDates = events.map((event) => {
+      return event.dateStart;
+    });
+
+    eventsDates.sort((a, b) => a - b);
+
+    let days = new Set();
+
+    eventsDates.forEach((date) => {
+      days.add(date);
+    });
+
+    days = Array.from(days).map((day) => {
+      const eventsInDay = events.filter((event) => {
+        return event.dateStart === day;
+      });
+      eventsInDay.sort((a, b) => {
+        return Date.parse(a.dateTimeStart) - Date.parse(b.dateTimeStart);
+      });
+      return {
+        day,
+        events: eventsInDay,
+      };
+    });
+
+    return days;
   }
 
   _renderSort() {
@@ -34,16 +63,21 @@ export default class Trip {
 
   _renderDaysList() {
     render(this._tripComponent, this._daysListComponent, RenderPosition.BEFOREEND);
+
+    const days = this._generateDays(this._tripEvents);
+
+    for (let i = 0; i < days.length; i++) {
+      this._renderDay(days[i], i);
+    }
   }
 
   _renderDay(tripDay, index) {
-    const dayComponent = new DayView(tripDay.day, index); // нормально же, что я внутри метода создаю нвоый экземпляр?
+    const dayComponent = new DayView(tripDay.day, index);
     render(this._daysListComponent, dayComponent, RenderPosition.BEFOREEND);
     this._renderEventsList(dayComponent, tripDay.events);
   }
 
   _renderEventsList(dayElement, dayEvents) {
-    // нормально, что в названии первого параметра есть слово Element?
     const eventsListComponent = new EventsListView();
     render(dayElement, eventsListComponent, RenderPosition.BEFOREEND);
     for (let i = 0; i < dayEvents.length; i++) {
@@ -92,20 +126,12 @@ export default class Trip {
   }
 
   _renderTrip() {
-    if (this._tripDays.length === 0) {
+    if (this._tripEvents.length === 0) {
       this._renderNoEvent();
       return;
     }
 
     this._renderSort();
     this._renderDaysList();
-
-    for (let i = 0; i < this._tripDays.length; i++) {
-      this._renderDay(this._tripDays[i], i);
-    }
   }
 }
-
-// todo разобрать вопросы
-// нэйминг this._tripComponent = new TripView(); - возможно стоило вместо trip использовать board?
-//
