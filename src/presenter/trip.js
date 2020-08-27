@@ -28,7 +28,8 @@ export default class Trip {
 
   _handleSortTypeChange(sortType) {
     this._sortType = sortType;
-    this._generateDays()
+    this._clearDaysList();
+    this._renderDaysList();
   }
 
   _generateDays(events) {
@@ -57,10 +58,17 @@ export default class Trip {
           events: eventsInDay,
         };
       });
-
       return days;
     }
-    return null;
+    return [
+      {
+        events
+      }
+    ];
+  }
+
+  _clearDaysList() {
+    this._daysListComponent.getElement().innerHTML = ``;
   }
 
   _renderSort() {
