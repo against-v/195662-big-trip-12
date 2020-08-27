@@ -7,13 +7,11 @@ import TripPresenter from "./presenter/trip.js";
 
 import {generateEvent} from "./mock/event.js";
 
-import {generateDays} from "./utils/common.js";
 import {render, RenderPosition} from "./utils/render.js";
 
 const EVENT_COUNT = 10;
 
 const events = new Array(EVENT_COUNT).fill().map(generateEvent);
-const days = generateDays(events);
 
 const siteHeaderMainElement = document.querySelector(`.trip-main`);
 const siteHeaderControlsElement = siteHeaderMainElement.querySelector(`.trip-controls`);
@@ -27,4 +25,4 @@ render(siteHeaderMainElement, new InfoView(events), RenderPosition.AFTERBEGIN);
 render(siteMenuTitleElement, new MenuView(), RenderPosition.AFTEREND);
 render(siteFilterTitleElement, new FilterView(), RenderPosition.AFTEREND);
 
-tripPresenter.init(days);
+tripPresenter.init(events);

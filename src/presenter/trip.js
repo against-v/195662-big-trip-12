@@ -7,6 +7,8 @@ import EventView from "../view/event.js";
 import EventEditView from "../view/event-edit.js";
 import NoEventView from "../view/no-event.js";
 import {render, replace, RenderPosition} from "../utils/render.js";
+import {sortType} from "../const.js";
+import {sortByPrice, sortByTime, groupEventsByDay} from "../utils/trip-board";
 
 export default class Trip {
   constructor(tripContainer) {
@@ -15,35 +17,66 @@ export default class Trip {
     this._sortComponent = new SortView();
     this._daysListComponent = new DaysListView();
     this._noEventComponent = new NoEventView();
-
-    // todo разобраться с конструктором
-    // вопрос: какие компоненты мы определяем в конструкторе?
-    // сейчас я здесь написал только статичные компоненты
-    // но я не уверен, что это правильный критерий
+    this._currentSortType = sortType.DEFAULT;
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
-  init(tripDays) {
-    this._tripDays = tripDays.slice();
+  init(tripEvents) {
+    this._tripEvents = tripEvents.slice();
     render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
   }
 
+  _handleSortTypeChange(newSortType) {
+    this._currentSortType = newSortType;
+    this._clearDaysList();
+    this._renderDaysList();
+  }
+
+  _sortingEvents(events) {
+    let groupedEvents = [];
+
+    switch (this._currentSortType) {
+      case sortType.TIME:
+        events.sort(sortByTime);
+        groupedEvents.push({events});
+        break;
+      case sortType.PRICE:
+        events.sort(sortByPrice);
+        groupedEvents.push({events});
+        break;
+      default:
+        groupedEvents = groupEventsByDay(events);
+    }
+    return groupedEvents;
+  }
+
+  _clearDaysList() {
+    this._daysListComponent.getElement().innerHTML = ``;
+  }
+
   _renderSort() {
     render(this._tripComponent, this._sortComponent, RenderPosition.BEFOREEND);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderDaysList() {
     render(this._tripComponent, this._daysListComponent, RenderPosition.BEFOREEND);
+
+    const groupedEvents = this._sortingEvents(this._tripEvents);
+
+    for (let i = 0; i < groupedEvents.length; i++) {
+      this._renderDay(groupedEvents[i], i);
+    }
   }
 
   _renderDay(tripDay, index) {
-    const dayComponent = new DayView(tripDay.day, index); // нормально же, что я внутри метода создаю нвоый экземпляр?
+    const dayComponent = new DayView(tripDay.day, index);
     render(this._daysListComponent, dayComponent, RenderPosition.BEFOREEND);
     this._renderEventsList(dayComponent, tripDay.events);
   }
 
   _renderEventsList(dayElement, dayEvents) {
-    // нормально, что в названии первого параметра есть слово Element?
     const eventsListComponent = new EventsListView();
     render(dayElement, eventsListComponent, RenderPosition.BEFOREEND);
     for (let i = 0; i < dayEvents.length; i++) {
@@ -92,20 +125,12 @@ export default class Trip {
   }
 
   _renderTrip() {
-    if (this._tripDays.length === 0) {
+    if (this._tripEvents.length === 0) {
       this._renderNoEvent();
       return;
     }
 
     this._renderSort();
     this._renderDaysList();
-
-    for (let i = 0; i < this._tripDays.length; i++) {
-      this._renderDay(this._tripDays[i], i);
-    }
   }
 }
-
-// todo разобрать вопросы
-// нэйминг this._tripComponent = new TripView(); - возможно стоило вместо trip использовать board?
-//
