@@ -52,6 +52,9 @@ export default class Trip {
   }
 
   _clearDaysList() {
+    // todo переделать
+    // для этого надо сделать презентер day, с методом destroy,
+    // и как-то отрисовывать в нем список событий через метод _renderDay
     this._daysListComponent.getElement().innerHTML = ``;
   }
 
