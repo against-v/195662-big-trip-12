@@ -218,7 +218,7 @@ const createEventEditTemplate = (data) => {
 export default class EventEdit extends AbstractView {
   constructor(event = BLANK_EVENT) {
     super();
-    this._data = EventEdit.parseTaskToData(event);
+    this._data = EventEdit.parseEventToData(event);
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
@@ -257,7 +257,7 @@ export default class EventEdit extends AbstractView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(this._data);
+    this._callback.formSubmit(EventEdit.parseDataToEvent(this._data));
   }
 
   _closeEditClickHandler(evt) {
@@ -285,7 +285,7 @@ export default class EventEdit extends AbstractView {
     this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`change`, this._favoriteClickHandler);
   }
 
-  static parseTaskToData(event) {
+  static parseEventToData(event) {
     return Object.assign(
         {},
         event,
@@ -294,5 +294,14 @@ export default class EventEdit extends AbstractView {
           isStopping: isEventStopping(event.type)
         }
     );
+  }
+
+  static parseDataToEvent(data) {
+    data = Object.assign({}, data);
+
+    delete data.typeCapitalized;
+    delete data.isStopping;
+
+    return data;
   }
 }
