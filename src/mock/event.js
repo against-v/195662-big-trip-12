@@ -155,6 +155,7 @@ export const generateEvent = () => {
     city: generateCity(),
     offers: generateOffers(type),
     price: generatePrice(),
+    isFavorite: Boolean(getRandomInteger()),
     dateTimeStart,
     dateTimeEnd: generateDateTime(dateTimeStart, 0, 1),
     dateStart: generateDate(dateTimeStart),
