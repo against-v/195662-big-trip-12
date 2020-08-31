@@ -3,10 +3,10 @@ import SortView from "../view/sort.js";
 import DaysListView from "../view/days-list.js";
 import DayView from "../view/day.js";
 import EventsListView from "../view/events-list.js";
-import EventView from "../view/event.js";
-import EventEditView from "../view/event-edit.js";
 import NoEventView from "../view/no-event.js";
-import {render, replace, RenderPosition} from "../utils/render.js";
+
+import EventPresenter from "./event.js";
+import {render, RenderPosition} from "../utils/render.js";
 import {sortType} from "../const.js";
 import {sortByPrice, sortByTime, groupEventsByDay} from "../utils/trip-board";
 
@@ -85,39 +85,8 @@ export default class Trip {
   }
 
   _renderEvent(eventsListElement, event) {
-    const eventComponent = new EventView(event);
-
-    // todo Здесь должна быть вторая структура данных - offers, пофиксить, когда подрубим данные с бэка
-    const eventEditComponent = new EventEditView(event);
-
-    const replaceEventToForm = () => {
-      replace(eventEditComponent, eventComponent);
-    };
-
-    const replaceFormToEvent = () => {
-      replace(eventComponent, eventEditComponent);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        replaceFormToEvent();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    eventComponent.setEditClickHandler(() => {
-      replaceEventToForm();
-      eventEditComponent.setFormCloseHandler(() => replaceFormToEvent());
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    eventEditComponent.setFormSubmitHandler(() => {
-      replaceFormToEvent();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
-
-    render(eventsListElement, eventComponent, RenderPosition.BEFOREEND);
+    const eventPresenter = new EventPresenter(eventsListElement);
+    eventPresenter.init(event);
   }
 
   _renderNoEvent() {
