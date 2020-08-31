@@ -3,14 +3,16 @@ import EventEditView from "../view/event-edit";
 import {render, RenderPosition, replace, remove} from "../utils/render";
 
 export default class Event {
-  constructor(eventsListElement) {
+  constructor(eventsListElement, changeData) {
     this._eventsListElement = eventsListElement;
+    this._changeData = changeData;
 
     this._eventComponent = null;
     this._eventEditComponent = null;
 
     this._handleEditClick = this._handleEditClick.bind(this);
-    this._handleFormClose = this._handleFormClose.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleCloseEditClick = this._handleCloseEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
@@ -27,7 +29,8 @@ export default class Event {
     this._eventEditComponent = new EventEditView(event);
 
     this._eventComponent.setEditClickHandler(this._handleEditClick);
-    this._eventEditComponent.setFormCloseHandler(this._handleFormClose);
+    this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._eventEditComponent.setCloseEditClickHandler(this._handleCloseEditClick);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
 
     if (prevEventComponent === null || prevEventEditComponent === null) {
@@ -54,7 +57,7 @@ export default class Event {
 
   _replaceEventToForm() {
     replace(this._eventEditComponent, this._eventComponent);
-    this._eventEditComponent.setFormCloseHandler(() => this._replaceFormToEvent());
+    this._eventEditComponent.setCloseEditClickHandler(() => this._replaceFormToEvent());
     document.addEventListener(`keydown`, this._escKeyDownHandler);
   }
 
@@ -74,7 +77,19 @@ export default class Event {
     this._replaceEventToForm();
   }
 
-  _handleFormClose() {
+  _handleFavoriteClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._event,
+            {
+              isFavorite: !this._event.isFavorite
+            }
+        )
+    );
+  }
+
+  _handleCloseEditClick() {
     this._replaceFormToEvent();
   }
 

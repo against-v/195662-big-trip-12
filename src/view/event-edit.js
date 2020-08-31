@@ -145,7 +145,6 @@ const createEventEditTemplate = (event) => {
   const typeTitle = `${type.name} ${type.type === `trip` ? `to` : `in`}`;
   const eventTypeListTemplate = generateEventTypeListTemplate(type);
   const favoriteCheckboxIsChecked = isFavorite ? `checked` : ``;
-  console.log(favoriteCheckboxIsChecked);
 
   return (
     `<li class="trip-events__item">
@@ -219,7 +218,8 @@ export default class EventEdit extends AbstractView {
     this._event = event;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    this._formCloseHandler = this._formCloseHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._closeEditClickHandler = this._closeEditClickHandler.bind(this);
 
     // this._formEventHandler = this._formEventHandler.bind(this);
   }
@@ -230,13 +230,19 @@ export default class EventEdit extends AbstractView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(this._event);
   }
 
-  _formCloseHandler(evt) {
+  _closeEditClickHandler(evt) {
     evt.preventDefault();
-    this._callback.formClose();
+    this._callback.closeEditClick();
   }
+
+  _favoriteClickHandler() {
+    this._callback.favoriteClick();
+  }
+
+
   // todo при попытке написать общий хендлер для событий, задваивается клик
   // _formEventHandler(callback, evt) {
   //   evt.preventDefault();
@@ -249,9 +255,14 @@ export default class EventEdit extends AbstractView {
     this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
   }
 
-  setFormCloseHandler(callback) {
-    this._callback.formClose = callback;
+  setCloseEditClickHandler(callback) {
+    this._callback.closeEditClick = callback;
     // this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formEventHandler.bind(null, `formClose`));
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formCloseHandler);
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeEditClickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`change`, this._favoriteClickHandler);
   }
 }
