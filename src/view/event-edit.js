@@ -57,13 +57,13 @@ const generateEventOffersTemplate = (offers, type) => {
 };
 const generateEventTypeListTemplate = (type) => {
   const tripsTypes = EVENT_TYPES.filter((eventType) => {
-    return eventType.type === `trip`;
+    return !isEventStopping(eventType);
   });
   const stopsTypes = EVENT_TYPES.filter((eventType) => {
-    return eventType.type === `stop`;
+    return isEventStopping(eventType);
   });
   const setChecked = (currentType) => {
-    return currentType.id === type.id ? `checked` : ``;
+    return currentType === type ? `checked` : ``;
   };
   return (
     `<div class="event__type-list">
@@ -73,14 +73,14 @@ const generateEventTypeListTemplate = (type) => {
       return (
         `<div class="event__type-item">
                   <input
-                  id="event-type-${currentType.icon}-1"
+                  id="event-type-${currentType}-1"
                   class="event__type-input  visually-hidden"
                   type="radio" name="event-type"
-                  value="${currentType.id}"
+                  value="${currentType}"
                   ${setChecked(currentType)}>
                   <label
-                  class="event__type-label  event__type-label--${currentType.icon}"
-                  for="event-type-${currentType.icon}-1">${currentType.name}
+                  class="event__type-label  event__type-label--${currentType}"
+                  for="event-type-${currentType}-1">${currentType}
                   </label>
                 </div>`
       );
@@ -93,14 +93,14 @@ const generateEventTypeListTemplate = (type) => {
       return (
         `<div class="event__type-item">
                   <input
-                  id="event-type-${currentType.icon}-1"
+                  id="event-type-${currentType}-1"
                   class="event__type-input  visually-hidden"
                   type="radio" name="event-type"
-                  value="${currentType.id}"
+                  value="${currentType}"
                   ${setChecked(currentType)}>
                   <label
-                  class="event__type-label  event__type-label--${currentType.icon}"
-                  for="event-type-${currentType.icon}-1">${currentType.name}
+                  class="event__type-label  event__type-label--${currentType}"
+                  for="event-type-${currentType}-1">${currentType}
                   </label>
                 </div>`
       );
