@@ -1,4 +1,7 @@
+import {nanoid} from 'nanoid';
 import {CITIES, EVENT_OFFERS} from "../const.js";
+
+const ID_LENGTH = 3;
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -147,6 +150,7 @@ export const generateEvent = () => {
   const type = generateType();
   const dateTimeStart = generateDateTime();
   return {
+    id: nanoid(ID_LENGTH),
     type,
     city: generateCity(),
     offers: generateOffers(type),
