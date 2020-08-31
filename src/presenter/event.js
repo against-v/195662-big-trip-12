@@ -1,6 +1,6 @@
 import EventView from "../view/event";
 import EventEditView from "../view/event-edit";
-import {render, RenderPosition, replace} from "../utils/render";
+import {render, RenderPosition, replace, remove} from "../utils/render";
 
 export default class Event {
   constructor(eventsListElement) {
@@ -17,6 +17,10 @@ export default class Event {
 
   init(event) {
     this._event = event;
+
+    const prevEventComponent = this._eventComponent;
+    const prevEventEditComponent = this._eventEditComponent;
+
     this._eventComponent = new EventView(event);
 
     // todo Здесь должна быть вторая структура данных - offers, пофиксить, когда подрубим данные с бэка
@@ -26,7 +30,26 @@ export default class Event {
     this._eventEditComponent.setFormCloseHandler(this._handleFormClose);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
 
-    render(this._eventsListElement, this._eventComponent, RenderPosition.BEFOREEND);
+    if (prevEventComponent === null || prevEventEditComponent === null) {
+      render(this._eventsListElement, this._eventComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this._eventsListElement.getElement().contains(prevEventComponent.getElement())) {
+      replace(this._eventComponent, prevEventComponent);
+    }
+
+    if (this._eventsListElement.getElement().contains(prevEventEditComponent.getElement())) {
+      replace(this._eventEditComponent, prevEventEditComponent);
+    }
+
+    remove(prevEventComponent);
+    remove(prevEventEditComponent);
+  }
+
+  destroy() {
+    remove(this._eventComponent);
+    remove(this._eventEditComponent);
   }
 
   _replaceEventToForm() {
