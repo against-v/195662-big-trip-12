@@ -9,6 +9,7 @@ import EventPresenter from "./event.js";
 import {render, RenderPosition} from "../utils/render.js";
 import {sortType} from "../const.js";
 import {sortByPrice, sortByTime, groupEventsByDay} from "../utils/trip-board";
+import {updateItem} from "../utils/common.js";
 
 export default class Trip {
   constructor(tripContainer) {
@@ -17,14 +18,25 @@ export default class Trip {
     this._sortComponent = new SortView();
     this._daysListComponent = new DaysListView();
     this._noEventComponent = new NoEventView();
+
+    this._eventPresenter = {};
+
     this._currentSortType = sortType.DEFAULT;
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleEventChange = this._handleEventChange.bind(this);
   }
 
   init(tripEvents) {
     this._tripEvents = tripEvents.slice();
+    this._sourcedTripEvents = tripEvents.slice();
     render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
+  }
+
+  _handleEventChange(updatedEvent) {
+    this._tripEvents = updateItem(this._tripEvents, updatedEvent);
+    this._sourcedTripEvents = updateItem(this._sourcedTripEvents, updatedEvent);
+    this._eventPresenter[updatedEvent.id].init(updatedEvent);
   }
 
   _handleSortTypeChange(newSortType) {
