@@ -36,7 +36,6 @@ export default class Trip {
   _handleEventChange(updatedEvent) {
     this._tripEvents = updateItem(this._tripEvents, updatedEvent);
     this._sourcedTripEvents = updateItem(this._sourcedTripEvents, updatedEvent);
-    console.log(this._eventPresenter)
     this._eventPresenter[updatedEvent.id].init(updatedEvent);
   }
 
