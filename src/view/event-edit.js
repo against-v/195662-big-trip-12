@@ -1,4 +1,5 @@
 import AbstractView from "./abstract.js";
+import {isEventStopping, capitalizeString} from "../utils/event";
 import {EVENT_TYPES, CITIES, EVENT_OFFERS} from "../const.js";
 
 const dateTimeFormatting = (dateTime) => {
@@ -32,7 +33,7 @@ const generateEventOffersTemplate = (offers, type) => {
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
       <div class="event__available-offers">
-      ${EVENT_OFFERS[type.id].map((offer, index) => {
+      ${EVENT_OFFERS[type].map((offer, index) => {
       return (
         `<div class="event__offer-selector">
           <input
@@ -108,10 +109,13 @@ const generateEventTypeListTemplate = (type) => {
       </div>`
   );
 };
-const createEventEditTemplate = (event) => {
+const createEventEditTemplate = (data) => {
+
   const {
     id,
     type,
+    typeCapitalized,
+    isStopping,
     city,
     dateTimeStart,
     dateTimeEnd,
@@ -120,7 +124,7 @@ const createEventEditTemplate = (event) => {
     isFavorite,
     destinationDescription,
     photos,
-  } = event;
+  } = data;
 
   const dateTimeStartValue = dateTimeFormatting(dateTimeStart);
   const dateTimeEndValue = dateTimeFormatting(dateTimeEnd);
@@ -142,10 +146,9 @@ const createEventEditTemplate = (event) => {
       ${CITIES.map((_city) => `<option value="${_city}"></option>`)}
     </datalist>`
   );
-  const typeTitle = `${type.name} ${type.type === `trip` ? `to` : `in`}`;
+  const typeTitle = `${typeCapitalized} ${isStopping ? `in` : `to`}`;
   const eventTypeListTemplate = generateEventTypeListTemplate(type);
   const favoriteCheckboxIsChecked = isFavorite ? `checked` : ``;
-
   return (
     `<li class="trip-events__item">
       <form class="event  event--edit" action="#" method="post">
@@ -153,7 +156,7 @@ const createEventEditTemplate = (event) => {
           <div class="event__type-wrapper">
             <label class="event__type  event__type-btn" for="event-type-toggle-1">
               <span class="visually-hidden">Choose event type</span>
-              <img class="event__type-icon" width="17" height="17" src="img/icons/${type.icon}.png" alt="Event type icon">
+              <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
             </label>
             <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
             ${eventTypeListTemplate}
@@ -215,22 +218,21 @@ const createEventEditTemplate = (event) => {
 export default class EventEdit extends AbstractView {
   constructor(event = BLANK_EVENT) {
     super();
-    this._event = event;
+    this._data = EventEdit.parseTaskToData(event);
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._closeEditClickHandler = this._closeEditClickHandler.bind(this);
 
-    // this._formEventHandler = this._formEventHandler.bind(this);
   }
 
   getTemplate() {
-    return createEventEditTemplate(this._event);
+    return createEventEditTemplate(this._data);
   }
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(this._event);
+    this._callback.formSubmit(this._data);
   }
 
   _closeEditClickHandler(evt) {
@@ -242,13 +244,6 @@ export default class EventEdit extends AbstractView {
     this._callback.favoriteClick();
   }
 
-
-  // todo при попытке написать общий хендлер для событий, задваивается клик
-  // _formEventHandler(callback, evt) {
-  //   evt.preventDefault();
-  //   this._callback[callback]();
-  // }
-
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     // this.getElement().querySelector(`form`).addEventListener(`submit`, this._formEventHandler.bind(null, `formSubmit`));
@@ -257,12 +252,22 @@ export default class EventEdit extends AbstractView {
 
   setCloseEditClickHandler(callback) {
     this._callback.closeEditClick = callback;
-    // this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formEventHandler.bind(null, `formClose`));
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeEditClickHandler);
   }
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`change`, this._favoriteClickHandler);
+  }
+
+  static parseTaskToData(event) {
+    return Object.assign(
+        {},
+        event,
+        {
+          typeCapitalized: capitalizeString(event.type),
+          isStopping: isEventStopping(event.type)
+        }
+    );
   }
 }

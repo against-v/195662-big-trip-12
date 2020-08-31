@@ -1,64 +1,74 @@
 export const EVENT_TYPES = [
-  {
-    name: `Taxi`,
-    icon: `taxi`,
-    id: `taxi`,
-    type: `trip`,
-  },
-  {
-    name: `Bus`,
-    icon: `bus`,
-    id: `bus`,
-    type: `trip`,
-  },
-  {
-    name: `Train`,
-    icon: `train`,
-    id: `train`,
-    type: `trip`,
-  },
-  {
-    name: `Ship`,
-    icon: `ship`,
-    id: `ship`,
-    type: `trip`,
-  },
-  {
-    name: `Transport`,
-    icon: `transport`,
-    id: `transport`,
-    type: `trip`,
-  },
-  {
-    name: `Drive`,
-    icon: `drive`,
-    id: `drive`,
-    type: `trip`,
-  },
-  {
-    name: `Flight`,
-    icon: `flight`,
-    id: `flight`,
-    type: `trip`,
-  },
-  {
-    name: `Check-in`,
-    icon: `check-in`,
-    id: `checkIn`,
-    type: `stop`,
-  },
-  {
-    name: `Sightseeing`,
-    icon: `sightseeing`,
-    id: `sightseeing`,
-    type: `stop`,
-  },
-  {
-    name: `Restaurant`,
-    icon: `restaurant`,
-    id: `restaurant`,
-    type: `stop`,
-  },
+  `taxi`,
+  `bus`,
+  `train`,
+  `ship`,
+  `transport`,
+  `drive`,
+  `flight`,
+  `check-in`,
+  `sightseeing`,
+  `restaurant`,
+  // {
+  //   name: `Taxi`,
+  //   icon: `taxi`,
+  //   id: `taxi`,
+  //   type: `trip`,
+  // },
+  // {
+  //   name: `Bus`,
+  //   icon: `bus`,
+  //   id: `bus`,
+  //   type: `trip`,
+  // },
+  // {
+  //   name: `Train`,
+  //   icon: `train`,
+  //   id: `train`,
+  //   type: `trip`,
+  // },
+  // {
+  //   name: `Ship`,
+  //   icon: `ship`,
+  //   id: `ship`,
+  //   type: `trip`,
+  // },
+  // {
+  //   name: `Transport`,
+  //   icon: `transport`,
+  //   id: `transport`,
+  //   type: `trip`,
+  // },
+  // {
+  //   name: `Drive`,
+  //   icon: `drive`,
+  //   id: `drive`,
+  //   type: `trip`,
+  // },
+  // {
+  //   name: `Flight`,
+  //   icon: `flight`,
+  //   id: `flight`,
+  //   type: `trip`,
+  // },
+  // {
+  //   name: `Check-in`,
+  //   icon: `check-in`,
+  //   id: `checkIn`,
+  //   type: `stop`,
+  // },
+  // {
+  //   name: `Sightseeing`,
+  //   icon: `sightseeing`,
+  //   id: `sightseeing`,
+  //   type: `stop`,
+  // },
+  // {
+  //   name: `Restaurant`,
+  //   icon: `restaurant`,
+  //   id: `restaurant`,
+  //   type: `stop`,
+  // },
 ];
 export const CITIES = [
   `The Hague`,
@@ -73,7 +83,7 @@ export const CITIES = [
   `Breda`,
 ];
 export const EVENT_OFFERS = {
-  taxi: [
+  "taxi": [
     {
       name: `Comfort tariff`,
       price: 50,
@@ -87,7 +97,7 @@ export const EVENT_OFFERS = {
       price: 10,
     },
   ],
-  bus: [
+  "bus": [
     {
       name: `Comfort tariff`,
       price: 30,
@@ -101,7 +111,7 @@ export const EVENT_OFFERS = {
       price: 5,
     },
   ],
-  train: [
+  "train": [
     {
       name: `Comfort tariff`,
       price: 150,
@@ -119,7 +129,7 @@ export const EVENT_OFFERS = {
       price: 20,
     },
   ],
-  ship: [
+  "ship": [
     {
       name: `Comfort tariff`,
       price: 250,
@@ -137,19 +147,19 @@ export const EVENT_OFFERS = {
       price: 50,
     },
   ],
-  transport: [
+  "transport": [
     {
       name: `Add luggage`,
       price: 3,
     },
   ],
-  drive: [
+  "drive": [
     {
       name: `Rent a car`,
       price: 50,
     },
   ],
-  flight: [
+  "flight": [
     {
       name: `Business tariff`,
       price: 500,
@@ -163,7 +173,7 @@ export const EVENT_OFFERS = {
       price: 80,
     },
   ],
-  checkIn: [
+  "check-in": [
     {
       name: `Breakfast`,
       price: 25,
@@ -173,7 +183,7 @@ export const EVENT_OFFERS = {
       price: 5,
     },
   ],
-  sightseeing: [
+  "sightseeing": [
     {
       name: `Souvenirs`,
       price: 15,
@@ -187,7 +197,7 @@ export const EVENT_OFFERS = {
       price: 15,
     },
   ],
-  restaurant: [
+  "restaurant": [
     {
       name: `Wine`,
       price: 30,

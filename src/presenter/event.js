@@ -93,7 +93,8 @@ export default class Event {
     this._replaceFormToEvent();
   }
 
-  _handleFormSubmit() {
+  _handleFormSubmit(event) {
+    this._changeData(event);
     this._replaceFormToEvent();
   }
 }

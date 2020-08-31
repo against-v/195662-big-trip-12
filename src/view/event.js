@@ -1,4 +1,5 @@
 import AbstractView from "./abstract.js";
+import {capitalizeString, isEventStopping} from "../utils/event";
 
 const createOffersTemplate = (items) => {
   const trimmedItems = items.slice(0, 3);
@@ -61,7 +62,7 @@ const createEventTemplate = (event) => {
     dateTimeEnd,
   } = event;
 
-  const title = `${type.name} ${type.type === `trip` ? `to` : `in`} ${city}`;
+  const title = `${capitalizeString(type)} ${isEventStopping(type) ? `in` : `to`} ${city}`;
   const offersTemplate = createOffersTemplate(offers);
   const timeGap = calcTimeGap(dateTimeStart, dateTimeEnd);
 
@@ -69,7 +70,7 @@ const createEventTemplate = (event) => {
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${type.icon}.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${title}</h3>
 

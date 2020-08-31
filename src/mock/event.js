@@ -19,66 +19,76 @@ const shuffleArray = (array = []) => {
 
 const generateType = () => {
   const eventTypes = [
-    {
-      name: `Taxi`,
-      icon: `taxi`,
-      id: `taxi`,
-      type: `trip`,
-    },
-    {
-      name: `Bus`,
-      icon: `bus`,
-      id: `bus`,
-      type: `trip`,
-    },
-    {
-      name: `Train`,
-      icon: `train`,
-      id: `train`,
-      type: `trip`,
-    },
-    {
-      name: `Ship`,
-      icon: `ship`,
-      id: `ship`,
-      type: `trip`,
-    },
-    {
-      name: `Transport`,
-      icon: `transport`,
-      id: `transport`,
-      type: `trip`,
-    },
-    {
-      name: `Drive`,
-      icon: `drive`,
-      id: `drive`,
-      type: `trip`,
-    },
-    {
-      name: `Flight`,
-      icon: `flight`,
-      id: `flight`,
-      type: `trip`,
-    },
-    {
-      name: `Check-in`,
-      icon: `check-in`,
-      id: `checkIn`,
-      type: `stop`,
-    },
-    {
-      name: `Sightseeing`,
-      icon: `sightseeing`,
-      id: `sightseeing`,
-      type: `stop`,
-    },
-    {
-      name: `Restaurant`,
-      icon: `restaurant`,
-      id: `restaurant`,
-      type: `stop`,
-    },
+    `taxi`,
+    `bus`,
+    `train`,
+    `ship`,
+    `transport`,
+    `drive`,
+    `flight`,
+    `check-in`,
+    `sightseeing`,
+    `restaurant`,
+    // {
+    //   name: `Taxi`,
+    //   icon: `taxi`,
+    //   id: `taxi`,
+    //   type: `trip`,
+    // },
+    // {
+    //   name: `Bus`,
+    //   icon: `bus`,
+    //   id: `bus`,
+    //   type: `trip`,
+    // },
+    // {
+    //   name: `Train`,
+    //   icon: `train`,
+    //   id: `train`,
+    //   type: `trip`,
+    // },
+    // {
+    //   name: `Ship`,
+    //   icon: `ship`,
+    //   id: `ship`,
+    //   type: `trip`,
+    // },
+    // {
+    //   name: `Transport`,
+    //   icon: `transport`,
+    //   id: `transport`,
+    //   type: `trip`,
+    // },
+    // {
+    //   name: `Drive`,
+    //   icon: `drive`,
+    //   id: `drive`,
+    //   type: `trip`,
+    // },
+    // {
+    //   name: `Flight`,
+    //   icon: `flight`,
+    //   id: `flight`,
+    //   type: `trip`,
+    // },
+    // {
+    //   name: `Check-in`,
+    //   icon: `check-in`,
+    //   id: `checkIn`,
+    //   type: `stop`,
+    // },
+    // {
+    //   name: `Sightseeing`,
+    //   icon: `sightseeing`,
+    //   id: `sightseeing`,
+    //   type: `stop`,
+    // },
+    // {
+    //   name: `Restaurant`,
+    //   icon: `restaurant`,
+    //   id: `restaurant`,
+    //   type: `stop`,
+    // },
   ];
   const randomIndex = getRandomInteger(0, eventTypes.length - 1);
   return eventTypes[randomIndex];
@@ -90,13 +100,13 @@ const generateCity = () => {
 const generateOffers = (eventType) => {
   if (eventType) {
     const shuffledEventOffers = shuffleArray(EVENT_OFFERS);
-    const count = getRandomInteger(0, EVENT_OFFERS[eventType.id].length);
+    const count = getRandomInteger(0, EVENT_OFFERS[eventType].length);
     if (count === 0) {
       return [];
     }
     const offers = [];
     for (let i = 0; i < count; i++) {
-      offers.push(shuffledEventOffers[eventType.id][i]);
+      offers.push(shuffledEventOffers[eventType][i]);
     }
     return offers;
   }
