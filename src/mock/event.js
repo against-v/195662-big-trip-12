@@ -1,64 +1,13 @@
 import {nanoid} from 'nanoid';
 import {shuffleArray, getRandomInteger} from "../utils/common";
-import {CITIES, EVENT_OFFERS} from "../const.js";
+import {CITIES, EVENT_OFFERS, EVENT_TYPES} from "../const.js";
 
 const ID_LENGTH = 3;
 
-const generateType = () => {
-  const eventTypes = [
-    `taxi`,
-    `bus`,
-    `train`,
-    `ship`,
-    `transport`,
-    `drive`,
-    `flight`,
-    `check-in`,
-    `sightseeing`,
-    `restaurant`,
-  ];
-  const randomIndex = getRandomInteger(0, eventTypes.length - 1);
-  return eventTypes[randomIndex];
-};
+
 const generateCity = () => {
   const randomIndex = getRandomInteger(0, CITIES.length - 1);
   return CITIES[randomIndex];
-};
-const generateOffers = (eventType) => {
-  if (eventType) {
-    const shuffledEventOffers = shuffleArray(EVENT_OFFERS);
-    const count = getRandomInteger(0, EVENT_OFFERS[eventType].length);
-    if (count === 0) {
-      return [];
-    }
-    const offers = [];
-    for (let i = 0; i < count; i++) {
-      offers.push(shuffledEventOffers[eventType][i]);
-    }
-    return offers;
-  }
-  return [];
-
-};
-const generatePrice = () => {
-  const MIN_VALUE = 1;
-  const MAX_VALUE = 99;
-  const COEFFICIENT = 10;
-  return getRandomInteger(MIN_VALUE, MAX_VALUE) * COEFFICIENT;
-};
-const generateDateTime = (date = new Date(), nearestDayIndex = 1, latterDayIndex = 7) => {
-  const dayGap = getRandomInteger(nearestDayIndex, latterDayIndex);
-  const newDate = new Date(date);
-  newDate.setDate(date.getDate() + dayGap);
-  if (!dayGap) {
-    const hours = getRandomInteger(date.getHours(), 23);
-    const minMinutesValue = hours === date.getHours() ? date.getMinutes() : 0;
-    const minutes = getRandomInteger(minMinutesValue, 59);
-    newDate.setHours(hours, minutes);
-  } else {
-    newDate.setHours(getRandomInteger(0, 23), getRandomInteger(0, 59));
-  }
-  return newDate;
 };
 const generateDate = (date = new Date()) => {
   const newDate = new Date(date);
@@ -83,16 +32,69 @@ const generateDestinationPhotos = () => {
   return destinationPhotos;
 };
 
-export const generateEvent = () => {
+
+const generatePrice = () => {
+  const MIN_VALUE = 1;
+  const MAX_VALUE = 99;
+  const COEFFICIENT = 10;
+  return getRandomInteger(MIN_VALUE, MAX_VALUE) * COEFFICIENT;
+};
+const generateDateTime = (date = new Date(), nearestDayIndex = 1, latterDayIndex = 7) => {
+  const dayGap = getRandomInteger(nearestDayIndex, latterDayIndex);
+  const newDate = new Date(date);
+  newDate.setDate(date.getDate() + dayGap);
+  if (!dayGap) {
+    const hours = getRandomInteger(date.getHours(), 23);
+    const minMinutesValue = hours === date.getHours() ? date.getMinutes() : 0;
+    const minutes = getRandomInteger(minMinutesValue, 59);
+    newDate.setHours(hours, minutes);
+  } else {
+    newDate.setHours(getRandomInteger(0, 23), getRandomInteger(0, 59));
+  }
+  return newDate;
+};
+const generateDestination = (destinationsList) => {
+  const randomIndex = getRandomInteger(0, destinationsList.length - 1);
+  return destinationsList[randomIndex];
+};
+const generateOffers = (eventType, offersList) => {
+  const filteredOffers = offersList.find((offer) => {
+    return offer.type === eventType;
+  });
+  const shuffledOffers = shuffleArray(filteredOffers.offers);
+  const count = getRandomInteger(0, shuffledOffers.length - 1);
+  if (count === 0) {
+    return [];
+  }
+  const checkedOffers = [];
+  for (let i = 0; i < count; i++) {
+    checkedOffers.push(shuffledOffers[i]);
+  }
+  return checkedOffers;
+
+};
+const generateType = () => {
+  const randomIndex = getRandomInteger(0, EVENT_TYPES.length - 1);
+  return EVENT_TYPES[randomIndex];
+};
+
+
+export const generateEvent = (destinationsList, offersList) => {
   const type = generateType();
   const dateTimeStart = generateDateTime();
   return {
+    basePrice: generatePrice(),
+    dateFrom: dateTimeStart,
+    dateTo: generateDateTime(dateTimeStart, 0, 1),
+    destination: generateDestination(destinationsList),
     id: nanoid(ID_LENGTH),
-    type,
-    city: generateCity(),
-    offers: generateOffers(type),
-    price: generatePrice(),
     isFavorite: Boolean(getRandomInteger()),
+    offers: generateOffers(type, offersList),
+    type,
+
+
+    city: generateCity(),
+    price: generatePrice(),
     dateTimeStart,
     dateTimeEnd: generateDateTime(dateTimeStart, 0, 1),
     dateStart: generateDate(dateTimeStart),

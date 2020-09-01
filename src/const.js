@@ -1,15 +1,3 @@
-export const EVENT_TYPES = [
-  `taxi`,
-  `bus`,
-  `train`,
-  `ship`,
-  `transport`,
-  `drive`,
-  `flight`,
-  `check-in`,
-  `sightseeing`,
-  `restaurant`,
-];
 export const CITIES = [
   `The Hague`,
   `Delft`,
@@ -22,134 +10,162 @@ export const CITIES = [
   `Gouda`,
   `Breda`,
 ];
-export const EVENT_OFFERS = {
-  "taxi": [
-    {
-      name: `Comfort tariff`,
-      price: 50,
-    },
-    {
-      name: `Business tariff`,
-      price: 100,
-    },
-    {
-      name: `Preorder`,
-      price: 10,
-    },
-  ],
-  "bus": [
-    {
-      name: `Comfort tariff`,
-      price: 30,
-    },
-    {
-      name: `Business tariff`,
-      price: 50,
-    },
-    {
-      name: `Add luggage`,
-      price: 5,
-    },
-  ],
-  "train": [
-    {
-      name: `Comfort tariff`,
-      price: 150,
-    },
-    {
-      name: `Business tariff`,
-      price: 200,
-    },
-    {
-      name: `Transfer to the station`,
-      price: 40,
-    },
-    {
-      name: `Add luggage`,
-      price: 20,
-    },
-  ],
-  "ship": [
-    {
-      name: `Comfort tariff`,
-      price: 250,
-    },
-    {
-      name: `Business tariff`,
-      price: 400,
-    },
-    {
-      name: `Transfer to the port`,
-      price: 40,
-    },
-    {
-      name: `Add luggage`,
-      price: 50,
-    },
-  ],
-  "transport": [
-    {
-      name: `Add luggage`,
-      price: 3,
-    },
-  ],
-  "drive": [
-    {
-      name: `Rent a car`,
-      price: 50,
-    },
-  ],
-  "flight": [
-    {
-      name: `Business tariff`,
-      price: 500,
-    },
-    {
-      name: `Add luggage`,
-      price: 150,
-    },
-    {
-      name: `Transfer to the airport`,
-      price: 80,
-    },
-  ],
-  "check-in": [
-    {
-      name: `Breakfast`,
-      price: 25,
-    },
-    {
-      name: `Laundry`,
-      price: 5,
-    },
-  ],
-  "sightseeing": [
-    {
-      name: `Souvenirs`,
-      price: 15,
-    },
-    {
-      name: `Museum tickets`,
-      price: 5,
-    },
-    {
-      name: `Food and drinks`,
-      price: 15,
-    },
-  ],
-  "restaurant": [
-    {
-      name: `Wine`,
-      price: 30,
-    },
-    {
-      name: `Delicacies`,
-      price: 30,
-    },
-  ],
-};
+// export const EVENT_OFFERS = {
+//   "taxi": [
+//     {
+//       name: `Comfort tariff`,
+//       price: 50,
+//     },
+//     {
+//       name: `Business tariff`,
+//       price: 100,
+//     },
+//     {
+//       name: `Preorder`,
+//       price: 10,
+//     },
+//   ],
+//   "bus": [
+//     {
+//       name: `Comfort tariff`,
+//       price: 30,
+//     },
+//     {
+//       name: `Business tariff`,
+//       price: 50,
+//     },
+//     {
+//       name: `Add luggage`,
+//       price: 5,
+//     },
+//   ],
+//   "train": [
+//     {
+//       name: `Comfort tariff`,
+//       price: 150,
+//     },
+//     {
+//       name: `Business tariff`,
+//       price: 200,
+//     },
+//     {
+//       name: `Transfer to the station`,
+//       price: 40,
+//     },
+//     {
+//       name: `Add luggage`,
+//       price: 20,
+//     },
+//   ],
+//   "ship": [
+//     {
+//       name: `Comfort tariff`,
+//       price: 250,
+//     },
+//     {
+//       name: `Business tariff`,
+//       price: 400,
+//     },
+//     {
+//       name: `Transfer to the port`,
+//       price: 40,
+//     },
+//     {
+//       name: `Add luggage`,
+//       price: 50,
+//     },
+//   ],
+//   "transport": [
+//     {
+//       name: `Add luggage`,
+//       price: 3,
+//     },
+//   ],
+//   "drive": [
+//     {
+//       name: `Rent a car`,
+//       price: 50,
+//     },
+//   ],
+//   "flight": [
+//     {
+//       name: `Business tariff`,
+//       price: 500,
+//     },
+//     {
+//       name: `Add luggage`,
+//       price: 150,
+//     },
+//     {
+//       name: `Transfer to the airport`,
+//       price: 80,
+//     },
+//   ],
+//   "check-in": [
+//     {
+//       name: `Breakfast`,
+//       price: 25,
+//     },
+//     {
+//       name: `Laundry`,
+//       price: 5,
+//     },
+//   ],
+//   "sightseeing": [
+//     {
+//       name: `Souvenirs`,
+//       price: 15,
+//     },
+//     {
+//       name: `Museum tickets`,
+//       price: 5,
+//     },
+//     {
+//       name: `Food and drinks`,
+//       price: 15,
+//     },
+//   ],
+//   "restaurant": [
+//     {
+//       name: `Wine`,
+//       price: 30,
+//     },
+//     {
+//       name: `Delicacies`,
+//       price: 30,
+//     },
+//   ],
+// };
+
 export const sortType = {
   DEFAULT: `sort-event`,
   TIME: `sort-time`,
   PRICE: `sort-price`,
 };
+
+export const DESTINATIONS = [
+  `The Hague`,
+  `Delft`,
+  `Leiden`,
+  `Rotterdam`,
+  `Helmond`,
+  `Eindhoven`,
+  `Tilburg`,
+  `Venlo`,
+  `Gouda`,
+  `Breda`,
+];
+export const EVENT_TYPES = [
+  `taxi`,
+  `bus`,
+  `train`,
+  `ship`,
+  `transport`,
+  `drive`,
+  `flight`,
+  `check-in`,
+  `sightseeing`,
+  `restaurant`,
+];
+
+export const FILLER_TEXT = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;

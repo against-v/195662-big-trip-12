@@ -17,8 +17,7 @@ const EVENT_COUNT = 10;
 
 const destinations = DESTINATIONS.map((destinationName) => generateDestination(destinationName));
 const offers = EVENT_TYPES.map((offerType) => generateOffer(offerType));
-
-const events = new Array(EVENT_COUNT).fill().map(generateEvent);
+const events = new Array(EVENT_COUNT).fill().map(() => generateEvent(destinations, offers));
 
 const siteHeaderMainElement = document.querySelector(`.trip-main`);
 const siteHeaderControlsElement = siteHeaderMainElement.querySelector(`.trip-controls`);
