@@ -1,5 +1,6 @@
 import AbstractView from "./abstract.js";
-import {capitalizeString, isEventStopping} from "../utils/event";
+import {isEventStopping} from "../utils/event.js";
+import {capitalizeString} from "../utils/common.js";
 
 const createOffersTemplate = (items) => {
   const trimmedItems = items.slice(0, 3);

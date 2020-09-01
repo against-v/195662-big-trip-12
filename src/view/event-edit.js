@@ -1,5 +1,6 @@
 import AbstractView from "./abstract.js";
-import {isEventStopping, capitalizeString} from "../utils/event";
+import {isEventStopping} from "../utils/event.js";
+import {capitalizeString} from "../utils/common.js";
 import {EVENT_TYPES, CITIES, EVENT_OFFERS} from "../const.js";
 
 const dateTimeFormatting = (dateTime) => {
