@@ -1,8 +1,8 @@
 import {shuffleArray, getRandomInteger} from "../utils/common";
+import {FILLER_TEXT} from "../const";
 
 const generateDescription = () => {
-  const fillerText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
-  const shuffledFillerText = shuffleArray(fillerText.substring(0, fillerText.length - 1).split(`. `));
+  const shuffledFillerText = shuffleArray(FILLER_TEXT.substring(0, FILLER_TEXT.length - 1).split(`. `));
   const count = getRandomInteger(1, 5);
   const destinationDescription = [];
   for (let i = 0; i < count; i++) {
@@ -12,15 +12,15 @@ const generateDescription = () => {
 };
 
 const generatePictures = () => {
-  const destinationPhotos = [];
+  const pictures = [];
   const count = getRandomInteger(0, 5);
   for (let i = 0; i < count; i++) {
-    destinationPhotos.push({
+    pictures.push({
       src: `http://picsum.photos/248/152?r=${Math.random()}`,
       description: `Picture description`
     });
   }
-  return destinationPhotos;
+  return pictures;
 };
 
 
