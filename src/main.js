@@ -31,4 +31,4 @@ render(siteHeaderMainElement, new InfoView(events), RenderPosition.AFTERBEGIN);
 render(siteMenuTitleElement, new MenuView(), RenderPosition.AFTEREND);
 render(siteFilterTitleElement, new FilterView(), RenderPosition.AFTEREND);
 
-tripPresenter.init(events);
+tripPresenter.init(events, destinations, offers);

@@ -26,9 +26,11 @@ export default class Trip {
     this._handleEventChange = this._handleEventChange.bind(this);
   }
 
-  init(tripEvents) {
+  init(tripEvents, destinations, offers) {
     this._tripEvents = tripEvents.slice();
     this._sourcedTripEvents = tripEvents.slice();
+    this._destinations = destinations;
+    this._offers = offers;
     render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
   }
@@ -101,7 +103,7 @@ export default class Trip {
 
   _renderEvent(eventsListElement, event) {
     const eventPresenter = new EventPresenter(eventsListElement, this._handleEventChange);
-    eventPresenter.init(event);
+    eventPresenter.init(event, this._destinations, this._offers);
     this._eventPresenter[event.id] = eventPresenter;
   }
 

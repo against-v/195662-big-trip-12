@@ -22,10 +22,11 @@ const BLANK_EVENT = {
   photos: [],
 };
 
-const generateEventOffersTemplate = (offers, type) => {
+const generateEventOffersTemplate = (eventType, eventOffers, offersList) => {
+  const offersByType = offersList.find((offer) => offer.type === eventType);
   const setChecked = (offer) => {
-    const isChecked = offers.some((currentEventOffer) => {
-      return currentEventOffer.name === offer.name;
+    const isChecked = eventOffers.some((currentEventOffer) => {
+      return currentEventOffer.title === offer.title;
     });
     return isChecked ? `checked` : ``;
   };
@@ -34,7 +35,7 @@ const generateEventOffersTemplate = (offers, type) => {
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
       <div class="event__available-offers">
-      ${EVENT_OFFERS[type].map((offer, index) => {
+      ${offersByType.offers.map((offer, index) => {
       return (
         `<div class="event__offer-selector">
           <input
@@ -44,8 +45,8 @@ const generateEventOffersTemplate = (offers, type) => {
           type="checkbox"
           name="event-offer-luggage"
           ${setChecked(offer)}>
-          <label class="event__offer-label" for="event-offer-luggage-1">
-            <span class="event__offer-title">${offer.name}</span>
+          <label class="event__offer-label" for="event-offer-luggage-${index + 1}">
+            <span class="event__offer-title">${offer.title}</span>
             &plus;
             &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
           </label>
@@ -110,7 +111,7 @@ const generateEventTypeListTemplate = (type) => {
       </div>`
   );
 };
-const createEventEditTemplate = (data) => {
+const createEventEditTemplate = (data, destinationList, offersList) => {
 
   const {
     id,
@@ -141,7 +142,7 @@ const createEventEditTemplate = (data) => {
       </div>
     </section>`
   );
-  const eventOffersTemplate = generateEventOffersTemplate(offers, type);
+  const eventOffersTemplate = generateEventOffersTemplate(type, offers, offersList);
   const eventDestinationListTemplate = (
     `<datalist id="destination-list-1">
       ${CITIES.map((_city) => `<option value="${_city}"></option>`)}
@@ -217,9 +218,11 @@ const createEventEditTemplate = (data) => {
 };
 
 export default class EventEdit extends AbstractView {
-  constructor(event = BLANK_EVENT) {
+  constructor(event = BLANK_EVENT, destinations, offers) {
     super();
     this._data = EventEdit.parseEventToData(event);
+    this._destinationsList = destinations;
+    this._offersList = offers;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
@@ -228,7 +231,7 @@ export default class EventEdit extends AbstractView {
   }
 
   getTemplate() {
-    return createEventEditTemplate(this._data);
+    return createEventEditTemplate(this._data, this._destinationsList, this._offersList);
   }
 
   updateData(update) {

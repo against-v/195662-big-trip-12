@@ -17,7 +17,7 @@ export default class Event {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(event) {
+  init(event, destinations, offers) {
     this._event = event;
 
     const prevEventComponent = this._eventComponent;
@@ -25,8 +25,7 @@ export default class Event {
 
     this._eventComponent = new EventView(event);
 
-    // todo Здесь должна быть вторая структура данных - offers, пофиксить, когда подрубим данные с бэка
-    this._eventEditComponent = new EventEditView(event);
+    this._eventEditComponent = new EventEditView(event, destinations, offers);
 
     this._eventComponent.setEditClickHandler(this._handleEditClick);
     this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
