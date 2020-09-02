@@ -55,17 +55,17 @@ const calcTimeGap = (timeStart, timeEnd) => {
 
 const createEventTemplate = (event) => {
   const {
+    basePrice,
+    dateFrom,
+    dateTo,
     type,
     city,
     offers,
-    price,
-    dateTimeStart,
-    dateTimeEnd,
   } = event;
 
   const title = `${capitalizeString(type)} ${isEventStopping(type) ? `in` : `to`} ${city}`;
   const offersTemplate = createOffersTemplate(offers);
-  const timeGap = calcTimeGap(dateTimeStart, dateTimeEnd);
+  const timeGap = calcTimeGap(dateFrom, dateTo);
 
   return (
     `<li class="trip-events__item">
@@ -77,15 +77,15 @@ const createEventTemplate = (event) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${createDateTimeAttribute(dateTimeStart)}">${createTime(dateTimeStart)}</time>
+            <time class="event__start-time" datetime="${createDateTimeAttribute(dateFrom)}">${createTime(dateFrom)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${createDateTimeAttribute(dateTimeEnd)}">${createTime(dateTimeEnd)}</time>
+            <time class="event__end-time" datetime="${createDateTimeAttribute(dateTo)}">${createTime(dateTo)}</time>
           </p>
           <p class="event__duration">${timeGap}</p>
         </div>
 
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${price}</span>
+          &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
 
         <h4 class="visually-hidden">Offers:</h4>

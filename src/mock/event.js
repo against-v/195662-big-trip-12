@@ -92,12 +92,10 @@ export const generateEvent = (destinationsList, offersList) => {
     offers: generateOffers(type, offersList),
     type,
 
+    //todo убрать после подключения данных с сервера
+    dateStart: generateDate(dateTimeStart),
 
     city: generateCity(),
-    price: generatePrice(),
-    dateTimeStart,
-    dateTimeEnd: generateDateTime(dateTimeStart, 0, 1),
-    dateStart: generateDate(dateTimeStart),
     destinationDescription: generateDestinationDescription(),
     photos: generateDestinationPhotos(),
   };

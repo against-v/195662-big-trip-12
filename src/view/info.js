@@ -3,7 +3,7 @@ import {dateFormatting} from "../utils/common.js";
 const calcCost = (events) => {
   let cost = 0;
   events.forEach((event) => {
-    cost += event.price;
+    cost += event.basePrice;
     event.offers.forEach((offer) => {
       cost += offer.price;
     });
@@ -13,9 +13,9 @@ const calcCost = (events) => {
 
 const createMainTemplate = (events) => {
   if (events.length > 0) {
-    events.sort((a, b) => a.dateStart - b.dateStart);
-    const dateStart = dateFormatting(events[0].dateTimeStart);
-    const dateEnd = dateFormatting(events[events.length - 1].dateTimeEnd);
+    events.sort((a, b) => a.dateFrom - b.dateFrom);
+    const dateStart = dateFormatting(events[0].dateFrom);
+    const dateEnd = dateFormatting(events[events.length - 1].dateTo);
     return (
       `<div class="trip-info__main">
         <h1 class="trip-info__title">${events[0].city} &mdash; ${events[events.length - 1].city}</h1>

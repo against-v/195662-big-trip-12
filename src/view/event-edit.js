@@ -1,7 +1,7 @@
 import AbstractView from "./abstract.js";
 import {isEventStopping} from "../utils/event.js";
 import {capitalizeString} from "../utils/common.js";
-import {EVENT_TYPES, CITIES, EVENT_OFFERS} from "../const.js";
+import {EVENT_TYPES, CITIES} from "../const.js";
 
 const dateTimeFormatting = (dateTime) => {
   const day = (`0${dateTime.getDate()}`).slice(-2);
@@ -112,24 +112,24 @@ const generateEventTypeListTemplate = (type) => {
   );
 };
 const createEventEditTemplate = (data, destinationList, offersList) => {
-
   const {
+    basePrice,
+    dateFrom,
+    dateTo,
+
     id,
     type,
     typeCapitalized,
     isStopping,
     city,
-    dateTimeStart,
-    dateTimeEnd,
     offers,
-    price,
     isFavorite,
     destinationDescription,
     photos,
   } = data;
 
-  const dateTimeStartValue = dateTimeFormatting(dateTimeStart);
-  const dateTimeEndValue = dateTimeFormatting(dateTimeEnd);
+  const dateTimeStartValue = dateTimeFormatting(dateFrom);
+  const dateTimeEndValue = dateTimeFormatting(dateTo);
   const eventDestinationTemplate = (
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -189,7 +189,7 @@ const createEventEditTemplate = (data, destinationList, offersList) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -223,6 +223,7 @@ export default class EventEdit extends AbstractView {
     this._data = EventEdit.parseEventToData(event);
     this._destinationsList = destinations;
     this._offersList = offers;
+    console.log(this._data);
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
