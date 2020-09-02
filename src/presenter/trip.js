@@ -38,7 +38,8 @@ export default class Trip {
   _handleEventChange(updatedEvent) {
     this._tripEvents = updateItem(this._tripEvents, updatedEvent);
     this._sourcedTripEvents = updateItem(this._sourcedTripEvents, updatedEvent);
-    this._eventPresenter[updatedEvent.id].init(updatedEvent);
+    //todo разобрать надо ли при реинициализации отправлять destinations и offers (они ведь не могут меняться)
+    this._eventPresenter[updatedEvent.id].init(updatedEvent, this._destinations, this._offers);
   }
 
   _handleSortTypeChange(newSortType) {
@@ -103,6 +104,7 @@ export default class Trip {
 
   _renderEvent(eventsListElement, event) {
     const eventPresenter = new EventPresenter(eventsListElement, this._handleEventChange);
+    console.log(44)
     eventPresenter.init(event, this._destinations, this._offers);
     this._eventPresenter[event.id] = eventPresenter;
   }
