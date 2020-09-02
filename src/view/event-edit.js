@@ -1,7 +1,7 @@
 import AbstractView from "./abstract.js";
 import {isEventStopping} from "../utils/event.js";
 import {capitalizeString} from "../utils/common.js";
-import {EVENT_TYPES, CITIES} from "../const.js";
+import {EVENT_TYPES} from "../const.js";
 
 const dateTimeFormatting = (dateTime) => {
   const day = (`0${dateTime.getDate()}`).slice(-2);
@@ -111,21 +111,18 @@ const generateEventTypeListTemplate = (type) => {
       </div>`
   );
 };
-const createEventEditTemplate = (data, destinationList, offersList) => {
+const createEventEditTemplate = (data, destinationsList, offersList) => {
   const {
     basePrice,
     dateFrom,
     dateTo,
-
+    destination,
     id,
+    isFavorite,
+    offers,
     type,
     typeCapitalized,
     isStopping,
-    city,
-    offers,
-    isFavorite,
-    destinationDescription,
-    photos,
   } = data;
 
   const dateTimeStartValue = dateTimeFormatting(dateFrom);
@@ -133,11 +130,11 @@ const createEventEditTemplate = (data, destinationList, offersList) => {
   const eventDestinationTemplate = (
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${destinationDescription}</p>
+      <p class="event__destination-description">${destination.description}</p>
 
       <div class="event__photos-container">
         <div class="event__photos-tape">
-          ${photos.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`).join(``)}
+          ${destination.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join(``)}
         </div>
       </div>
     </section>`
@@ -145,7 +142,7 @@ const createEventEditTemplate = (data, destinationList, offersList) => {
   const eventOffersTemplate = generateEventOffersTemplate(type, offers, offersList);
   const eventDestinationListTemplate = (
     `<datalist id="destination-list-1">
-      ${CITIES.map((_city) => `<option value="${_city}"></option>`)}
+      ${destinationsList.map((currentDestination) => `<option value="${currentDestination.name}"></option>`)}
     </datalist>`
   );
   const typeTitle = `${typeCapitalized} ${isStopping ? `in` : `to`}`;
@@ -168,7 +165,7 @@ const createEventEditTemplate = (data, destinationList, offersList) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${typeTitle}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
               ${eventDestinationListTemplate}
           </div>
 
@@ -223,7 +220,6 @@ export default class EventEdit extends AbstractView {
     this._data = EventEdit.parseEventToData(event);
     this._destinationsList = destinations;
     this._offersList = offers;
-    console.log(this._data);
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);

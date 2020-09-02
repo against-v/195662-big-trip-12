@@ -58,12 +58,12 @@ const createEventTemplate = (event) => {
     basePrice,
     dateFrom,
     dateTo,
-    type,
-    city,
+    destination,
     offers,
+    type,
   } = event;
 
-  const title = `${capitalizeString(type)} ${isEventStopping(type) ? `in` : `to`} ${city}`;
+  const title = `${capitalizeString(type)} ${isEventStopping(type) ? `in` : `to`} ${destination.name}`;
   const offersTemplate = createOffersTemplate(offers);
   const timeGap = calcTimeGap(dateFrom, dateTo);
 

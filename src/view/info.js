@@ -18,7 +18,7 @@ const createMainTemplate = (events) => {
     const dateEnd = dateFormatting(events[events.length - 1].dateTo);
     return (
       `<div class="trip-info__main">
-        <h1 class="trip-info__title">${events[0].city} &mdash; ${events[events.length - 1].city}</h1>
+        <h1 class="trip-info__title">${events[0].destination.name} &mdash; ${events[events.length - 1].destination.name}</h1>
         <p class="trip-info__dates">${dateStart}&nbsp;&mdash;&nbsp;${dateEnd}</p>
       </div>`
     );

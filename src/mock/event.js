@@ -94,9 +94,5 @@ export const generateEvent = (destinationsList, offersList) => {
 
     //todo убрать после подключения данных с сервера
     dateStart: generateDate(dateTimeStart),
-
-    city: generateCity(),
-    destinationDescription: generateDestinationDescription(),
-    photos: generateDestinationPhotos(),
   };
 };
