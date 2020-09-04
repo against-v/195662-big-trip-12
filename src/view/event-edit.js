@@ -225,6 +225,8 @@ const createEventEditTemplate = (data, destinationsList, offersList) => {
 };
 
 export default class EventEdit extends AbstractView {
+  //todo изменение даты будет во втором задании (6.2)
+
   constructor(event = BLANK_EVENT, destinations, offers) {
     super();
     this._data = EventEdit.parseEventToData(event);
@@ -237,6 +239,8 @@ export default class EventEdit extends AbstractView {
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
     this._eventDestinationChangeHandler = this._eventDestinationChangeHandler.bind(this);
     this._eventPriceChangeHandler = this._eventPriceChangeHandler.bind(this);
+    // this._eventDateFromChangeHandler = this._eventDateFromChangeHandler.bind(this);
+    // this._eventDateToChangeHandler = this._eventDateToChangeHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -249,6 +253,8 @@ export default class EventEdit extends AbstractView {
     this.getElement().querySelector(`.event__type-list`).addEventListener(`change`, this._eventTypeChangeHandler);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventDestinationChangeHandler);
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._eventPriceChangeHandler);
+    // this.getElement().querySelector(`.event__input--time[name="event-end-time"]`).addEventListener(`change`, this._eventDateFromChangeHandler);
+    // this.getElement().querySelector(`.event__input--time[name="event-start-time"]`).addEventListener(`change`, this._eventDateToChangeHandler);
   }
 
   _eventTypeChangeHandler(evt) {
@@ -257,6 +263,14 @@ export default class EventEdit extends AbstractView {
       offers: []
     });
   }
+
+  // _eventDateFromChangeHandler(evt) {
+  //
+  // }
+
+  // _eventDateToChangeHandler(evt) {
+  //
+  // }
 
   _eventDestinationChangeHandler(evt) {
     this.updateData({
