@@ -258,9 +258,12 @@ export default class EventEdit extends AbstractView {
   }
 
   _eventTypeChangeHandler(evt) {
+    const type = evt.target.value;
     this.updateData({
-      type: evt.target.value,
-      offers: []
+      type,
+      offers: [],
+      typeCapitalized: capitalizeString(type),
+      isStopping: isEventStopping(type),
     });
   }
 
@@ -275,7 +278,7 @@ export default class EventEdit extends AbstractView {
   _eventDestinationChangeHandler(evt) {
     this.updateData({
       destination: {
-        name: evt.target.value
+        name: evt.target.value,
       }
     });
   }
