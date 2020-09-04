@@ -111,6 +111,21 @@ const generateEventTypeListTemplate = (type) => {
       </div>`
   );
 };
+const generateDestinationTemplate = (eventDestination, destinationsList) => {
+  const currentDestination = destinationsList.find((destination) => eventDestination.name === destination.name);
+  return (
+    `<section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">${currentDestination.description}</p>
+
+      <div class="event__photos-container">
+        <div class="event__photos-tape">
+          ${currentDestination.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join(``)}
+        </div>
+      </div>
+    </section>`
+  );
+};
 const createEventEditTemplate = (data, destinationsList, offersList) => {
   const {
     basePrice,
@@ -127,18 +142,7 @@ const createEventEditTemplate = (data, destinationsList, offersList) => {
 
   const dateTimeStartValue = dateTimeFormatting(dateFrom);
   const dateTimeEndValue = dateTimeFormatting(dateTo);
-  const eventDestinationTemplate = (
-    `<section class="event__section  event__section--destination">
-      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${destination.description}</p>
-
-      <div class="event__photos-container">
-        <div class="event__photos-tape">
-          ${destination.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`).join(``)}
-        </div>
-      </div>
-    </section>`
-  );
+  const eventDestinationTemplate = generateDestinationTemplate(destination, destinationsList);
   const eventOffersTemplate = generateEventOffersTemplate(type, offers, offersList);
   const eventDestinationListTemplate = (
     `<datalist id="destination-list-1">
@@ -224,11 +228,29 @@ export default class EventEdit extends AbstractView {
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._closeEditClickHandler = this._closeEditClickHandler.bind(this);
+    this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
+    this._eventDestinationChangeHandler = this._eventDestinationChangeHandler.bind(this);
 
+    this.getElement().querySelector(`.event__type-list`).addEventListener(`change`, this._eventTypeChangeHandler);
+    this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventDestinationChangeHandler);
   }
 
   getTemplate() {
     return createEventEditTemplate(this._data, this._destinationsList, this._offersList);
+  }
+
+  _eventTypeChangeHandler(evt) {
+    this.updateData({
+      type: evt.target.value
+    });
+  }
+  _eventDestinationChangeHandler(evt) {
+    console.log(evt.target.value);
+    this.updateData({
+      destination: {
+        name: evt.target.value
+      }
+    });
   }
 
   updateData(update) {
