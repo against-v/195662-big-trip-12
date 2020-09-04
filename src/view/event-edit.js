@@ -231,12 +231,17 @@ export default class EventEdit extends AbstractView {
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
     this._eventDestinationChangeHandler = this._eventDestinationChangeHandler.bind(this);
 
-    this.getElement().querySelector(`.event__type-list`).addEventListener(`change`, this._eventTypeChangeHandler);
-    this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventDestinationChangeHandler);
+    this._setInnerHandlers();
+
+
   }
 
   getTemplate() {
     return createEventEditTemplate(this._data, this._destinationsList, this._offersList);
+  }
+  _setInnerHandlers() {
+    this.getElement().querySelector(`.event__type-list`).addEventListener(`change`, this._eventTypeChangeHandler);
+    this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventDestinationChangeHandler);
   }
 
   _eventTypeChangeHandler(evt) {
@@ -245,12 +250,19 @@ export default class EventEdit extends AbstractView {
     });
   }
   _eventDestinationChangeHandler(evt) {
-    console.log(evt.target.value);
     this.updateData({
       destination: {
         name: evt.target.value
       }
     });
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setCloseEditClickHandler(this._callback.closeEditClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
   }
 
   updateData(update) {
@@ -276,6 +288,8 @@ export default class EventEdit extends AbstractView {
 
     parent.replaceChild(newElement, prevElement);
     prevElement = null;
+
+    this.restoreHandlers();
   }
 
   _formSubmitHandler(evt) {
@@ -294,7 +308,6 @@ export default class EventEdit extends AbstractView {
 
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
-    // this.getElement().querySelector(`form`).addEventListener(`submit`, this._formEventHandler.bind(null, `formSubmit`));
     this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
   }
 
