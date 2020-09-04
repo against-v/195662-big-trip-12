@@ -6,8 +6,10 @@ import {EVENT_TYPES} from "../const.js";
 const dateTimeFormatting = (dateTime) => {
   const day = (`0${dateTime.getDate()}`).slice(-2);
   const month = (`0${dateTime.getMonth() + 1}`).slice(-2);
-  const year = dateTime.getFullYear();
-  const date = `${day}/${month}/${year}`;
+  const year = String(dateTime.getFullYear()).slice(-2);
+  const hours = dateTime.getHours();
+  const minutes = dateTime.getMinutes();
+  const date = `${day}/${month}/${year} ${hours}:${minutes}`;
   return `${date}`;
 };
 
@@ -234,31 +236,40 @@ export default class EventEdit extends AbstractView {
     this._closeEditClickHandler = this._closeEditClickHandler.bind(this);
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
     this._eventDestinationChangeHandler = this._eventDestinationChangeHandler.bind(this);
+    this._eventPriceChangeHandler = this._eventPriceChangeHandler.bind(this);
 
     this._setInnerHandlers();
-
-
   }
 
   getTemplate() {
     return createEventEditTemplate(this._data, this._destinationsList, this._offersList);
   }
+
   _setInnerHandlers() {
     this.getElement().querySelector(`.event__type-list`).addEventListener(`change`, this._eventTypeChangeHandler);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventDestinationChangeHandler);
+    this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._eventPriceChangeHandler);
   }
 
   _eventTypeChangeHandler(evt) {
     this.updateData({
-      type: evt.target.value
+      type: evt.target.value,
+      offers: []
     });
   }
+
   _eventDestinationChangeHandler(evt) {
     this.updateData({
       destination: {
         name: evt.target.value
       }
     });
+  }
+
+  _eventPriceChangeHandler(evt) {
+    this.updateData({
+      basePrice: evt.target.value
+    }, true);
   }
 
   restoreHandlers() {
@@ -269,7 +280,7 @@ export default class EventEdit extends AbstractView {
     this.setFavoriteClickHandler(this._callback.favoriteClick);
   }
 
-  updateData(update) {
+  updateData(update, justDataUpdating) {
     if (!update) {
       return;
     }
@@ -279,6 +290,10 @@ export default class EventEdit extends AbstractView {
         this._data,
         update
     );
+
+    if (justDataUpdating) {
+      return;
+    }
 
     this.updateElement();
   }
