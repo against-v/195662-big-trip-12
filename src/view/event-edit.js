@@ -113,8 +113,9 @@ const generateEventTypeListTemplate = (type) => {
 };
 const generateDestinationTemplate = (eventDestination, destinationsList) => {
   const currentDestination = destinationsList.find((destination) => eventDestination.name === destination.name);
-  return (
-    `<section class="event__section  event__section--destination">
+  if (currentDestination) {
+    return (
+      `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
       <p class="event__destination-description">${currentDestination.description}</p>
 
@@ -124,7 +125,10 @@ const generateDestinationTemplate = (eventDestination, destinationsList) => {
         </div>
       </div>
     </section>`
-  );
+    );
+  }
+  return ``;
+
 };
 const createEventEditTemplate = (data, destinationsList, offersList) => {
   const {
