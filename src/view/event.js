@@ -1,4 +1,6 @@
 import AbstractView from "./abstract.js";
+import {isEventStopping} from "../utils/event.js";
+import {capitalizeString} from "../utils/common.js";
 
 const createOffersTemplate = (items) => {
   const trimmedItems = items.slice(0, 3);
@@ -7,7 +9,7 @@ const createOffersTemplate = (items) => {
         ${trimmedItems.map((offer) => {
       return (
         `<li class="event__offer">
-                <span class="event__offer-title">${offer.name}</span>
+                <span class="event__offer-title">${offer.title}</span>
                 &plus;
                 &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
            </li>`
@@ -53,37 +55,37 @@ const calcTimeGap = (timeStart, timeEnd) => {
 
 const createEventTemplate = (event) => {
   const {
-    type,
-    city,
+    basePrice,
+    dateFrom,
+    dateTo,
+    destination,
     offers,
-    price,
-    dateTimeStart,
-    dateTimeEnd,
+    type,
   } = event;
 
-  const title = `${type.name} ${type.type === `trip` ? `to` : `in`} ${city}`;
+  const title = `${capitalizeString(type)} ${isEventStopping(type) ? `in` : `to`} ${destination.name}`;
   const offersTemplate = createOffersTemplate(offers);
-  const timeGap = calcTimeGap(dateTimeStart, dateTimeEnd);
+  const timeGap = calcTimeGap(dateFrom, dateTo);
 
   return (
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${type.icon}.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${title}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${createDateTimeAttribute(dateTimeStart)}">${createTime(dateTimeStart)}</time>
+            <time class="event__start-time" datetime="${createDateTimeAttribute(dateFrom)}">${createTime(dateFrom)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${createDateTimeAttribute(dateTimeEnd)}">${createTime(dateTimeEnd)}</time>
+            <time class="event__end-time" datetime="${createDateTimeAttribute(dateTo)}">${createTime(dateTo)}</time>
           </p>
           <p class="event__duration">${timeGap}</p>
         </div>
 
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${price}</span>
+          &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
 
         <h4 class="visually-hidden">Offers:</h4>

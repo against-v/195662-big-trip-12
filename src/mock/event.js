@@ -1,105 +1,15 @@
-import {CITIES, EVENT_OFFERS} from "../const.js";
+import {nanoid} from 'nanoid';
+import {shuffleArray, getRandomInteger} from "../utils/common";
+import {EVENT_TYPES} from "../const.js";
 
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
+const ID_LENGTH = 3;
 
-const shuffleArray = (array = []) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
+
+const generateDate = (date = new Date()) => {
+  const newDate = new Date(date);
+  return newDate.setHours(0, 0, 0, 0);
 };
 
-const generateType = () => {
-  const eventTypes = [
-    {
-      name: `Taxi`,
-      icon: `taxi`,
-      id: `taxi`,
-      type: `trip`,
-    },
-    {
-      name: `Bus`,
-      icon: `bus`,
-      id: `bus`,
-      type: `trip`,
-    },
-    {
-      name: `Train`,
-      icon: `train`,
-      id: `train`,
-      type: `trip`,
-    },
-    {
-      name: `Ship`,
-      icon: `ship`,
-      id: `ship`,
-      type: `trip`,
-    },
-    {
-      name: `Transport`,
-      icon: `transport`,
-      id: `transport`,
-      type: `trip`,
-    },
-    {
-      name: `Drive`,
-      icon: `drive`,
-      id: `drive`,
-      type: `trip`,
-    },
-    {
-      name: `Flight`,
-      icon: `flight`,
-      id: `flight`,
-      type: `trip`,
-    },
-    {
-      name: `Check-in`,
-      icon: `check-in`,
-      id: `checkIn`,
-      type: `stop`,
-    },
-    {
-      name: `Sightseeing`,
-      icon: `sightseeing`,
-      id: `sightseeing`,
-      type: `stop`,
-    },
-    {
-      name: `Restaurant`,
-      icon: `restaurant`,
-      id: `restaurant`,
-      type: `stop`,
-    },
-  ];
-  const randomIndex = getRandomInteger(0, eventTypes.length - 1);
-  return eventTypes[randomIndex];
-};
-const generateCity = () => {
-  const randomIndex = getRandomInteger(0, CITIES.length - 1);
-  return CITIES[randomIndex];
-};
-const generateOffers = (eventType) => {
-  if (eventType) {
-    const shuffledEventOffers = shuffleArray(EVENT_OFFERS);
-    const count = getRandomInteger(0, EVENT_OFFERS[eventType.id].length);
-    if (count === 0) {
-      return [];
-    }
-    const offers = [];
-    for (let i = 0; i < count; i++) {
-      offers.push(shuffledEventOffers[eventType.id][i]);
-    }
-    return offers;
-  }
-  return [];
-
-};
 const generatePrice = () => {
   const MIN_VALUE = 1;
   const MAX_VALUE = 99;
@@ -120,41 +30,46 @@ const generateDateTime = (date = new Date(), nearestDayIndex = 1, latterDayIndex
   }
   return newDate;
 };
-const generateDate = (date = new Date()) => {
-  const newDate = new Date(date);
-  return newDate.setHours(0, 0, 0, 0);
+const generateDestination = (destinationsList) => {
+  const randomIndex = getRandomInteger(0, destinationsList.length - 1);
+  return destinationsList[randomIndex];
 };
-const generateDestinationDescription = () => {
-  const fillerText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
-  const shuffledFillerText = shuffleArray(fillerText.substring(0, fillerText.length - 1).split(`. `));
-  const count = getRandomInteger(1, 5);
-  const destinationDescription = [];
-  for (let i = 0; i < count; i++) {
-    destinationDescription.push(shuffledFillerText[i]);
+const generateOffers = (eventType, offersList) => {
+  const filteredOffers = offersList.find((offer) => {
+    return offer.type === eventType;
+  });
+  const shuffledOffers = shuffleArray(filteredOffers.offers);
+  const count = getRandomInteger(0, shuffledOffers.length - 1);
+  if (count === 0) {
+    return [];
   }
-  return `${destinationDescription.join(`. `)}.`;
+  const checkedOffers = [];
+  for (let i = 0; i < count; i++) {
+    checkedOffers.push(shuffledOffers[i]);
+  }
+  return checkedOffers;
+
 };
-const generateDestinationPhotos = () => {
-  const destinationPhotos = [];
-  const count = getRandomInteger(0, 5);
-  for (let i = 0; i < count; i++) {
-    destinationPhotos.push(`http://picsum.photos/248/152?r=${Math.random()}`);
-  }
-  return destinationPhotos;
+const generateType = () => {
+  const randomIndex = getRandomInteger(0, EVENT_TYPES.length - 1);
+  return EVENT_TYPES[randomIndex];
 };
 
-export const generateEvent = () => {
+
+export const generateEvent = (destinationsList, offersList) => {
   const type = generateType();
   const dateTimeStart = generateDateTime();
   return {
+    basePrice: generatePrice(),
+    dateFrom: dateTimeStart,
+    dateTo: generateDateTime(dateTimeStart, 0, 1),
+    destination: generateDestination(destinationsList),
+    id: nanoid(ID_LENGTH),
+    isFavorite: Boolean(getRandomInteger()),
+    offers: generateOffers(type, offersList),
     type,
-    city: generateCity(),
-    offers: generateOffers(type),
-    price: generatePrice(),
-    dateTimeStart,
-    dateTimeEnd: generateDateTime(dateTimeStart, 0, 1),
+
+    // todo убрать после подключения данных с сервера
     dateStart: generateDate(dateTimeStart),
-    destinationDescription: generateDestinationDescription(),
-    photos: generateDestinationPhotos(),
   };
 };

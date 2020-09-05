@@ -3,12 +3,13 @@ import SortView from "../view/sort.js";
 import DaysListView from "../view/days-list.js";
 import DayView from "../view/day.js";
 import EventsListView from "../view/events-list.js";
-import EventView from "../view/event.js";
-import EventEditView from "../view/event-edit.js";
 import NoEventView from "../view/no-event.js";
-import {render, replace, RenderPosition} from "../utils/render.js";
+
+import EventPresenter from "./event.js";
+import {render, RenderPosition} from "../utils/render.js";
 import {sortType} from "../const.js";
 import {sortByPrice, sortByTime, groupEventsByDay} from "../utils/trip-board";
+import {updateItem} from "../utils/common.js";
 
 export default class Trip {
   constructor(tripContainer) {
@@ -17,14 +18,36 @@ export default class Trip {
     this._sortComponent = new SortView();
     this._daysListComponent = new DaysListView();
     this._noEventComponent = new NoEventView();
+
+    this._eventPresenter = {};
+
     this._currentSortType = sortType.DEFAULT;
+
+    this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleEventChange = this._handleEventChange.bind(this);
   }
 
-  init(tripEvents) {
+  init(tripEvents, destinations, offers) {
     this._tripEvents = tripEvents.slice();
+    this._sourcedTripEvents = tripEvents.slice();
+    this._destinations = destinations;
+    this._offers = offers;
     render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
+  }
+
+  _handleModeChange() {
+    Object
+      .values(this._eventPresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
+
+  _handleEventChange(updatedEvent) {
+    this._tripEvents = updateItem(this._tripEvents, updatedEvent);
+    this._sourcedTripEvents = updateItem(this._sourcedTripEvents, updatedEvent);
+    // todo разобрать надо ли при реинициализации отправлять destinations и offers (они ведь не могут меняться)
+    this._eventPresenter[updatedEvent.id].init(updatedEvent, this._destinations, this._offers);
   }
 
   _handleSortTypeChange(newSortType) {
@@ -52,6 +75,9 @@ export default class Trip {
   }
 
   _clearDaysList() {
+    // todo переделать
+    // для этого надо сделать презентер day, с методом destroy,
+    // и как-то отрисовывать в нем список событий через метод _renderDay
     this._daysListComponent.getElement().innerHTML = ``;
   }
 
@@ -85,39 +111,9 @@ export default class Trip {
   }
 
   _renderEvent(eventsListElement, event) {
-    const eventComponent = new EventView(event);
-
-    // todo Здесь должна быть вторая структура данных - offers, пофиксить, когда подрубим данные с бэка
-    const eventEditComponent = new EventEditView(event);
-
-    const replaceEventToForm = () => {
-      replace(eventEditComponent, eventComponent);
-    };
-
-    const replaceFormToEvent = () => {
-      replace(eventComponent, eventEditComponent);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        replaceFormToEvent();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    eventComponent.setEditClickHandler(() => {
-      replaceEventToForm();
-      eventEditComponent.setFormCloseHandler(() => replaceFormToEvent());
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    eventEditComponent.setFormSubmitHandler(() => {
-      replaceFormToEvent();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
-
-    render(eventsListElement, eventComponent, RenderPosition.BEFOREEND);
+    const eventPresenter = new EventPresenter(eventsListElement, this._handleEventChange, this._handleModeChange);
+    eventPresenter.init(event, this._destinations, this._offers);
+    this._eventPresenter[event.id] = eventPresenter;
   }
 
   _renderNoEvent() {
