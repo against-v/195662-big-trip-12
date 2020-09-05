@@ -1,6 +1,6 @@
 import {nanoid} from 'nanoid';
 import {shuffleArray, getRandomInteger} from "../utils/common";
-import {CITIES, EVENT_TYPES} from "../const.js";
+import {EVENT_TYPES} from "../const.js";
 
 const ID_LENGTH = 3;
 
