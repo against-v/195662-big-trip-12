@@ -158,6 +158,7 @@ const createEventEditTemplate = (data, destinationsList, offersList) => {
   const typeTitle = `${typeCapitalized} ${isStopping ? `in` : `to`}`;
   const eventTypeListTemplate = generateEventTypeListTemplate(type);
   const favoriteCheckboxIsChecked = isFavorite ? `checked` : ``;
+  const isSubmitDisabled = !(destination.name.length > 0 && String(basePrice).length > 0 && Number.isInteger(Number(basePrice)));
   return (
     `<li class="trip-events__item">
       <form class="event  event--edit" action="#" method="post">
@@ -199,7 +200,7 @@ const createEventEditTemplate = (data, destinationsList, offersList) => {
             <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>
           <button class="event__reset-btn" type="reset">Delete</button>
 
           <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${favoriteCheckboxIsChecked}>
@@ -290,7 +291,7 @@ export default class EventEdit extends AbstractView {
   _eventPriceChangeHandler(evt) {
     this.updateData({
       basePrice: evt.target.value
-    }, true);
+    });
   }
 
   restoreHandlers() {
