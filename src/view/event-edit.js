@@ -250,6 +250,10 @@ export default class EventEdit extends SmartView {
     this._setInnerHandlers();
   }
 
+  reset(event) {
+    this.updateData(EventEdit.parseEventToData(event));
+  }
+
   getTemplate() {
     return createEventEditTemplate(this._data, this._destinationsList, this._offersList);
   }
