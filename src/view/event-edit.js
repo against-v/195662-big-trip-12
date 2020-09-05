@@ -228,7 +228,7 @@ const createEventEditTemplate = (data, destinationsList, offersList) => {
 export default class EventEdit extends SmartView {
   // todo изменение даты будет во втором задании (6.2)
 
-  // todo изменение доп опций тоже должно быть либо в 6.2 либо в 7.1
+  // todo судя по заданию, изменение доп опций тоже должно быть либо в 6.2, либо в 7.1
 
   // todo поправить баг: если изменить данные, а потом изменить isFavorite, то данные сбросятся к последним сохраненным
 
