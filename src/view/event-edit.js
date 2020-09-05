@@ -1,4 +1,4 @@
-import AbstractView from "./abstract.js";
+import SmartView from "./smart.js";
 import {isEventStopping} from "../utils/event.js";
 import {capitalizeString} from "../utils/common.js";
 import {EVENT_TYPES} from "../const.js";
@@ -225,7 +225,7 @@ const createEventEditTemplate = (data, destinationsList, offersList) => {
   );
 };
 
-export default class EventEdit extends AbstractView {
+export default class EventEdit extends SmartView {
   // todo изменение даты будет во втором задании (6.2)
 
   // todo поправить баг: если изменить данные, а потом изменить isFavorite, то данные сбросятся к последним сохраненным
@@ -300,37 +300,6 @@ export default class EventEdit extends AbstractView {
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setCloseEditClickHandler(this._callback.closeEditClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
-  }
-
-  updateData(update, justDataUpdating) {
-    if (!update) {
-      return;
-    }
-
-    this._data = Object.assign(
-        {},
-        this._data,
-        update
-    );
-
-    if (justDataUpdating) {
-      return;
-    }
-
-    this.updateElement();
-  }
-
-  updateElement() {
-    let prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.getElement();
-
-    parent.replaceChild(newElement, prevElement);
-    prevElement = null;
-
-    this.restoreHandlers();
   }
 
   _formSubmitHandler(evt) {
