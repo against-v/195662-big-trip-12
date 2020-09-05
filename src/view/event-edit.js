@@ -225,7 +225,11 @@ const createEventEditTemplate = (data, destinationsList, offersList) => {
 };
 
 export default class EventEdit extends AbstractView {
-  //todo изменение даты будет во втором задании (6.2)
+  // todo изменение даты будет во втором задании (6.2)
+
+  // todo поправить баг: если изменить данные, а потом изменить isFavorite, то данные сбросятся к последним сохраненным
+
+  // todo поправить баг: при активном инпуте destination с введенным значением нажатие esc бросает ошибку в консоль
 
   constructor(event = BLANK_EVENT, destinations, offers) {
     super();
