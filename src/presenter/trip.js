@@ -12,7 +12,10 @@ import {sortByPrice, sortByTime, groupEventsByDay} from "../utils/trip-board";
 import {updateItem} from "../utils/common.js";
 
 export default class Trip {
-  constructor(tripContainer) {
+  constructor(tripContainer, eventsModel, destinationsModel, offersModel) {
+    this._eventsModel = eventsModel;
+    this._destinationsModel = destinationsModel;
+    this._offersModel = offersModel;
     this._tripContainer = tripContainer;
     this._tripComponent = new TripView();
     this._sortComponent = new SortView();
@@ -35,6 +38,16 @@ export default class Trip {
     this._offers = offers;
     render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
+  }
+
+  _getEvents() {
+    this._eventsModel.getEvents();
+  }
+  _getDestinations() {
+    this._destinationsModel.getEvents();
+  }
+  _getOffers() {
+    this._offersModel.getEvents();
   }
 
   _handleModeChange() {

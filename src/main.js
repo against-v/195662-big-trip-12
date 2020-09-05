@@ -4,6 +4,10 @@ import FilterView from "./view/filter.js";
 
 import TripPresenter from "./presenter/trip.js";
 
+import EventsModel from "./model/events.js";
+import DestinationsModel from "./model/destinations.js";
+import OffersModel from "./model/offers.js";
+
 
 import {generateEvent} from "./mock/event.js";
 import {generateDestination} from "./mock/destination";
@@ -19,13 +23,21 @@ const destinations = DESTINATIONS.map((destinationName) => generateDestination(d
 const offers = EVENT_TYPES.map((offerType) => generateOffer(offerType));
 const events = new Array(EVENT_COUNT).fill().map(() => generateEvent(destinations, offers));
 
+const destinationsModel = new DestinationsModel();
+const offersModel = new OffersModel();
+const eventsModel = new EventsModel();
+
+destinationsModel.setDestinations(destinations);
+offersModel.setOffers(offers);
+eventsModel.setEvents(events);
+
 const siteHeaderMainElement = document.querySelector(`.trip-main`);
 const siteHeaderControlsElement = siteHeaderMainElement.querySelector(`.trip-controls`);
 const siteMenuTitleElement = siteHeaderControlsElement.querySelector(`h2:first-child`);
 const siteFilterTitleElement = siteHeaderControlsElement.querySelector(`h2:last-child`);
 const siteMainElement = document.querySelector(`.page-main .page-body__container`);
 
-const tripPresenter = new TripPresenter(siteMainElement);
+const tripPresenter = new TripPresenter(siteMainElement, eventsModel, destinationsModel, offersModel);
 
 render(siteHeaderMainElement, new InfoView(events), RenderPosition.AFTERBEGIN);
 render(siteMenuTitleElement, new MenuView(), RenderPosition.AFTEREND);
