@@ -2,13 +2,20 @@ import EventView from "../view/event";
 import EventEditView from "../view/event-edit";
 import {render, RenderPosition, replace, remove} from "../utils/render";
 
+const Mode = {
+  DEFAULT: `DEFAULT`,
+  EDITING: `EDITING`
+};
+
 export default class Event {
-  constructor(eventsListElement, changeData) {
+  constructor(eventsListElement, changeData, changeMode) {
     this._eventsListElement = eventsListElement;
     this._changeData = changeData;
+    this._changeMode = changeMode;
 
     this._eventComponent = null;
     this._eventEditComponent = null;
+    this._mode = Mode.DEFAULT;
 
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
@@ -37,11 +44,11 @@ export default class Event {
       return;
     }
 
-    if (this._eventsListElement.getElement().contains(prevEventComponent.getElement())) {
+    if (this._mode === Mode.DEFAULT) {
       replace(this._eventComponent, prevEventComponent);
     }
 
-    if (this._eventsListElement.getElement().contains(prevEventEditComponent.getElement())) {
+    if (this._mode === Mode.EDITING) {
       replace(this._eventEditComponent, prevEventEditComponent);
     }
 
@@ -54,15 +61,24 @@ export default class Event {
     remove(this._eventEditComponent);
   }
 
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceFormToEvent();
+    }
+  }
+
   _replaceEventToForm() {
     replace(this._eventEditComponent, this._eventComponent);
     this._eventEditComponent.setCloseEditClickHandler(this._handleCloseEditClick);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
+    this._changeMode();
+    this._mode = Mode.EDITING;
   }
 
   _replaceFormToEvent() {
     replace(this._eventComponent, this._eventEditComponent);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    this._mode = Mode.DEFAULT;
   }
 
   _escKeyDownHandler(evt) {

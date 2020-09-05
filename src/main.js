@@ -13,7 +13,7 @@ import {render, RenderPosition} from "./utils/render.js";
 
 import {DESTINATIONS, EVENT_TYPES} from "./const";
 
-const EVENT_COUNT = 1;
+const EVENT_COUNT = 10;
 
 const destinations = DESTINATIONS.map((destinationName) => generateDestination(destinationName));
 const offers = EVENT_TYPES.map((offerType) => generateOffer(offerType));
