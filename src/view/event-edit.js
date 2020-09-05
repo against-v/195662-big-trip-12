@@ -230,8 +230,6 @@ export default class EventEdit extends SmartView {
 
   // todo поправить баг: если изменить данные, а потом изменить isFavorite, то данные сбросятся к последним сохраненным
 
-  // todo поправить баг: при активном инпуте destination с введенным значением нажатие esc бросает ошибку в консоль
-
   constructor(event = BLANK_EVENT, destinations, offers) {
     super();
     this._data = EventEdit.parseEventToData(event);

@@ -68,6 +68,7 @@ export default class Event {
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
+      evt.target.blur();
       this._eventEditComponent.reset(this._event);
       this._replaceFormToEvent();
     }
