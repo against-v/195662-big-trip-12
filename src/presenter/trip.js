@@ -46,7 +46,7 @@ export default class Trip {
   _handleEventChange(updatedEvent) {
     this._tripEvents = updateItem(this._tripEvents, updatedEvent);
     this._sourcedTripEvents = updateItem(this._sourcedTripEvents, updatedEvent);
-    //todo разобрать надо ли при реинициализации отправлять destinations и offers (они ведь не могут меняться)
+    // todo разобрать надо ли при реинициализации отправлять destinations и offers (они ведь не могут меняться)
     this._eventPresenter[updatedEvent.id].init(updatedEvent, this._destinations, this._offers);
   }
 

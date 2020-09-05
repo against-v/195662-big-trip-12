@@ -1,37 +1,14 @@
 import {nanoid} from 'nanoid';
 import {shuffleArray, getRandomInteger} from "../utils/common";
-import {CITIES, EVENT_OFFERS, EVENT_TYPES} from "../const.js";
+import {CITIES, EVENT_TYPES} from "../const.js";
 
 const ID_LENGTH = 3;
 
 
-const generateCity = () => {
-  const randomIndex = getRandomInteger(0, CITIES.length - 1);
-  return CITIES[randomIndex];
-};
 const generateDate = (date = new Date()) => {
   const newDate = new Date(date);
   return newDate.setHours(0, 0, 0, 0);
 };
-const generateDestinationDescription = () => {
-  const fillerText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
-  const shuffledFillerText = shuffleArray(fillerText.substring(0, fillerText.length - 1).split(`. `));
-  const count = getRandomInteger(1, 5);
-  const destinationDescription = [];
-  for (let i = 0; i < count; i++) {
-    destinationDescription.push(shuffledFillerText[i]);
-  }
-  return `${destinationDescription.join(`. `)}.`;
-};
-const generateDestinationPhotos = () => {
-  const destinationPhotos = [];
-  const count = getRandomInteger(0, 5);
-  for (let i = 0; i < count; i++) {
-    destinationPhotos.push(`http://picsum.photos/248/152?r=${Math.random()}`);
-  }
-  return destinationPhotos;
-};
-
 
 const generatePrice = () => {
   const MIN_VALUE = 1;
@@ -92,7 +69,7 @@ export const generateEvent = (destinationsList, offersList) => {
     offers: generateOffers(type, offersList),
     type,
 
-    //todo убрать после подключения данных с сервера
+    // todo убрать после подключения данных с сервера
     dateStart: generateDate(dateTimeStart),
   };
 };

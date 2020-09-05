@@ -138,7 +138,7 @@ const createEventEditTemplate = (data, destinationsList, offersList) => {
     dateFrom,
     dateTo,
     destination,
-    id,
+    // id,
     isFavorite,
     offers,
     type,

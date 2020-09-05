@@ -40,5 +40,5 @@ export const generateOffer = (type) => {
   return {
     type,
     offers: generateOffers()
-  }
+  };
 };
