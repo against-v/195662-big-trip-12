@@ -8,8 +8,7 @@ import NoEventView from "../view/no-event.js";
 import EventPresenter from "./event.js";
 import {render, RenderPosition} from "../utils/render.js";
 import {sortType} from "../const.js";
-import {sortByPrice, sortByTime, groupEventsByDay} from "../utils/trip-board";
-import {updateItem} from "../utils/common.js";
+import {sortByPrice, sortByTime, groupEventsByDay, groupEventsIntoOneList} from "../utils/trip-board";
 
 export default class Trip {
   constructor(tripContainer, eventsModel, destinationsModel, offersModel) {
@@ -31,23 +30,30 @@ export default class Trip {
     this._handleEventChange = this._handleEventChange.bind(this);
   }
 
-  init(tripEvents, destinations, offers) {
-    this._tripEvents = tripEvents.slice();
-    this._sourcedTripEvents = tripEvents.slice();
-    this._destinations = destinations;
-    this._offers = offers;
+  init() {
     render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
   }
 
   _getEvents() {
-    this._eventsModel.getEvents();
+    return this._eventsModel.getEvents();
   }
+  _getGroupedSortedEvents() {
+    switch (this._currentSortType) {
+      case sortType.TIME:
+        return groupEventsIntoOneList(this._getEvents().slice().sort(sortByTime));
+      case sortType.PRICE:
+        return groupEventsIntoOneList(this._getEvents().slice().sort(sortByPrice));
+      default:
+        return groupEventsByDay(this._getEvents().slice());
+    }
+  }
+
   _getDestinations() {
-    this._destinationsModel.getEvents();
+    return this._destinationsModel.getDestinations();
   }
   _getOffers() {
-    this._offersModel.getEvents();
+    return this._offersModel.getOffers();
   }
 
   _handleModeChange() {
@@ -57,10 +63,8 @@ export default class Trip {
   }
 
   _handleEventChange(updatedEvent) {
-    this._tripEvents = updateItem(this._tripEvents, updatedEvent);
-    this._sourcedTripEvents = updateItem(this._sourcedTripEvents, updatedEvent);
-    // todo разобрать надо ли при реинициализации отправлять destinations и offers (они ведь не могут меняться)
-    this._eventPresenter[updatedEvent.id].init(updatedEvent, this._destinations, this._offers);
+    // Здесь будем вызывать обновление модели
+    this._eventPresenter[updatedEvent.id].init(updatedEvent);
   }
 
   _handleSortTypeChange(newSortType) {
@@ -69,23 +73,6 @@ export default class Trip {
     this._renderDaysList();
   }
 
-  _sortingEvents(events) {
-    let groupedEvents = [];
-
-    switch (this._currentSortType) {
-      case sortType.TIME:
-        events.sort(sortByTime);
-        groupedEvents.push({events});
-        break;
-      case sortType.PRICE:
-        events.sort(sortByPrice);
-        groupedEvents.push({events});
-        break;
-      default:
-        groupedEvents = groupEventsByDay(events);
-    }
-    return groupedEvents;
-  }
 
   _clearDaysList() {
     // todo переделать
@@ -101,9 +88,7 @@ export default class Trip {
 
   _renderDaysList() {
     render(this._tripComponent, this._daysListComponent, RenderPosition.BEFOREEND);
-
-    const groupedEvents = this._sortingEvents(this._tripEvents);
-
+    const groupedEvents = this._getGroupedSortedEvents();
     for (let i = 0; i < groupedEvents.length; i++) {
       this._renderDay(groupedEvents[i], i);
     }
@@ -124,8 +109,15 @@ export default class Trip {
   }
 
   _renderEvent(eventsListElement, event) {
-    const eventPresenter = new EventPresenter(eventsListElement, this._handleEventChange, this._handleModeChange);
-    eventPresenter.init(event, this._destinations, this._offers);
+    const eventPresenterParams = [
+      eventsListElement,
+      this._getDestinations(),
+      this._getOffers(),
+      this._handleEventChange,
+      this._handleModeChange,
+    ];
+    const eventPresenter = new EventPresenter(...eventPresenterParams);
+    eventPresenter.init(event);
     this._eventPresenter[event.id] = eventPresenter;
   }
 
@@ -134,7 +126,7 @@ export default class Trip {
   }
 
   _renderTrip() {
-    if (this._tripEvents.length === 0) {
+    if (this._getEvents().length === 0) {
       this._renderNoEvent();
       return;
     }
