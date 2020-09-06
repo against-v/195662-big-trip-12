@@ -1,11 +1,15 @@
 export const sortByPrice = (eventA, eventB) => {
-  return eventB.price - eventA.price;
+  return eventB.basePrice - eventA.basePrice;
 };
 
 export const sortByTime = (eventA, eventB) => {
-  const eventADuration = eventA.dateTimeEnd - eventA.dateTimeStart;
-  const eventBDuration = eventB.dateTimeEnd - eventB.dateTimeStart;
+  const eventADuration = eventA.dateTo - eventA.dateFrom;
+  const eventBDuration = eventB.dateTo - eventB.dateFrom;
   return eventBDuration - eventADuration;
+};
+
+export const groupEventsIntoOneList = (events) => {
+  return [{events}];
 };
 
 export const groupEventsByDay = (events) => {
