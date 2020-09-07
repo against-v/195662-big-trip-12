@@ -6,7 +6,7 @@ import EventsListView from "../view/events-list.js";
 import NoEventView from "../view/no-event.js";
 
 import EventPresenter from "./event.js";
-import {render, RenderPosition} from "../utils/render.js";
+import {render, RenderPosition, remove} from "../utils/render.js";
 import {SortType, UpdateType, UserAction} from "../const.js";
 import {sortByPrice, sortByTime, groupEventsByDay, groupEventsIntoOneList} from "../utils/trip-board";
 
@@ -17,9 +17,10 @@ export default class Trip {
     this._offersModel = offersModel;
     this._tripContainer = tripContainer;
     this._tripComponent = new TripView();
-    this._sortComponent = new SortView();
     this._daysListComponent = new DaysListView();
     this._noEventComponent = new NoEventView();
+
+    this._sortComponent = null;
 
     this._eventPresenter = {};
 
@@ -87,8 +88,12 @@ export default class Trip {
         this._eventPresenter[data.id].init(data);
         break;
       case UpdateType.MINOR:
+        this._clearTrip();
+        this._renderTrip();
         break;
       case UpdateType.MAJOR:
+        this._clearTrip({resetFilter: true, resetSortType: true});
+        this._renderTrip();
         break;
 
     }
@@ -96,20 +101,17 @@ export default class Trip {
 
   _handleSortTypeChange(newSortType) {
     this._currentSortType = newSortType;
-    this._clearDaysList();
-    this._renderDaysList();
-  }
-
-  _clearDaysList() {
-    // todo переделать
-    // для этого надо сделать презентер day, с методом destroy,
-    // и как-то отрисовывать в нем список событий через метод _renderDay
-    this._daysListComponent.getElement().innerHTML = ``;
+    this._clearTrip();
+    this._renderTrip();
   }
 
   _renderSort() {
-    render(this._tripComponent, this._sortComponent, RenderPosition.BEFOREEND);
+    if (this._sortComponent !== null) {
+      this._sortComponent = null;
+    }
+    this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+    render(this._tripComponent, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
   _renderDaysList() {
@@ -149,6 +151,24 @@ export default class Trip {
 
   _renderNoEvent() {
     render(this._tripComponent, this._noEventComponent, RenderPosition.BEFOREEND);
+  }
+
+  _clearTrip({resetFilter = false, resetSortType = false} = {}) {
+    Object
+      .values(this._eventPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._eventPresenter = {};
+
+    remove(this._sortComponent);
+    remove(this._noEventComponent);
+    remove(this._daysListComponent);
+
+    if (resetFilter) {
+      console.log(`RESET FILTER`);
+    }
+    if (resetSortType) {
+      this._currentSortType = SortType.DEFAULT;
+    }
   }
 
   _renderTrip() {

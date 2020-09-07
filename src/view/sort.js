@@ -2,29 +2,28 @@ import AbstractView from "./abstract.js";
 import {SortType} from "../const";
 
 const createSortTemplate = (currentSortType) => {
-  // todo разобраться с dayTitle
-  // Надо выводить dayTitle только в случае сортировки по умолчанию
-  // И я не придумал как сделать это поприличнее
-  // Возможно в следующих лекциях про связывание данных об этом расскажут
   const dayTitle = currentSortType === SortType.DEFAULT ? `Day` : ``;
+  const setChecked = (inputValue) => {
+    return currentSortType === inputValue ? `checked` : ``;
+  };
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
       <span class="trip-sort__item  trip-sort__item--day">${dayTitle}</span>
 
       <div class="trip-sort__item  trip-sort__item--event">
-        <input id="sort-event" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-event" checked>
+        <input id="sort-event" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-event" ${setChecked(SortType.DEFAULT)}>
           <label class="trip-sort__btn" for="sort-event">Event</label>
       </div>
 
       <div class="trip-sort__item  trip-sort__item--time">
-        <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time">
+        <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time" ${setChecked(SortType.TIME)}>
           <label class="trip-sort__btn  trip-sort__btn--active  trip-sort__btn--by-increase" for="sort-time">
             Time
           </label>
       </div>
 
       <div class="trip-sort__item  trip-sort__item--price">
-        <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price">
+        <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price" ${setChecked(SortType.PRICE)}>
           <label class="trip-sort__btn" for="sort-price">
             Price
           </label>
@@ -36,10 +35,10 @@ const createSortTemplate = (currentSortType) => {
 };
 
 export default class Sort extends AbstractView {
-  constructor() {
+  constructor(currentSortType) {
     super();
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
-    this._currentSortType = SortType.DEFAULT;
+    this._currentSortType = currentSortType;
   }
 
   getTemplate() {
