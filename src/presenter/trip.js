@@ -7,7 +7,7 @@ import NoEventView from "../view/no-event.js";
 
 import EventPresenter from "./event.js";
 import {render, RenderPosition} from "../utils/render.js";
-import {SortType} from "../const.js";
+import {SortType, UpdateType, UserAction} from "../const.js";
 import {sortByPrice, sortByTime, groupEventsByDay, groupEventsIntoOneList} from "../utils/trip-board";
 
 export default class Trip {
@@ -68,18 +68,30 @@ export default class Trip {
   }
 
   _handleViewAction(actionType, updateType, update) {
-    console.log(actionType, updateType, update);
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
+    switch (actionType) {
+      case (UserAction.UPDATE_EVENT):
+        this._eventsModel.updateEvent(updateType, update);
+        break;
+      case (UserAction.ADD_EVENT):
+        this._eventsModel.addEvent(updateType, update);
+        break;
+      case (UserAction.DELETE_EVENT):
+        this._eventsModel.deleteEvent(updateType, update);
+        break;
+    }
   }
+
   _handleModelEvt(updateType, data) {
-    console.log(updateType, data);
-    // В зависимости от типа изменений решаем, что делать:
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список (например, когда задача ушла в архив)
-    // - обновить всю доску (например, при переключении фильтра)
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._eventPresenter[data.id].init(data);
+        break;
+      case UpdateType.MINOR:
+        break;
+      case UpdateType.MAJOR:
+        break;
+
+    }
   }
 
   _handleSortTypeChange(newSortType) {
