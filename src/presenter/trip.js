@@ -7,7 +7,7 @@ import NoEventView from "../view/no-event.js";
 
 import EventPresenter from "./event.js";
 import {render, RenderPosition} from "../utils/render.js";
-import {sortType} from "../const.js";
+import {SortType} from "../const.js";
 import {sortByPrice, sortByTime, groupEventsByDay, groupEventsIntoOneList} from "../utils/trip-board";
 
 export default class Trip {
@@ -23,11 +23,14 @@ export default class Trip {
 
     this._eventPresenter = {};
 
-    this._currentSortType = sortType.DEFAULT;
+    this._currentSortType = SortType.DEFAULT;
 
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-    this._handleEventChange = this._handleEventChange.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvt = this._handleModelEvt.bind(this);
+
+    this._eventsModel.addObserver(this._handleModelEvt);
   }
 
   init() {
@@ -38,11 +41,12 @@ export default class Trip {
   _getEvents() {
     return this._eventsModel.getEvents();
   }
+
   _getGroupedSortedEvents() {
     switch (this._currentSortType) {
-      case sortType.TIME:
+      case SortType.TIME:
         return groupEventsIntoOneList(this._getEvents().slice().sort(sortByTime));
-      case sortType.PRICE:
+      case SortType.PRICE:
         return groupEventsIntoOneList(this._getEvents().slice().sort(sortByPrice));
       default:
         return groupEventsByDay(this._getEvents().slice());
@@ -52,6 +56,7 @@ export default class Trip {
   _getDestinations() {
     return this._destinationsModel.getDestinations();
   }
+
   _getOffers() {
     return this._offersModel.getOffers();
   }
@@ -62,9 +67,19 @@ export default class Trip {
       .forEach((presenter) => presenter.resetView());
   }
 
-  _handleEventChange(updatedEvent) {
-    // Здесь будем вызывать обновление модели
-    this._eventPresenter[updatedEvent.id].init(updatedEvent);
+  _handleViewAction(actionType, updateType, update) {
+    console.log(actionType, updateType, update);
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+  }
+  _handleModelEvt(updateType, data) {
+    console.log(updateType, data);
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
   }
 
   _handleSortTypeChange(newSortType) {
@@ -72,7 +87,6 @@ export default class Trip {
     this._clearDaysList();
     this._renderDaysList();
   }
-
 
   _clearDaysList() {
     // todo переделать
@@ -113,7 +127,7 @@ export default class Trip {
       eventsListElement,
       this._getDestinations(),
       this._getOffers(),
-      this._handleEventChange,
+      this._handleViewAction,
       this._handleModeChange,
     ];
     const eventPresenter = new EventPresenter(...eventPresenterParams);

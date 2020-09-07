@@ -1,6 +1,7 @@
 import EventView from "../view/event";
 import EventEditView from "../view/event-edit";
 import {render, RenderPosition, replace, remove} from "../utils/render";
+import {UserAction, UpdateType} from "../const.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -96,8 +97,15 @@ export default class Event {
     this._replaceEventToForm();
   }
 
+  _handleCloseEditClick() {
+    this._eventEditComponent.reset(this._event);
+    this._replaceFormToEvent();
+  }
+
   _handleFavoriteClick() {
     this._changeData(
+        UserAction.UPDATE_EVENT,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._event,
@@ -108,13 +116,12 @@ export default class Event {
     );
   }
 
-  _handleCloseEditClick() {
-    this._eventEditComponent.reset(this._event);
-    this._replaceFormToEvent();
-  }
-
   _handleFormSubmit(event) {
-    this._changeData(event);
+    this._changeData(
+        UserAction.UPDATE_EVENT,
+        UpdateType.MINOR,
+        event
+    );
     this._replaceFormToEvent();
   }
 }
