@@ -24,6 +24,7 @@ export default class Event {
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleCloseEditClick = this._handleCloseEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
@@ -41,6 +42,7 @@ export default class Event {
     this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._eventEditComponent.setCloseEditClickHandler(this._handleCloseEditClick);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevEventComponent === null || prevEventEditComponent === null) {
       render(this._eventsListElement, this._eventComponent, RenderPosition.BEFOREEND);
@@ -117,11 +119,20 @@ export default class Event {
   }
 
   _handleFormSubmit(event) {
+    // todo сделать разветвление на минор и патч (или не делать)
     this._changeData(
         UserAction.UPDATE_EVENT,
         UpdateType.MINOR,
         event
     );
     this._replaceFormToEvent();
+  }
+
+  _handleDeleteClick(event) {
+    this._changeData(
+        UserAction.DELETE_EVENT,
+        UpdateType.MINOR,
+        event
+    );
   }
 }

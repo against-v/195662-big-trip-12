@@ -239,6 +239,7 @@ export default class EventEdit extends SmartView {
     this._offersList = offers;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._closeEditClickHandler = this._closeEditClickHandler.bind(this);
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
@@ -249,6 +250,16 @@ export default class EventEdit extends SmartView {
 
     this._setInnerHandlers();
   }
+
+  // todo Перегружаем метод родителя removeElement,
+  // чтобы при удалении удалялся более ненужный календарь
+  // removeElement() {
+  //   super.removeElement();
+  //   if (this._datepicker) {
+  //     this._datepicker.destroy();
+  //     this._datepicker = null;
+  //   }
+  // }
 
   reset(event) {
     this.updateData(EventEdit.parseEventToData(event));
@@ -302,6 +313,7 @@ export default class EventEdit extends SmartView {
     this._setInnerHandlers();
 
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
     this.setCloseEditClickHandler(this._callback.closeEditClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
   }
@@ -320,6 +332,11 @@ export default class EventEdit extends SmartView {
     this._callback.favoriteClick();
   }
 
+  _deleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(EventEdit.parseDataToEvent(this._data));
+  }
+
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
@@ -333,6 +350,11 @@ export default class EventEdit extends SmartView {
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`change`, this._favoriteClickHandler);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._deleteClickHandler);
   }
 
   static parseEventToData(event) {
