@@ -7,6 +7,7 @@ import TripPresenter from "./presenter/trip.js";
 import EventsModel from "./model/events.js";
 import DestinationsModel from "./model/destinations.js";
 import OffersModel from "./model/offers.js";
+import FilterModel from "./model/filter.js";
 
 
 import {generateEvent} from "./mock/event.js";
@@ -26,6 +27,7 @@ const events = new Array(EVENT_COUNT).fill().map(() => generateEvent(destination
 const destinationsModel = new DestinationsModel();
 const offersModel = new OffersModel();
 const eventsModel = new EventsModel();
+const filterModel = new FilterModel();
 
 destinationsModel.setDestinations(destinations);
 offersModel.setOffers(offers);
