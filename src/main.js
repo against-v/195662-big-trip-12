@@ -3,6 +3,7 @@ import MenuView from "./view/menu.js";
 import FilterView from "./view/filter.js";
 
 import TripPresenter from "./presenter/trip.js";
+import FilterPresenter from "./presenter/filter.js";
 
 import EventsModel from "./model/events.js";
 import DestinationsModel from "./model/destinations.js";
@@ -40,9 +41,11 @@ const siteFilterTitleElement = siteHeaderControlsElement.querySelector(`h2:last-
 const siteMainElement = document.querySelector(`.page-main .page-body__container`);
 
 const tripPresenter = new TripPresenter(siteMainElement, eventsModel, destinationsModel, offersModel);
+const filterPresenter = new FilterPresenter(siteFilterTitleElement, filterModel);
 
 render(siteHeaderMainElement, new InfoView(events), RenderPosition.AFTERBEGIN);
 render(siteMenuTitleElement, new MenuView(), RenderPosition.AFTEREND);
-render(siteFilterTitleElement, new FilterView(), RenderPosition.AFTEREND);
+// render(siteFilterTitleElement, new FilterView(), RenderPosition.AFTEREND);
 
+filterPresenter.init();
 tripPresenter.init();
