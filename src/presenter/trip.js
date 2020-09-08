@@ -94,7 +94,7 @@ export default class Trip {
         this._renderTrip();
         break;
       case UpdateType.MAJOR:
-        this._clearTrip({resetFilter: true, resetSortType: true});
+        this._clearTrip({resetSortType: true});
         this._renderTrip();
         break;
 
@@ -154,7 +154,7 @@ export default class Trip {
     render(this._tripComponent, this._noEventComponent, RenderPosition.BEFOREEND);
   }
 
-  _clearTrip({resetFilter = false, resetSortType = false} = {}) {
+  _clearTrip({resetSortType = false} = {}) {
     Object
       .values(this._eventPresenter)
       .forEach((presenter) => presenter.destroy());
@@ -164,9 +164,6 @@ export default class Trip {
     remove(this._noEventComponent);
     remove(this._daysListComponent);
 
-    if (resetFilter) {
-      console.log(`RESET FILTER`);
-    }
     if (resetSortType) {
       this._currentSortType = SortType.DEFAULT;
     }
