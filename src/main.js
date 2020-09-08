@@ -40,12 +40,11 @@ const siteMenuTitleElement = siteHeaderControlsElement.querySelector(`h2:first-c
 const siteFilterTitleElement = siteHeaderControlsElement.querySelector(`h2:last-child`);
 const siteMainElement = document.querySelector(`.page-main .page-body__container`);
 
-const tripPresenter = new TripPresenter(siteMainElement, eventsModel, destinationsModel, offersModel);
+const tripPresenter = new TripPresenter(siteMainElement, eventsModel, destinationsModel, offersModel, filterModel);
 const filterPresenter = new FilterPresenter(siteFilterTitleElement, filterModel);
 
 render(siteHeaderMainElement, new InfoView(events), RenderPosition.AFTERBEGIN);
 render(siteMenuTitleElement, new MenuView(), RenderPosition.AFTEREND);
-// render(siteFilterTitleElement, new FilterView(), RenderPosition.AFTEREND);
 
 filterPresenter.init();
 tripPresenter.init();

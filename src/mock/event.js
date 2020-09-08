@@ -16,7 +16,7 @@ const generatePrice = () => {
   const COEFFICIENT = 10;
   return getRandomInteger(MIN_VALUE, MAX_VALUE) * COEFFICIENT;
 };
-const generateDateTime = (date = new Date(), nearestDayIndex = 1, latterDayIndex = 7) => {
+const generateDateTime = (date = new Date(), nearestDayIndex = -7, latterDayIndex = 7) => {
   const dayGap = getRandomInteger(nearestDayIndex, latterDayIndex);
   const newDate = new Date(date);
   newDate.setDate(date.getDate() + dayGap);
