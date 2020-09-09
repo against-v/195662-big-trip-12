@@ -2,6 +2,9 @@ import SmartView from "./smart.js";
 import {isEventStopping} from "../utils/event.js";
 import {capitalizeString} from "../utils/common.js";
 import {EVENT_TYPES} from "../const.js";
+import flatpickr from "flatpickr";
+
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const dateTimeFormatting = (dateTime) => {
   const day = (`0${dateTime.getDate()}`).slice(-2);
