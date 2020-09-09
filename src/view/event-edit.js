@@ -240,6 +240,10 @@ export default class EventEdit extends SmartView {
     this._data = EventEdit.parseEventToData(event);
     this._destinationsList = destinations;
     this._offersList = offers;
+    this._dateFromPicker = null;
+    this._dateFromPickerParams = null;
+    this._dateToPickerParams = null;
+
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
@@ -248,10 +252,14 @@ export default class EventEdit extends SmartView {
     this._eventTypeChangeHandler = this._eventTypeChangeHandler.bind(this);
     this._eventDestinationChangeHandler = this._eventDestinationChangeHandler.bind(this);
     this._eventPriceChangeHandler = this._eventPriceChangeHandler.bind(this);
-    // this._eventDateFromChangeHandler = this._eventDateFromChangeHandler.bind(this);
-    // this._eventDateToChangeHandler = this._eventDateToChangeHandler.bind(this);
+    this._eventDateFromChangeHandler = this._eventDateFromChangeHandler.bind(this);
+    this._eventDateToChangeHandler = this._eventDateToChangeHandler.bind(this);
 
     this._setInnerHandlers();
+
+    this._setDatepickersParams();
+    this._setDatepicker(this._dateFromPickerParams);
+    this._setDatepicker(this._dateToPickerParams);
   }
 
   // todo Перегружаем метод родителя removeElement,
@@ -315,10 +323,58 @@ export default class EventEdit extends SmartView {
   restoreHandlers() {
     this._setInnerHandlers();
 
+    this._setDatepickersParams();
+    this._setDatepicker(this._dateFromPickerParams);
+    this._setDatepicker(this._dateToPickerParams);
+
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setDeleteClickHandler(this._callback.deleteClick);
     this.setCloseEditClickHandler(this._callback.closeEditClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
+  }
+
+  _setDatepickersParams() {
+    this._dateFromPickerParams = {
+      datepicker: this._dateFromPicker,
+      element: this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
+      defaultDate: this._data.dateFrom,
+      handler: this._eventDateFromChangeHandler,
+    };
+    this._dateToPickerParams = {
+      datepicker: this._dateToPicker,
+      element: this.getElement().querySelector(`.event__input--time[name="event-end-time"]`),
+      defaultDate: this._data.dateTo,
+      handler: this._eventDateToChangeHandler,
+    };
+  }
+
+  _setDatepicker({datepicker, element, defaultDate, handler}) {
+    if (datepicker) {
+      datepicker.destroy();
+      datepicker = null;
+    }
+    datepicker = flatpickr(
+        element,
+        {
+          dateFormat: `d/m/y H:i`,
+          defaultDate,
+          onChange: handler,
+          enableTime: true,
+          time_24hr: true
+        }
+    );
+  }
+
+  _eventDateFromChangeHandler([userDate]) {
+    this.updateData({
+      dateFrom: userDate
+    });
+  }
+
+  _eventDateToChangeHandler([userDate]) {
+    this.updateData({
+      dateTo: userDate
+    });
   }
 
   _formSubmitHandler(evt) {
