@@ -20,6 +20,14 @@ export const FilterType = {
   PAST: `past`,
 };
 
+export const DateFormat = {
+  MONTH_DAY: `MMM D`,
+  DATE_TIME: `YYYY-MM-DDTHH:mm`,
+  DATEPICKER: `DD/MM/YY HH:mm`,
+  YEAR_MONTH_DAY: `YYYY-MM-DD`,
+  HOURS_MINUTES: `HH:mm`,
+};
+
 export const DESTINATIONS = [
   `The Hague`,
   `Delft`,

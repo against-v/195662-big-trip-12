@@ -1,20 +1,10 @@
 import SmartView from "./smart.js";
 import {isEventStopping} from "../utils/event.js";
-import {capitalizeString} from "../utils/common.js";
-import {EVENT_TYPES} from "../const.js";
+import {capitalizeString, formatDate} from "../utils/common.js";
+import {EVENT_TYPES, DateFormat} from "../const.js";
 import flatpickr from "flatpickr";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
-
-const dateTimeFormatting = (dateTime) => {
-  const day = (`0${dateTime.getDate()}`).slice(-2);
-  const month = (`0${dateTime.getMonth() + 1}`).slice(-2);
-  const year = String(dateTime.getFullYear()).slice(-2);
-  const hours = dateTime.getHours();
-  const minutes = dateTime.getMinutes();
-  const date = `${day}/${month}/${year} ${hours}:${minutes}`;
-  return `${date}`;
-};
 
 const BLANK_EVENT = {
   type: EVENT_TYPES[0],
@@ -149,8 +139,8 @@ const createEventEditTemplate = (data, destinationsList, offersList) => {
     isStopping,
   } = data;
 
-  const dateTimeStartValue = dateTimeFormatting(dateFrom);
-  const dateTimeEndValue = dateTimeFormatting(dateTo);
+  const dateTimeStartValue = formatDate(dateFrom, DateFormat.DATEPICKER);
+  const dateTimeEndValue = formatDate(dateTo, DateFormat.DATEPICKER);
   const eventDestinationTemplate = generateDestinationTemplate(destination, destinationsList);
   const eventOffersTemplate = generateEventOffersTemplate(type, offers, offersList);
   const eventDestinationListTemplate = (
@@ -360,6 +350,7 @@ export default class EventEdit extends SmartView {
           defaultDate,
           onChange: handler,
           enableTime: true,
+          // eslint-disable-next-line camelcase
           time_24hr: true
         }
     );

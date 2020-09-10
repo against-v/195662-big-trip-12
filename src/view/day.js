@@ -1,5 +1,6 @@
 import AbstractView from "./abstract.js";
-import {dateFormatting, createDateInAttributeFormat} from "../utils/common.js";
+import {formatDate} from "../utils/common.js";
+import {DateFormat} from "../const.js";
 
 const createDayInfoTemplate = (index, dateAttribute, formattedDate) => {
   return (
@@ -12,8 +13,8 @@ const createDayTemplate = (day, i) => {
   let dayInfoTemplate = ``;
   if (day) {
     const date = new Date(day);
-    const dateAttribute = createDateInAttributeFormat(date);
-    const formattedDate = dateFormatting(date);
+    const dateAttribute = formatDate(date);
+    const formattedDate = formatDate(date, DateFormat.MONTH_DAY);
     dayInfoTemplate = createDayInfoTemplate(i, dateAttribute, formattedDate);
   }
 
