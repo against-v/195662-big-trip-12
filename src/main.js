@@ -1,6 +1,5 @@
 import InfoView from "./view/info.js";
 import MenuView from "./view/menu.js";
-import FilterView from "./view/filter.js";
 
 import TripPresenter from "./presenter/trip.js";
 import FilterPresenter from "./presenter/filter.js";
