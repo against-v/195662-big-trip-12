@@ -219,7 +219,6 @@ const createEventEditTemplate = (data, destinationsList, offersList) => {
 };
 
 export default class EventEdit extends SmartView {
-  // todo изменение даты будет во втором задании (6.2)
 
   // todo судя по заданию, изменение доп опций тоже должно быть либо в 6.2, либо в 7.1
 
@@ -231,8 +230,7 @@ export default class EventEdit extends SmartView {
     this._destinationsList = destinations;
     this._offersList = offers;
     this._dateFromPicker = null;
-    this._dateFromPickerParams = null;
-    this._dateToPickerParams = null;
+    this._dateToPicker = null;
 
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
@@ -246,21 +244,20 @@ export default class EventEdit extends SmartView {
     this._eventDateToChangeHandler = this._eventDateToChangeHandler.bind(this);
 
     this._setInnerHandlers();
-
-    this._setDatepickersParams();
-    this._setDatepicker(this._dateFromPickerParams);
-    this._setDatepicker(this._dateToPickerParams);
+    this._setDatepicker();
   }
 
-  // todo Перегружаем метод родителя removeElement,
-  // чтобы при удалении удалялся более ненужный календарь
-  // removeElement() {
-  //   super.removeElement();
-  //   if (this._datepicker) {
-  //     this._datepicker.destroy();
-  //     this._datepicker = null;
-  //   }
-  // }
+  removeElement() {
+    super.removeElement();
+    if (this._dateFromPicker) {
+      this._dateFromPicker.destroy();
+      this._dateFromPicker = null;
+    }
+    if (this._dateToPicker) {
+      this._dateToPicker.destroy();
+      this._dateToPicker = null;
+    }
+  }
 
   reset(event) {
     this.updateData(EventEdit.parseEventToData(event));
@@ -288,14 +285,6 @@ export default class EventEdit extends SmartView {
     });
   }
 
-  // _eventDateFromChangeHandler(evt) {
-  //
-  // }
-
-  // _eventDateToChangeHandler(evt) {
-  //
-  // }
-
   _eventDestinationChangeHandler(evt) {
     this.updateData({
       destination: {
@@ -313,42 +302,32 @@ export default class EventEdit extends SmartView {
   restoreHandlers() {
     this._setInnerHandlers();
 
-    this._setDatepickersParams();
-    this._setDatepicker(this._dateFromPickerParams);
-    this._setDatepicker(this._dateToPickerParams);
-
+    this._setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setDeleteClickHandler(this._callback.deleteClick);
     this.setCloseEditClickHandler(this._callback.closeEditClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
   }
 
-  _setDatepickersParams() {
-    this._dateFromPickerParams = {
-      datepicker: this._dateFromPicker,
-      element: this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
-      defaultDate: this._data.dateFrom,
-      handler: this._eventDateFromChangeHandler,
-    };
-    this._dateToPickerParams = {
-      datepicker: this._dateToPicker,
-      element: this.getElement().querySelector(`.event__input--time[name="event-end-time"]`),
-      defaultDate: this._data.dateTo,
-      handler: this._eventDateToChangeHandler,
-    };
-  }
-
-  _setDatepicker({datepicker, element, defaultDate, handler}) {
-    if (datepicker) {
-      datepicker.destroy();
-      datepicker = null;
-    }
-    datepicker = flatpickr(
-        element,
+  _setDatepicker() {
+    // todo вызывать функцию только когда открывается форма редактирования
+    this._dateFromPicker = flatpickr(
+        this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
         {
           dateFormat: `d/m/y H:i`,
-          defaultDate,
-          onChange: handler,
+          defaultDate: this._data.dateFrom,
+          onChange: this._eventDateFromChangeHandler,
+          enableTime: true,
+          // eslint-disable-next-line camelcase
+          time_24hr: true
+        }
+    );
+    this._dateToPicker = flatpickr(
+        this.getElement().querySelector(`.event__input--time[name="event-end-time"]`),
+        {
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._data.dateTo,
+          onChange: this._eventDateToChangeHandler,
           enableTime: true,
           // eslint-disable-next-line camelcase
           time_24hr: true

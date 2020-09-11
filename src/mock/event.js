@@ -68,8 +68,5 @@ export const generateEvent = (destinationsList, offersList) => {
     isFavorite: Boolean(getRandomInteger()),
     offers: generateOffers(type, offersList),
     type,
-
-    // todo убрать после подключения данных с сервера
-    dateStart: generateDate(dateTimeStart),
   };
 };

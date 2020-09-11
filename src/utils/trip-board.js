@@ -1,3 +1,6 @@
+import moment from "moment";
+import {UnitOfTime} from "../const.js";
+
 export const sortByPrice = (eventA, eventB) => {
   return eventB.basePrice - eventA.basePrice;
 };
@@ -14,9 +17,8 @@ export const groupEventsIntoOneList = (events) => {
 
 export const groupEventsByDay = (events) => {
   const eventsDates = events.map((event) => {
-    return event.dateStart;
+    return moment(event.dateFrom).startOf(UnitOfTime.DAY).valueOf();
   });
-
   eventsDates.sort((a, b) => a - b);
 
   let days = new Set();
@@ -27,10 +29,10 @@ export const groupEventsByDay = (events) => {
 
   days = Array.from(days).map((day) => {
     const eventsInDay = events.filter((event) => {
-      return event.dateStart === day;
+      return moment(event.dateFrom).startOf(UnitOfTime.DAY).valueOf() === day;
     });
     eventsInDay.sort((eventA, eventB) => {
-      return Date.parse(eventA.dateTimeStart) - Date.parse(eventB.dateTimeStart);
+      return Date.parse(eventA.dateFrom) - Date.parse(eventB.dateFrom);
     });
     return {
       day,

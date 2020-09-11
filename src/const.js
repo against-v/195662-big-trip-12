@@ -19,6 +19,9 @@ export const FilterType = {
   FUTURE: `future`,
   PAST: `past`,
 };
+export const UnitOfTime = {
+  DAY: `day`,
+};
 
 export const DateFormat = {
   MONTH_DAY: `MMM D`,
