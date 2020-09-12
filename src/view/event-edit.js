@@ -288,7 +288,7 @@ export default class EventEdit extends SmartView {
 
   // todo судя по заданию, изменение доп опций тоже должно быть либо в 6.2, либо в 7.1
 
-  // todo поправить баг: если изменить данные, а потом изменить isFavorite, то данные сбросятся к последним сохраненным
+  // todo ТУТ НУЖНА ПОМОЩЬ: если изменить данные в редактировании события, а потом изменить isFavorite, то данные сбросятся к последним сохраненным
 
   constructor(mode, destinations, offers, event = BLANK_EVENT) {
     super();
