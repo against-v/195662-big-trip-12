@@ -1,6 +1,7 @@
 import InfoView from "./view/info.js";
 import MenuView from "./view/menu.js";
 import AddEventButtonView from "./view/add-event-button.js";
+import StatisticsView from "./view/statistics.js";
 
 import TripPresenter from "./presenter/trip.js";
 import FilterPresenter from "./presenter/filter.js";
@@ -17,7 +18,7 @@ import {generateOffer} from "./mock/offer";
 
 import {render, RenderPosition} from "./utils/render.js";
 
-import {DESTINATIONS, EVENT_TYPES, MenuItem} from "./const";
+import {DESTINATIONS, EVENT_TYPES, MenuItem, FilterType, UpdateType} from "./const";
 
 const EVENT_COUNT = 1;
 
@@ -53,11 +54,11 @@ render(siteHeaderMainElement, addEventButtonComponent, RenderPosition.BEFOREEND)
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
-      // Показать доску
+      tripPresenter.init();
       // Скрыть статистику
       break;
     case MenuItem.STATISTICS:
-      // Скрыть доску
+      tripPresenter.destroy();
       // Показать статистику
       break;
   }
@@ -70,7 +71,9 @@ const handleEventNewFormClose = () => {
 
 const handleAddEventButtonClick = () => {
   // Скрыть статистику
-  // Показать доску
+  tripPresenter.destroy();
+  filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
+  tripPresenter.init();
   tripPresenter.createEvent(handleEventNewFormClose);
   addEventButtonComponent.getElement().disabled = true;
 
@@ -80,4 +83,5 @@ siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 addEventButtonComponent.setAddEventButtonClickHandler(handleAddEventButtonClick);
 
 filterPresenter.init();
-tripPresenter.init();
+// tripPresenter.init();
+render(siteMainElement, new StatisticsView(eventsModel.getEvents()), RenderPosition.BEFOREEND);

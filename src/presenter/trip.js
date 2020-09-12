@@ -42,7 +42,21 @@ export default class Trip {
 
   init() {
     render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
+
+    this._eventsModel.addObserver(this._handleModelEvt);
+    this._filterModel.addObserver(this._handleModelEvt);
+
     this._renderTrip();
+  }
+
+  destroy() {
+    this._clearTrip({resetSortType: true});
+
+    remove(this._daysListComponent);
+    remove(this._tripComponent);
+
+    this._eventsModel.removeObserver(this._handleModelEvt);
+    this._filterModel.removeObserver(this._handleModelEvt);
   }
 
   createEvent(callback) {
@@ -165,6 +179,7 @@ export default class Trip {
   }
 
   _clearTrip({resetSortType = false} = {}) {
+    console.log(resetSortType)
     this._eventNewPresenter.destroy();
     Object
       .values(this._eventPresenter)
