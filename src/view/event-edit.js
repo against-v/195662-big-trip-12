@@ -1,7 +1,7 @@
 import SmartView from "./smart.js";
 import {isEventStopping} from "../utils/event.js";
 import {capitalizeString, formatDate} from "../utils/common.js";
-import {EVENT_TYPES, DateFormat, EditingModes} from "../const.js";
+import {EVENT_TYPES, DateFormat, EditingModes, RegEx} from "../const.js";
 import flatpickr from "flatpickr";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
@@ -242,7 +242,7 @@ const createEventEditTemplate = (data, destinationsList, offersList, mode) => {
   const typeTitle = `${typeCapitalized} ${isStopping ? `in` : `to`}`;
   const eventTypeListTemplate = generateEventTypeListTemplate(type);
   const favoriteCheckboxIsChecked = isFavorite ? `checked` : ``;
-  const isSubmitDisabled = !(destination.name.length > 0 && String(basePrice).length > 0 && Number.isInteger(Number(basePrice)));
+  const isSubmitDisabled = false;
   const resetButtonLabel = mode === EditingModes.CREATE ? `Cancel` : `Delete`;
   const eventRollupButtonTemplate = generateEventRollupButtonTemplate(mode);
 
@@ -316,14 +316,8 @@ export default class EventEdit extends SmartView {
 
   removeElement() {
     super.removeElement();
-    if (this._dateFromPicker) {
-      this._dateFromPicker.destroy();
-      this._dateFromPicker = null;
-    }
-    if (this._dateToPicker) {
-      this._dateToPicker.destroy();
-      this._dateToPicker = null;
-    }
+    this._removeDatepicker(this._dateFromPicker);
+    this._removeDatepicker(this._dateToPicker);
   }
 
   reset(event) {
@@ -359,9 +353,10 @@ export default class EventEdit extends SmartView {
   }
 
   _eventPriceChangeHandler(evt) {
+    evt.target.value = evt.target.value.replace(RegEx.PRICE, ``);
     this.updateData({
       basePrice: evt.target.value
-    });
+    }, true);
   }
 
   restoreHandlers() {
@@ -374,24 +369,27 @@ export default class EventEdit extends SmartView {
     this.setFavoriteClickHandler(this._callback.favoriteClick);
   }
 
-  _setDatepicker() {
-    // todo вызывать функцию только когда открывается форма редактирования
+  _setDateFromPicker() {
     this._dateFromPicker = flatpickr(
         this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
         {
           dateFormat: `d/m/y H:i`,
           defaultDate: this._data.dateFrom,
+          maxDate: this._data.dateTo,
           onChange: this._eventDateFromChangeHandler,
           enableTime: true,
           // eslint-disable-next-line camelcase
           time_24hr: true
         }
     );
+  }
+  _setDateToPicker() {
     this._dateToPicker = flatpickr(
         this.getElement().querySelector(`.event__input--time[name="event-end-time"]`),
         {
           dateFormat: `d/m/y H:i`,
           defaultDate: this._data.dateTo,
+          minDate: this._data.dateFrom,
           onChange: this._eventDateToChangeHandler,
           enableTime: true,
           // eslint-disable-next-line camelcase
@@ -400,16 +398,32 @@ export default class EventEdit extends SmartView {
     );
   }
 
+  _removeDatepicker(datepicker) {
+    if (datepicker) {
+      datepicker.destroy();
+      datepicker = null;
+    }
+  }
+
+  _setDatepicker() {
+    this._setDateFromPicker();
+    this._setDateToPicker();
+  }
+
   _eventDateFromChangeHandler([userDate]) {
     this.updateData({
       dateFrom: userDate
-    });
+    }, true);
+    this._removeDatepicker(this._dateToPicker);
+    this._setDateToPicker();
   }
 
   _eventDateToChangeHandler([userDate]) {
     this.updateData({
       dateTo: userDate
-    });
+    }, true);
+    this._removeDatepicker(this._dateFromPicker);
+    this._setDateFromPicker();
   }
 
   _formSubmitHandler(evt) {

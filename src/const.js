@@ -35,6 +35,10 @@ export const DateFormat = {
   HOURS_MINUTES: `HH:mm`,
 };
 
+export const RegEx = {
+  PRICE: /^[^1-9]$|\D+/,
+};
+
 export const DESTINATIONS = [
   `The Hague`,
   `Delft`,
