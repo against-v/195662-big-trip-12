@@ -133,7 +133,7 @@ const generateEventRollupButtonTemplate = (mode) => {
         <span class="visually-hidden">Open event</span>
       </button>`
     );
-  };
+  }
   return ``;
 };
 const generateEventHeaderTemplate = (data) => {
