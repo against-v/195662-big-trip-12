@@ -337,9 +337,7 @@ export default class EventEdit extends SmartView {
   _setInnerHandlers() {
     this.getElement().querySelector(`.event__type-list`).addEventListener(`change`, this._eventTypeChangeHandler);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventDestinationChangeHandler);
-    this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._eventPriceChangeHandler);
-    // this.getElement().querySelector(`.event__input--time[name="event-end-time"]`).addEventListener(`change`, this._eventDateFromChangeHandler);
-    // this.getElement().querySelector(`.event__input--time[name="event-start-time"]`).addEventListener(`change`, this._eventDateToChangeHandler);
+    this.getElement().querySelector(`.event__input--price`).addEventListener(`input`, this._eventPriceChangeHandler);
   }
 
   _eventTypeChangeHandler(evt) {
