@@ -1,7 +1,38 @@
-export const sortType = {
+export const SortType = {
   DEFAULT: `sort-event`,
   TIME: `sort-time`,
   PRICE: `sort-price`,
+};
+export const UserAction = {
+  UPDATE_EVENT: `UPDATE_EVENT`,
+  ADD_EVENT: `ADD_EVENT`,
+  DELETE_EVENT: `DELETE_EVENT`
+};
+
+export const UpdateType = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
+export const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`,
+};
+export const UnitOfTime = {
+  DAY: `day`,
+};
+export const EditingModes = {
+  CREATE: `create`,
+  UPDATE: `update`,
+};
+
+export const DateFormat = {
+  MONTH_DAY: `MMM D`,
+  DATE_TIME: `YYYY-MM-DDTHH:mm`,
+  DATEPICKER: `DD/MM/YY HH:mm`,
+  YEAR_MONTH_DAY: `YYYY-MM-DD`,
+  HOURS_MINUTES: `HH:mm`,
 };
 
 export const DESTINATIONS = [

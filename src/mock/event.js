@@ -4,19 +4,13 @@ import {EVENT_TYPES} from "../const.js";
 
 const ID_LENGTH = 3;
 
-
-const generateDate = (date = new Date()) => {
-  const newDate = new Date(date);
-  return newDate.setHours(0, 0, 0, 0);
-};
-
 const generatePrice = () => {
   const MIN_VALUE = 1;
   const MAX_VALUE = 99;
   const COEFFICIENT = 10;
   return getRandomInteger(MIN_VALUE, MAX_VALUE) * COEFFICIENT;
 };
-const generateDateTime = (date = new Date(), nearestDayIndex = 1, latterDayIndex = 7) => {
+const generateDateTime = (date = new Date(), nearestDayIndex = -7, latterDayIndex = 7) => {
   const dayGap = getRandomInteger(nearestDayIndex, latterDayIndex);
   const newDate = new Date(date);
   newDate.setDate(date.getDate() + dayGap);
@@ -68,8 +62,5 @@ export const generateEvent = (destinationsList, offersList) => {
     isFavorite: Boolean(getRandomInteger()),
     offers: generateOffers(type, offersList),
     type,
-
-    // todo убрать после подключения данных с сервера
-    dateStart: generateDate(dateTimeStart),
   };
 };

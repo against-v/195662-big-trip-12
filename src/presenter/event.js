@@ -1,6 +1,7 @@
 import EventView from "../view/event";
 import EventEditView from "../view/event-edit";
 import {render, RenderPosition, replace, remove} from "../utils/render";
+import {UserAction, UpdateType, EditingModes} from "../const.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -8,8 +9,10 @@ const Mode = {
 };
 
 export default class Event {
-  constructor(eventsListElement, changeData, changeMode) {
+  constructor(eventsListElement, destinations, offers, changeData, changeMode) {
     this._eventsListElement = eventsListElement;
+    this._destinations = destinations;
+    this._offers = offers;
     this._changeData = changeData;
     this._changeMode = changeMode;
 
@@ -21,10 +24,11 @@ export default class Event {
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleCloseEditClick = this._handleCloseEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(event, destinations, offers) {
+  init(event) {
     this._event = event;
 
     const prevEventComponent = this._eventComponent;
@@ -32,12 +36,13 @@ export default class Event {
 
     this._eventComponent = new EventView(event);
 
-    this._eventEditComponent = new EventEditView(event, destinations, offers);
+    this._eventEditComponent = new EventEditView(EditingModes.UPDATE, this._destinations, this._offers, event);
 
     this._eventComponent.setEditClickHandler(this._handleEditClick);
     this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._eventEditComponent.setCloseEditClickHandler(this._handleCloseEditClick);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevEventComponent === null || prevEventEditComponent === null) {
       render(this._eventsListElement, this._eventComponent, RenderPosition.BEFOREEND);
@@ -94,8 +99,15 @@ export default class Event {
     this._replaceEventToForm();
   }
 
+  _handleCloseEditClick() {
+    this._eventEditComponent.reset(this._event);
+    this._replaceFormToEvent();
+  }
+
   _handleFavoriteClick() {
     this._changeData(
+        UserAction.UPDATE_EVENT,
+        UpdateType.PATCH,
         Object.assign(
             {},
             this._event,
@@ -106,13 +118,21 @@ export default class Event {
     );
   }
 
-  _handleCloseEditClick() {
-    this._eventEditComponent.reset(this._event);
+  _handleFormSubmit(event) {
+    // todo сделать разветвление на минор и патч (или не делать)
+    this._changeData(
+        UserAction.UPDATE_EVENT,
+        UpdateType.MINOR,
+        event
+    );
     this._replaceFormToEvent();
   }
 
-  _handleFormSubmit(event) {
-    this._changeData(event);
-    this._replaceFormToEvent();
+  _handleDeleteClick(event) {
+    this._changeData(
+        UserAction.DELETE_EVENT,
+        UpdateType.MINOR,
+        event
+    );
   }
 }

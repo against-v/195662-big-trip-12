@@ -1,5 +1,7 @@
 import AbstractView from "./abstract.js";
-import {dateFormatting} from "../utils/common.js";
+import {formatDate} from "../utils/common.js";
+import {DateFormat} from "../const";
+
 const calcCost = (events) => {
   let cost = 0;
   events.forEach((event) => {
@@ -14,8 +16,8 @@ const calcCost = (events) => {
 const createMainTemplate = (events) => {
   if (events.length > 0) {
     events.sort((a, b) => a.dateFrom - b.dateFrom);
-    const dateStart = dateFormatting(events[0].dateFrom);
-    const dateEnd = dateFormatting(events[events.length - 1].dateTo);
+    const dateStart = formatDate(events[0].dateFrom, DateFormat.MONTH_DAY);
+    const dateEnd = formatDate(events[events.length - 1].dateTo, DateFormat.MONTH_DAY);
     return (
       `<div class="trip-info__main">
         <h1 class="trip-info__title">${events[0].destination.name} &mdash; ${events[events.length - 1].destination.name}</h1>

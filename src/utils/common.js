@@ -1,42 +1,24 @@
-export const dateFormatting = (date) => {
-  const MONTHS = [
-    `JAN`,
-    `FEB`,
-    `MAR`,
-    `APR`,
-    `MAY`,
-    `JUNE`,
-    `JULY`,
-    `AUG`,
-    `SEPT`,
-    `OCT`,
-    `NOV`,
-    `DEC`,
-  ];
-  const _day = date.getDate();
-  const _month = MONTHS[date.getMonth()];
-  return `${_month} ${_day}`;
-};
+import moment from "moment";
 
-export const createDateInAttributeFormat = (date) => {
-  const year = date.getFullYear();
-  const month = `0${date.getMonth() + 1}`;
-  const day = date.getDate();
-  return `${year}-${month}-${day}`;
-};
-
-export const updateItem = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-
-  if (index === -1) {
-    return items;
+export const formatDate = (date, format) => {
+  if (!(date instanceof Date)) {
+    return ``;
   }
+  return moment(date).format(format);
+};
 
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1)
-  ];
+export const getDuration = (dateFrom, dateTo) => {
+  const gap = dateTo - dateFrom;
+  const day = moment.duration(gap).days();
+  const hours = moment.duration(gap).hours();
+  const minutes = moment.duration(gap).minutes();
+  if (day > 0) {
+    return `${day}D ${hours}H ${minutes}M`;
+  }
+  if (hours > 0) {
+    return `${hours}H ${minutes}M`;
+  }
+  return `${minutes}M`;
 };
 
 export const getRandomInteger = (a = 0, b = 1) => {
