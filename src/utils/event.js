@@ -9,3 +9,6 @@ export const isEventStopping = (eventType) => {
   });
   return index > -1;
 };
+export const validateDestination = (currentDestination, destinationsList) => {
+  return destinationsList.findIndex((destination) => destination.name === currentDestination) > -1;
+};

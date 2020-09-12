@@ -1,5 +1,5 @@
 import SmartView from "./smart.js";
-import {isEventStopping} from "../utils/event.js";
+import {isEventStopping, validateDestination} from "../utils/event.js";
 import {capitalizeString, formatDate} from "../utils/common.js";
 import {EVENT_TYPES, DateFormat, EditingModes, RegEx} from "../const.js";
 import flatpickr from "flatpickr";
@@ -345,11 +345,15 @@ export default class EventEdit extends SmartView {
   }
 
   _eventDestinationChangeHandler(evt) {
+    if (!validateDestination(evt.target.value, this._destinationsList)) {
+      evt.target.value = this._data.destination.name;
+      return;
+    }
     this.updateData({
       destination: {
         name: evt.target.value,
       }
-    });
+    }, true);
   }
 
   _eventPriceChangeHandler(evt) {
