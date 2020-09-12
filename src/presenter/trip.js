@@ -45,10 +45,10 @@ export default class Trip {
     this._renderTrip();
   }
 
-  createEvent() {
+  createEvent(callback) {
     this._currentSortType = SortType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._eventNewPresenter.init();
+    this._eventNewPresenter.init(callback);
   }
 
   _getEvents() {

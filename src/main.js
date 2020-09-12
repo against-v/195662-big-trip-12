@@ -62,11 +62,18 @@ const handleSiteMenuClick = (menuItem) => {
       break;
   }
 };
+
+const handleEventNewFormClose = () => {
+  addEventButtonComponent.getElement().disabled = false;
+  // siteMenuComponent.setMenuItem(MenuItem.TASKS);
+};
+
 const handleAddEventButtonClick = () => {
   // Скрыть статистику
   // Показать доску
-  // Показать форму добавления новой задачи
-  // Убрать выделение с ADD NEW TASK после сохранения
+  tripPresenter.createEvent(handleEventNewFormClose);
+  addEventButtonComponent.getElement().disabled = true;
+
 };
 
 siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
@@ -74,8 +81,3 @@ addEventButtonComponent.setAddEventButtonClickHandler(handleAddEventButtonClick)
 
 filterPresenter.init();
 tripPresenter.init();
-
-document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
-  evt.preventDefault();
-  tripPresenter.createEvent();
-});
