@@ -39,6 +39,11 @@ export const RegEx = {
   PRICE: /^[^1-9]$|\D+/,
 };
 
+export const MenuItem = {
+  TABLE: `table`,
+  STATISTICS: `statistics`
+};
+
 export const DESTINATIONS = [
   `The Hague`,
   `Delft`,
