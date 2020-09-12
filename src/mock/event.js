@@ -4,12 +4,6 @@ import {EVENT_TYPES} from "../const.js";
 
 const ID_LENGTH = 3;
 
-
-const generateDate = (date = new Date()) => {
-  const newDate = new Date(date);
-  return newDate.setHours(0, 0, 0, 0);
-};
-
 const generatePrice = () => {
   const MIN_VALUE = 1;
   const MAX_VALUE = 99;

@@ -1,7 +1,7 @@
 import EventView from "../view/event";
 import EventEditView from "../view/event-edit";
 import {render, RenderPosition, replace, remove} from "../utils/render";
-import {UserAction, UpdateType} from "../const.js";
+import {UserAction, UpdateType, EditingModes} from "../const.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -36,7 +36,7 @@ export default class Event {
 
     this._eventComponent = new EventView(event);
 
-    this._eventEditComponent = new EventEditView(event, this._destinations, this._offers);
+    this._eventEditComponent = new EventEditView(EditingModes.UPDATE, this._destinations, this._offers, event);
 
     this._eventComponent.setEditClickHandler(this._handleEditClick);
     this._eventEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);

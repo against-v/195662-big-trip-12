@@ -47,3 +47,8 @@ render(siteMenuTitleElement, new MenuView(), RenderPosition.AFTEREND);
 
 filterPresenter.init();
 tripPresenter.init();
+
+document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+  tripPresenter.createEvent();
+});

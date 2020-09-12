@@ -22,6 +22,10 @@ export const FilterType = {
 export const UnitOfTime = {
   DAY: `day`,
 };
+export const EditingModes = {
+  CREATE: `create`,
+  UPDATE: `update`,
+};
 
 export const DateFormat = {
   MONTH_DAY: `MMM D`,
