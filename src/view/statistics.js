@@ -2,7 +2,8 @@ import SmartView from "./smart.js";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {ChartSettings} from "../const.js";
-import {makeItemsUniq, countEventsPriceByEventType} from "../utils/statistics.js";
+import {makeItemsUniq, countEventsPriceByEventType, countTripsTypesByType} from "../utils/statistics.js";
+import {isEventStopping} from "../utils/event";
 
 const renderMoneyChart = (moneyCtx, events) => {
   const eventsTypes = events.map((event) => event.type);
@@ -79,7 +80,14 @@ const renderMoneyChart = (moneyCtx, events) => {
     }
   });
 };
-const renderTransportChart = (transportCtx) => {
+const renderTransportChart = (transportCtx, events) => {
+  const eventsTypes = events.map((event) => event.type);
+  const tripsTypes = eventsTypes.filter((eventType) => !isEventStopping(eventType));
+  const uniqTripsTypes = makeItemsUniq(tripsTypes);
+  const tripsTypesByType = countTripsTypesByType(tripsTypes, uniqTripsTypes);
+  console.log(tripsTypesByType)
+
+
   return new Chart(transportCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
@@ -215,7 +223,7 @@ export default class Statistics extends SmartView {
     // timeSpendCtx.height = BAR_HEIGHT * 4;
 
     this._moneyChart = renderMoneyChart(moneyCtx, this._data);
-    this._transportChart = renderTransportChart(transportCtx);
+    this._transportChart = renderTransportChart(transportCtx, this._data);
     this._timeSpendChart = renderTimeSpendChart(timeSpendCtx);
   }
 }
