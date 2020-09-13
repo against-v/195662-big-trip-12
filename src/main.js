@@ -16,7 +16,7 @@ import {generateEvent} from "./mock/event.js";
 import {generateDestination} from "./mock/destination";
 import {generateOffer} from "./mock/offer";
 
-import {render, RenderPosition} from "./utils/render.js";
+import {render, RenderPosition, remove} from "./utils/render.js";
 
 import {DESTINATIONS, EVENT_TYPES, MenuItem, FilterType, UpdateType} from "./const";
 
@@ -51,29 +51,34 @@ render(siteHeaderMainElement, new InfoView(events), RenderPosition.AFTERBEGIN);
 render(siteMenuTitleElement, siteMenuComponent, RenderPosition.AFTEREND);
 render(siteHeaderMainElement, addEventButtonComponent, RenderPosition.BEFOREEND);
 
+let statisticsComponent = null;
+
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
       tripPresenter.init();
-      // Скрыть статистику
+      remove(statisticsComponent);
       break;
     case MenuItem.STATISTICS:
       tripPresenter.destroy();
-      // Показать статистику
+      statisticsComponent = new StatisticsView(eventsModel.getEvents());
+      render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
       break;
   }
 };
 
 const handleEventNewFormClose = () => {
   addEventButtonComponent.getElement().disabled = false;
-  // siteMenuComponent.setMenuItem(MenuItem.TASKS);
 };
 
 const handleAddEventButtonClick = () => {
-  // Скрыть статистику
+  if (statisticsComponent) {
+    remove(statisticsComponent);
+  }
   tripPresenter.destroy();
-  filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
+  filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
   tripPresenter.init();
+  siteMenuComponent.setMenuItem(MenuItem.TABLE);
   tripPresenter.createEvent(handleEventNewFormClose);
   addEventButtonComponent.getElement().disabled = true;
 
@@ -83,5 +88,4 @@ siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 addEventButtonComponent.setAddEventButtonClickHandler(handleAddEventButtonClick);
 
 filterPresenter.init();
-// tripPresenter.init();
-render(siteMainElement, new StatisticsView(eventsModel.getEvents()), RenderPosition.BEFOREEND);
+tripPresenter.init();
