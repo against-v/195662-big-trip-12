@@ -57,6 +57,12 @@ export const ChartSettings = {
   BAR_HEIGHT: 55
 };
 
+export const ChartDataPropertyName = {
+  PRICE: `price`,
+  COUNT: `count`,
+  DURATION: `duration`,
+};
+
 export const DESTINATIONS = [
   `The Hague`,
   `Delft`,

@@ -1,7 +1,7 @@
 import SmartView from "./smart.js";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {ChartSettings} from "../const.js";
+import {ChartSettings, ChartDataPropertyName} from "../const.js";
 import {isEventStopping} from "../utils/event";
 import {humanizeDuration} from "../utils/common.js";
 import {
@@ -18,7 +18,7 @@ import {
 const renderMoneyChart = (moneyCtx, events) => {
   const uniqEventsTypes = getUniqTypes(events);
   const eventsPriceByEventType = uniqEventsTypes.map((type) => countEventsPriceByEventType(events, type));
-  const chartData = getChartData(eventsPriceByEventType, `price`);
+  const chartData = getChartData(eventsPriceByEventType, ChartDataPropertyName.PRICE);
   setCtxHeight(moneyCtx, uniqEventsTypes.length);
 
   return new Chart(moneyCtx, {
@@ -92,7 +92,7 @@ const renderTransportChart = (transportCtx, events) => {
   const uniqEventsTypes = makeItemsUniq(filteredEventsTypes);
   const tripsTypesByType = uniqEventsTypes.map((type) => countTripsTypesByType(filteredEventsTypes, type));
 
-  const chartData = getChartData(tripsTypesByType, `count`);
+  const chartData = getChartData(tripsTypesByType, ChartDataPropertyName.COUNT);
 
   setCtxHeight(transportCtx, uniqEventsTypes.length);
 
@@ -165,7 +165,7 @@ const renderTimeChart = (timeCtx, events) => {
   const uniqEventsTypes = getUniqTypes(events);
   const eventsDurationByEventType = uniqEventsTypes.map((type) => countEventsDurationByEventType(events, type));
 
-  const chartData = getChartData(eventsDurationByEventType, `duration`);
+  const chartData = getChartData(eventsDurationByEventType, ChartDataPropertyName.DURATION);
 
   setCtxHeight(timeCtx, uniqEventsTypes.length);
 
