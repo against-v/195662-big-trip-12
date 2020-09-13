@@ -1,18 +1,29 @@
 import SmartView from "./smart.js";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {ChartSettings} from "../const.js";
+import {makeItemsUniq, countEventsPriceByEventType} from "../utils/statistics.js";
 
-const renderMoneyChart = (moneyCtx) => {
+const renderMoneyChart = (moneyCtx, events) => {
+  const eventsTypes = events.map((event) => event.type);
+  const uniqEventTypes = makeItemsUniq(eventsTypes);
+  const eventsPriceByEventType = uniqEventTypes.map((type) => countEventsPriceByEventType(events, type));
+  eventsPriceByEventType.sort((eventA, eventB) => eventB.price - eventA.price);
+  const chartLabels = eventsPriceByEventType.map((eventPrice) => eventPrice.type.toUpperCase());
+  const chartData = eventsPriceByEventType.map((eventPrice) => eventPrice.price);
+
+  moneyCtx.height = ChartSettings.BAR_HEIGHT * uniqEventTypes.length;
+
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [`✈️ FLY`, `???? STAY`, `???? DRIVE`, `????️ LOOK`, `???? EAT`, `???? RIDE`],
+      labels: chartLabels,
       datasets: [{
-        data: [400, 300, 200, 160, 150, 100],
-        backgroundColor: `#ffffff`,
-        hoverBackgroundColor: `#ffffff`,
-        anchor: `start`
+        data: chartData,
+        backgroundColor: ChartSettings.COLOR.WHITE,
+        hoverBackgroundColor: ChartSettings.COLOR.WHITE,
+        anchor: ChartSettings.POSITION.START,
       }]
     },
     options: {
@@ -21,23 +32,23 @@ const renderMoneyChart = (moneyCtx) => {
           font: {
             size: 13
           },
-          color: `#000000`,
-          anchor: 'end',
-          align: 'start',
+          color: ChartSettings.COLOR.BLACK,
+          anchor: ChartSettings.POSITION.END,
+          align: ChartSettings.POSITION.START,
           formatter: (val) => `€ ${val}`
         }
       },
       title: {
         display: true,
         text: `MONEY`,
-        fontColor: `#000000`,
+        fontColor: ChartSettings.COLOR.BLACK,
         fontSize: 23,
-        position: `left`
+        position: ChartSettings.POSITION.LEFT
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: `#000000`,
+            fontColor: ChartSettings.COLOR.BLACK,
             padding: 5,
             fontSize: 13,
           },
@@ -76,9 +87,9 @@ const renderTransportChart = (transportCtx) => {
       labels: [`???? DRIVE`, `???? RIDE`, `✈️ FLY`, `????️ SAIL`],
       datasets: [{
         data: [4, 3, 2, 1],
-        backgroundColor: `#ffffff`,
-        hoverBackgroundColor: `#ffffff`,
-        anchor: `start`
+        backgroundColor: ChartSettings.COLOR.WHITE,
+        hoverBackgroundColor: ChartSettings.COLOR.WHITE,
+        anchor: ChartSettings.POSITION.START,
       }]
     },
     options: {
@@ -87,23 +98,23 @@ const renderTransportChart = (transportCtx) => {
           font: {
             size: 13
           },
-          color: `#000000`,
-          anchor: 'end',
-          align: 'start',
+          color: ChartSettings.COLOR.BLACK,
+          anchor: ChartSettings.POSITION.END,
+          align: ChartSettings.POSITION.START,
           formatter: (val) => `${val}x`
         }
       },
       title: {
         display: true,
         text: `TRANSPORT`,
-        fontColor: `#000000`,
+        fontColor: ChartSettings.COLOR.BLACK,
         fontSize: 23,
-        position: `left`
+        position: ChartSettings.POSITION.LEFT
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: `#000000`,
+            fontColor: ChartSettings.COLOR.BLACK,
             padding: 5,
             fontSize: 13,
           },
@@ -194,8 +205,17 @@ export default class Statistics extends SmartView {
       this._timeSpendChart = null;
     }
 
-    this._moneyChart = renderMoneyChart();
-    this._transportChart = renderTransportChart();
-    this._timeSpendChart = renderTimeSpendChart();
+    const moneyCtx = this.getElement().querySelector(`.statistics__chart--money`);
+    const transportCtx = this.getElement().querySelector(`.statistics__chart--transport`);
+    const timeSpendCtx = this.getElement().querySelector(`.statistics__chart--time-spend`);
+
+    // const BAR_HEIGHT = 55;
+    // moneyCtx.height = BAR_HEIGHT * 6;
+    // transportCtx.height = BAR_HEIGHT * 4;
+    // timeSpendCtx.height = BAR_HEIGHT * 4;
+
+    this._moneyChart = renderMoneyChart(moneyCtx, this._data);
+    this._transportChart = renderTransportChart(transportCtx);
+    this._timeSpendChart = renderTimeSpendChart(timeSpendCtx);
   }
 }

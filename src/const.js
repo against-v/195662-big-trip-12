@@ -44,6 +44,19 @@ export const MenuItem = {
   STATISTICS: `statistics`
 };
 
+export const ChartSettings = {
+  POSITION: {
+    START: `start`,
+    END: `end`,
+    LEFT: `left`,
+  },
+  COLOR: {
+    WHITE: `#ffffff`,
+    BLACK: `#000000`,
+  },
+  BAR_HEIGHT: 55
+};
+
 export const DESTINATIONS = [
   `The Hague`,
   `Delft`,

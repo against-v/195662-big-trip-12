@@ -20,11 +20,12 @@ import {render, RenderPosition} from "./utils/render.js";
 
 import {DESTINATIONS, EVENT_TYPES, MenuItem, FilterType, UpdateType} from "./const";
 
-const EVENT_COUNT = 1;
+const EVENT_COUNT = 10;
 
 const destinations = DESTINATIONS.map((destinationName) => generateDestination(destinationName));
 const offers = EVENT_TYPES.map((offerType) => generateOffer(offerType));
 const events = new Array(EVENT_COUNT).fill().map(() => generateEvent(destinations, offers));
+console.log(events)
 
 const destinationsModel = new DestinationsModel();
 const offersModel = new OffersModel();
