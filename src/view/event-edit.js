@@ -476,7 +476,9 @@ export default class EventEdit extends SmartView {
 
   setCloseEditClickHandler(callback) {
     this._callback.closeEditClick = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeEditClickHandler);
+    if (this._mode === EditingModes.UPDATE) {
+      this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeEditClickHandler);
+    }
   }
 
   setFavoriteClickHandler(callback) {

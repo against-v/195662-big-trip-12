@@ -1,6 +1,6 @@
 import AbstractView from "./abstract.js";
 import {isEventStopping} from "../utils/event.js";
-import {capitalizeString, formatDate, getDuration} from "../utils/common.js";
+import {capitalizeString, formatDate, getDuration, humanizeDuration} from "../utils/common.js";
 import {DateFormat} from "../const.js";
 
 const createOffersTemplate = (items) => {
@@ -36,7 +36,7 @@ const createEventTemplate = (event) => {
   const dateToAttribute = formatDate(dateTo, DateFormat.DATE_TIME);
   const timeFrom = formatDate(dateFrom, DateFormat.HOURS_MINUTES);
   const timeTo = formatDate(dateTo, DateFormat.HOURS_MINUTES);
-  const duration = getDuration(dateFrom, dateTo);
+  const duration = humanizeDuration(getDuration(dateFrom, dateTo));
 
   return (
     `<li class="trip-events__item">

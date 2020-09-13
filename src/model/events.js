@@ -31,11 +31,6 @@ export default class Events extends Observer {
   }
 
   addEvent(updateType, update) {
-    // todo удалитть
-    // this._events = [
-    //   update,
-    //   ...this._events
-    // ];
     this._events.push(update);
 
     this._notify(updateType, update);
