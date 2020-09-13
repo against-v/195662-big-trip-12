@@ -2,27 +2,32 @@ import SmartView from "./smart.js";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {ChartSettings} from "../const.js";
-import {makeItemsUniq, countEventsPriceByEventType, countTripsTypesByType, countEventsDurationByEventType} from "../utils/statistics.js";
 import {isEventStopping} from "../utils/event";
 import {humanizeDuration} from "../utils/common.js";
+import {
+  makeItemsUniq,
+  countEventsPriceByEventType,
+  countTripsTypesByType,
+  countEventsDurationByEventType,
+  getUniqTypes,
+  setCtxHeight,
+  getChartData,
+} from "../utils/statistics.js";
+
 
 const renderMoneyChart = (moneyCtx, events) => {
-  const eventsTypes = events.map((event) => event.type);
-  const uniqEventTypes = makeItemsUniq(eventsTypes);
-  const eventsPriceByEventType = uniqEventTypes.map((type) => countEventsPriceByEventType(events, type));
-  eventsPriceByEventType.sort((eventA, eventB) => eventB.price - eventA.price);
-  const chartLabels = eventsPriceByEventType.map((eventPrice) => eventPrice.type.toUpperCase());
-  const chartData = eventsPriceByEventType.map((eventPrice) => eventPrice.price);
-
-  moneyCtx.height = ChartSettings.BAR_HEIGHT * uniqEventTypes.length;
+  const uniqEventsTypes = getUniqTypes(events);
+  const eventsPriceByEventType = uniqEventsTypes.map((type) => countEventsPriceByEventType(events, type));
+  const chartData = getChartData(eventsPriceByEventType, `price`);
+  setCtxHeight(moneyCtx, uniqEventsTypes.length);
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: chartLabels,
+      labels: chartData.labels,
       datasets: [{
-        data: chartData,
+        data: chartData.data,
         backgroundColor: ChartSettings.COLOR.WHITE,
         hoverBackgroundColor: ChartSettings.COLOR.WHITE,
         anchor: ChartSettings.POSITION.START,
@@ -83,22 +88,21 @@ const renderMoneyChart = (moneyCtx, events) => {
 };
 const renderTransportChart = (transportCtx, events) => {
   const eventsTypes = events.map((event) => event.type);
-  const tripsTypes = eventsTypes.filter((eventType) => !isEventStopping(eventType));
-  const uniqTripsTypes = makeItemsUniq(tripsTypes);
-  const tripsTypesByType = uniqTripsTypes.map((type) => countTripsTypesByType(tripsTypes, type));
-  tripsTypesByType.sort((typeA, typeB) => typeB.count - typeA.count);
-  const chartLabels = tripsTypesByType.map((tripType) => tripType.type.toUpperCase());
-  const chartData = tripsTypesByType.map((tripType) => tripType.count);
+  const filteredEventsTypes = eventsTypes.filter((eventType) => !isEventStopping(eventType));
+  const uniqEventsTypes = makeItemsUniq(filteredEventsTypes);
+  const tripsTypesByType = uniqEventsTypes.map((type) => countTripsTypesByType(filteredEventsTypes, type));
 
-  transportCtx.height = ChartSettings.BAR_HEIGHT * uniqTripsTypes.length;
+  const chartData = getChartData(tripsTypesByType, `count`);
+
+  setCtxHeight(transportCtx, uniqEventsTypes.length);
 
   return new Chart(transportCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: chartLabels,
+      labels: chartData.labels,
       datasets: [{
-        data: chartData,
+        data: chartData.data,
         backgroundColor: ChartSettings.COLOR.WHITE,
         hoverBackgroundColor: ChartSettings.COLOR.WHITE,
         anchor: ChartSettings.POSITION.START,
@@ -158,23 +162,20 @@ const renderTransportChart = (transportCtx, events) => {
   });
 };
 const renderTimeChart = (timeCtx, events) => {
-  const eventsTypes = events.map((event) => event.type);
-  const uniqEventTypes = makeItemsUniq(eventsTypes);
-  const eventsDurationByEventType = uniqEventTypes.map((type) => countEventsDurationByEventType(events, type));
-  eventsDurationByEventType.sort((eventA, eventB) => eventB.duration - eventA.duration);
-  const chartLabels = eventsDurationByEventType.map((eventDuration) => eventDuration.type.toUpperCase());
-  const chartData = eventsDurationByEventType.map((eventDuration) => eventDuration.duration);
+  const uniqEventsTypes = getUniqTypes(events);
+  const eventsDurationByEventType = uniqEventsTypes.map((type) => countEventsDurationByEventType(events, type));
 
+  const chartData = getChartData(eventsDurationByEventType, `duration`);
 
-  timeCtx.height = ChartSettings.BAR_HEIGHT * uniqEventTypes.length;
+  setCtxHeight(timeCtx, uniqEventsTypes.length);
 
   return new Chart(timeCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: chartLabels,
+      labels: chartData.labels,
       datasets: [{
-        data: chartData,
+        data: chartData.data,
         backgroundColor: ChartSettings.COLOR.WHITE,
         hoverBackgroundColor: ChartSettings.COLOR.WHITE,
         anchor: ChartSettings.POSITION.START,

@@ -1,4 +1,5 @@
 import {getDuration} from "./common.js";
+import {ChartSettings} from "../const";
 
 export const makeItemsUniq = (items) => [...new Set(items)];
 
@@ -30,4 +31,19 @@ export const countEventsDurationByEventType = (events, type) => {
     type,
   };
 
+};
+
+export const getUniqTypes = (events) => {
+  const eventsTypes = events.map((event) => event.type);
+  return makeItemsUniq(eventsTypes);
+};
+export const setCtxHeight = (ctx, barsCount) => {
+  ctx.height = ChartSettings.BAR_HEIGHT * barsCount;
+};
+export const getChartData = (items, propName) => {
+  items.sort((itemA, itemB) => itemB[propName] - itemA[propName]);
+  return {
+    labels: items.map((item) => item.type.toUpperCase()),
+    data: items.map((item) => item[propName]),
+  };
 };

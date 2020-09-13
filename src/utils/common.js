@@ -9,6 +9,7 @@ export const formatDate = (date, format) => {
 
 export const getDuration = (dateFrom, dateTo) => {
   return dateTo - dateFrom;
+  //todo поправить
   // const gap = dateTo - dateFrom;
   // const day = moment.duration(gap).days();
   // const hours = moment.duration(gap).hours();
