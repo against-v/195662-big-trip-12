@@ -25,7 +25,7 @@ const EVENT_COUNT = 10;
 const destinations = DESTINATIONS.map((destinationName) => generateDestination(destinationName));
 const offers = EVENT_TYPES.map((offerType) => generateOffer(offerType));
 const events = new Array(EVENT_COUNT).fill().map(() => generateEvent(destinations, offers));
-console.log(events)
+events.forEach((e) => console.log(e.type));
 
 const destinationsModel = new DestinationsModel();
 const offersModel = new OffersModel();
@@ -84,5 +84,5 @@ siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 addEventButtonComponent.setAddEventButtonClickHandler(handleAddEventButtonClick);
 
 filterPresenter.init();
-tripPresenter.init();
-// render(siteMainElement, new StatisticsView(eventsModel.getEvents()), RenderPosition.BEFOREEND);
+// tripPresenter.init();
+render(siteMainElement, new StatisticsView(eventsModel.getEvents()), RenderPosition.BEFOREEND);

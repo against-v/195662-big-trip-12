@@ -84,17 +84,20 @@ const renderTransportChart = (transportCtx, events) => {
   const eventsTypes = events.map((event) => event.type);
   const tripsTypes = eventsTypes.filter((eventType) => !isEventStopping(eventType));
   const uniqTripsTypes = makeItemsUniq(tripsTypes);
-  const tripsTypesByType = countTripsTypesByType(tripsTypes, uniqTripsTypes);
-  console.log(tripsTypesByType)
+  const tripsTypesByType = uniqTripsTypes.map((type) => countTripsTypesByType(tripsTypes, type));
+  tripsTypesByType.sort((typeA, typeB) => typeB.count - typeA.count);
+  const chartLabels = tripsTypesByType.map((tripType) => tripType.type.toUpperCase());
+  const chartData = tripsTypesByType.map((tripType) => tripType.count);
 
+  transportCtx.height = ChartSettings.BAR_HEIGHT * tripsTypesByType.length;
 
   return new Chart(transportCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [`???? DRIVE`, `???? RIDE`, `✈️ FLY`, `????️ SAIL`],
+      labels: chartLabels,
       datasets: [{
-        data: [4, 3, 2, 1],
+        data: chartData,
         backgroundColor: ChartSettings.COLOR.WHITE,
         hoverBackgroundColor: ChartSettings.COLOR.WHITE,
         anchor: ChartSettings.POSITION.START,

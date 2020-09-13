@@ -11,11 +11,10 @@ export const countEventsPriceByEventType = (events, type) => {
     type,
   };
 };
-export const countTripsTypesByType = (tripTypes, types) => {
-  console.log(tripTypes, types)
-  types.forEach((type) => {
-    console.log(tripTypes.filter((tripType) => tripType === type).length);
-  });
-  // return tripTypes.filter((tripType) => tripType === type).length;
+export const countTripsTypesByType = (tripTypes, type) => {
+  return {
+    count: tripTypes.filter((tripType) => tripType === type).length,
+    type
+  };
 
 };
