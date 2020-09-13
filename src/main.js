@@ -25,7 +25,6 @@ const EVENT_COUNT = 10;
 const destinations = DESTINATIONS.map((destinationName) => generateDestination(destinationName));
 const offers = EVENT_TYPES.map((offerType) => generateOffer(offerType));
 const events = new Array(EVENT_COUNT).fill().map(() => generateEvent(destinations, offers));
-events.forEach((e) => console.log(e.type));
 
 const destinationsModel = new DestinationsModel();
 const offersModel = new OffersModel();

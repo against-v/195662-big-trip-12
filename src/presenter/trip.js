@@ -179,7 +179,6 @@ export default class Trip {
   }
 
   _clearTrip({resetSortType = false} = {}) {
-    console.log(resetSortType)
     this._eventNewPresenter.destroy();
     Object
       .values(this._eventPresenter)

@@ -8,10 +8,24 @@ export const formatDate = (date, format) => {
 };
 
 export const getDuration = (dateFrom, dateTo) => {
-  const gap = dateTo - dateFrom;
-  const day = moment.duration(gap).days();
-  const hours = moment.duration(gap).hours();
-  const minutes = moment.duration(gap).minutes();
+  return dateTo - dateFrom;
+  // const gap = dateTo - dateFrom;
+  // const day = moment.duration(gap).days();
+  // const hours = moment.duration(gap).hours();
+  // const minutes = moment.duration(gap).minutes();
+  // if (day > 0) {
+  //   return `${day}D ${hours}H ${minutes}M`;
+  // }
+  // if (hours > 0) {
+  //   return `${hours}H ${minutes}M`;
+  // }
+  // return `${minutes}M`;
+};
+
+export const humanizeDuration = (duration) => {
+  const day = moment.duration(duration).days();
+  const hours = moment.duration(duration).hours();
+  const minutes = moment.duration(duration).minutes();
   if (day > 0) {
     return `${day}D ${hours}H ${minutes}M`;
   }
