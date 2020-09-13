@@ -5,7 +5,6 @@ import {ChartSettings, ChartDataPropertyName} from "../const.js";
 import {isEventStopping} from "../utils/event";
 import {humanizeDuration} from "../utils/common.js";
 import {
-  makeItemsUniq,
   countEventsPriceByEventType,
   countTripsTypesByType,
   countEventsDurationByEventType,
@@ -89,7 +88,7 @@ const renderMoneyChart = (moneyCtx, events) => {
 const renderTransportChart = (transportCtx, events) => {
   const eventsTypes = events.map((event) => event.type);
   const filteredEventsTypes = eventsTypes.filter((eventType) => !isEventStopping(eventType));
-  const uniqEventsTypes = makeItemsUniq(filteredEventsTypes);
+  const uniqEventsTypes = [...new Set(filteredEventsTypes)];
   const tripsTypesByType = uniqEventsTypes.map((type) => countTripsTypesByType(filteredEventsTypes, type));
 
   const chartData = getChartData(tripsTypesByType, ChartDataPropertyName.COUNT);
