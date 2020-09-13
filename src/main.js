@@ -84,5 +84,5 @@ siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 addEventButtonComponent.setAddEventButtonClickHandler(handleAddEventButtonClick);
 
 filterPresenter.init();
-// tripPresenter.init();
-render(siteMainElement, new StatisticsView(eventsModel.getEvents()), RenderPosition.BEFOREEND);
+tripPresenter.init();
+// render(siteMainElement, new StatisticsView(eventsModel.getEvents()), RenderPosition.BEFOREEND);
