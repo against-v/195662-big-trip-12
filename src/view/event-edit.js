@@ -1,7 +1,7 @@
 import SmartView from "./smart.js";
-import {isEventStopping} from "../utils/event.js";
+import {isEventStopping, validateDestination} from "../utils/event.js";
 import {capitalizeString, formatDate} from "../utils/common.js";
-import {EVENT_TYPES, DateFormat, EditingModes} from "../const.js";
+import {EVENT_TYPES, DateFormat, EditingModes, RegEx} from "../const.js";
 import flatpickr from "flatpickr";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
@@ -40,6 +40,8 @@ const generateEventOffersTemplate = (eventType, eventOffers, offersList) => {
           id="event-offer-luggage-${index + 1}"
           type="checkbox"
           name="event-offer-luggage"
+          data-title="${offer.title}"
+          data-price="${offer.price}"
           ${setChecked(offer)}>
           <label class="event__offer-label" for="event-offer-luggage-${index + 1}">
             <span class="event__offer-title">${offer.title}</span>
@@ -242,7 +244,7 @@ const createEventEditTemplate = (data, destinationsList, offersList, mode) => {
   const typeTitle = `${typeCapitalized} ${isStopping ? `in` : `to`}`;
   const eventTypeListTemplate = generateEventTypeListTemplate(type);
   const favoriteCheckboxIsChecked = isFavorite ? `checked` : ``;
-  const isSubmitDisabled = !(destination.name.length > 0 && String(basePrice).length > 0 && Number.isInteger(Number(basePrice)));
+  const isSubmitDisabled = false;
   const resetButtonLabel = mode === EditingModes.CREATE ? `Cancel` : `Delete`;
   const eventRollupButtonTemplate = generateEventRollupButtonTemplate(mode);
 
@@ -286,8 +288,6 @@ const createEventEditTemplate = (data, destinationsList, offersList, mode) => {
 
 export default class EventEdit extends SmartView {
 
-  // todo судя по заданию, изменение доп опций тоже должно быть либо в 6.2, либо в 7.1
-
   // todo ТУТ НУЖНА ПОМОЩЬ: если изменить данные в редактировании события, а потом изменить isFavorite, то данные сбросятся к последним сохраненным
 
   constructor(mode, destinations, offers, event = BLANK_EVENT) {
@@ -309,6 +309,7 @@ export default class EventEdit extends SmartView {
     this._eventPriceChangeHandler = this._eventPriceChangeHandler.bind(this);
     this._eventDateFromChangeHandler = this._eventDateFromChangeHandler.bind(this);
     this._eventDateToChangeHandler = this._eventDateToChangeHandler.bind(this);
+    this._eventOffersChangeHandler = this._eventOffersChangeHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDatepicker();
@@ -316,14 +317,8 @@ export default class EventEdit extends SmartView {
 
   removeElement() {
     super.removeElement();
-    if (this._dateFromPicker) {
-      this._dateFromPicker.destroy();
-      this._dateFromPicker = null;
-    }
-    if (this._dateToPicker) {
-      this._dateToPicker.destroy();
-      this._dateToPicker = null;
-    }
+    this._removeDatepicker(this._dateFromPicker);
+    this._removeDatepicker(this._dateToPicker);
   }
 
   reset(event) {
@@ -335,9 +330,79 @@ export default class EventEdit extends SmartView {
   }
 
   _setInnerHandlers() {
+    this.getElement().querySelector(`.event__section--offers`).addEventListener(`change`, this._eventOffersChangeHandler);
     this.getElement().querySelector(`.event__type-list`).addEventListener(`change`, this._eventTypeChangeHandler);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventDestinationChangeHandler);
     this.getElement().querySelector(`.event__input--price`).addEventListener(`input`, this._eventPriceChangeHandler);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+
+    this._setDatepicker();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
+    this.setCloseEditClickHandler(this._callback.closeEditClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+  }
+
+  _setDateFromPicker() {
+    this._dateFromPicker = flatpickr(
+        this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
+        {
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._data.dateFrom,
+          maxDate: this._data.dateTo,
+          onChange: this._eventDateFromChangeHandler,
+          enableTime: true,
+          // eslint-disable-next-line camelcase
+          time_24hr: true
+        }
+    );
+  }
+
+  _setDateToPicker() {
+    this._dateToPicker = flatpickr(
+        this.getElement().querySelector(`.event__input--time[name="event-end-time"]`),
+        {
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._data.dateTo,
+          minDate: this._data.dateFrom,
+          onChange: this._eventDateToChangeHandler,
+          enableTime: true,
+          // eslint-disable-next-line camelcase
+          time_24hr: true
+        }
+    );
+  }
+
+  _removeDatepicker(datepicker) {
+    if (datepicker) {
+      datepicker.destroy();
+      datepicker = null;
+    }
+  }
+
+  _setDatepicker() {
+    this._setDateFromPicker();
+    this._setDateToPicker();
+  }
+
+  _eventOffersChangeHandler(evt) {
+    const changedOffer = {
+      title: evt.target.dataset.title,
+      price: evt.target.dataset.price,
+    };
+    const offers = this._data.offers.slice();
+    if (evt.target.checked) {
+      offers.push(changedOffer);
+    } else {
+      const offerIndex = offers.findIndex((offer) => offer.title === changedOffer.title);
+      offers.splice(offerIndex, 1);
+    }
+    this.updateData({
+      offers,
+    }, true);
   }
 
   _eventTypeChangeHandler(evt) {
@@ -351,65 +416,38 @@ export default class EventEdit extends SmartView {
   }
 
   _eventDestinationChangeHandler(evt) {
+    if (!validateDestination(evt.target.value, this._destinationsList)) {
+      evt.target.value = this._data.destination.name;
+      return;
+    }
     this.updateData({
       destination: {
         name: evt.target.value,
       }
-    });
+    }, true);
   }
 
   _eventPriceChangeHandler(evt) {
+    evt.target.value = evt.target.value.replace(RegEx.PRICE, ``);
     this.updateData({
       basePrice: evt.target.value
-    });
-  }
-
-  restoreHandlers() {
-    this._setInnerHandlers();
-
-    this._setDatepicker();
-    this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setDeleteClickHandler(this._callback.deleteClick);
-    this.setCloseEditClickHandler(this._callback.closeEditClick);
-    this.setFavoriteClickHandler(this._callback.favoriteClick);
-  }
-
-  _setDatepicker() {
-    // todo вызывать функцию только когда открывается форма редактирования
-    this._dateFromPicker = flatpickr(
-        this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
-        {
-          dateFormat: `d/m/y H:i`,
-          defaultDate: this._data.dateFrom,
-          onChange: this._eventDateFromChangeHandler,
-          enableTime: true,
-          // eslint-disable-next-line camelcase
-          time_24hr: true
-        }
-    );
-    this._dateToPicker = flatpickr(
-        this.getElement().querySelector(`.event__input--time[name="event-end-time"]`),
-        {
-          dateFormat: `d/m/y H:i`,
-          defaultDate: this._data.dateTo,
-          onChange: this._eventDateToChangeHandler,
-          enableTime: true,
-          // eslint-disable-next-line camelcase
-          time_24hr: true
-        }
-    );
+    }, true);
   }
 
   _eventDateFromChangeHandler([userDate]) {
     this.updateData({
       dateFrom: userDate
-    });
+    }, true);
+    this._removeDatepicker(this._dateToPicker);
+    this._setDateToPicker();
   }
 
   _eventDateToChangeHandler([userDate]) {
     this.updateData({
       dateTo: userDate
-    });
+    }, true);
+    this._removeDatepicker(this._dateFromPicker);
+    this._setDateFromPicker();
   }
 
   _formSubmitHandler(evt) {
@@ -438,7 +476,9 @@ export default class EventEdit extends SmartView {
 
   setCloseEditClickHandler(callback) {
     this._callback.closeEditClick = callback;
-    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeEditClickHandler);
+    if (this._mode === EditingModes.UPDATE) {
+      this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._closeEditClickHandler);
+    }
   }
 
   setFavoriteClickHandler(callback) {

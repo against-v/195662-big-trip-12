@@ -42,26 +42,40 @@ export default class Trip {
 
   init() {
     render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
+
+    this._eventsModel.addObserver(this._handleModelEvt);
+    this._filterModel.addObserver(this._handleModelEvt);
+
     this._renderTrip();
   }
 
-  createEvent() {
+  destroy() {
+    this._clearTrip({resetSortType: true});
+
+    remove(this._daysListComponent);
+    remove(this._tripComponent);
+
+    this._eventsModel.removeObserver(this._handleModelEvt);
+    this._filterModel.removeObserver(this._handleModelEvt);
+  }
+
+  createEvent(callback) {
     this._currentSortType = SortType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._eventNewPresenter.init();
+    this._eventNewPresenter.init(callback);
   }
 
   _getEvents() {
     const filterType = this._filterModel.getFilter();
     const events = this._eventsModel.getEvents();
-    const filtredEvents = filter[filterType](events);
+    const filteredEvents = filter[filterType](events);
     switch (this._currentSortType) {
       case SortType.TIME:
-        return groupEventsIntoOneList(filtredEvents.sort(sortByTime));
+        return groupEventsIntoOneList(filteredEvents.sort(sortByTime));
       case SortType.PRICE:
-        return groupEventsIntoOneList(filtredEvents.sort(sortByPrice));
+        return groupEventsIntoOneList(filteredEvents.sort(sortByPrice));
       default:
-        return groupEventsByDay(filtredEvents);
+        return groupEventsByDay(filteredEvents);
     }
   }
 

@@ -1,5 +1,7 @@
 import InfoView from "./view/info.js";
 import MenuView from "./view/menu.js";
+import AddEventButtonView from "./view/add-event-button.js";
+import StatisticsView from "./view/statistics.js";
 
 import TripPresenter from "./presenter/trip.js";
 import FilterPresenter from "./presenter/filter.js";
@@ -14,9 +16,9 @@ import {generateEvent} from "./mock/event.js";
 import {generateDestination} from "./mock/destination";
 import {generateOffer} from "./mock/offer";
 
-import {render, RenderPosition} from "./utils/render.js";
+import {render, RenderPosition, remove} from "./utils/render.js";
 
-import {DESTINATIONS, EVENT_TYPES} from "./const";
+import {DESTINATIONS, EVENT_TYPES, MenuItem, FilterType, UpdateType} from "./const";
 
 const EVENT_COUNT = 10;
 
@@ -39,16 +41,51 @@ const siteMenuTitleElement = siteHeaderControlsElement.querySelector(`h2:first-c
 const siteFilterTitleElement = siteHeaderControlsElement.querySelector(`h2:last-child`);
 const siteMainElement = document.querySelector(`.page-main .page-body__container`);
 
+const siteMenuComponent = new MenuView(MenuItem.TABLE);
+const addEventButtonComponent = new AddEventButtonView();
+
 const tripPresenter = new TripPresenter(siteMainElement, eventsModel, destinationsModel, offersModel, filterModel);
 const filterPresenter = new FilterPresenter(siteFilterTitleElement, filterModel);
 
 render(siteHeaderMainElement, new InfoView(events), RenderPosition.AFTERBEGIN);
-render(siteMenuTitleElement, new MenuView(), RenderPosition.AFTEREND);
+render(siteMenuTitleElement, siteMenuComponent, RenderPosition.AFTEREND);
+render(siteHeaderMainElement, addEventButtonComponent, RenderPosition.BEFOREEND);
+
+let statisticsComponent = null;
+
+const handleSiteMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.TABLE:
+      tripPresenter.init();
+      remove(statisticsComponent);
+      break;
+    case MenuItem.STATISTICS:
+      tripPresenter.destroy();
+      statisticsComponent = new StatisticsView(eventsModel.getEvents());
+      render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
+      break;
+  }
+};
+
+const handleEventNewFormClose = () => {
+  addEventButtonComponent.getElement().disabled = false;
+};
+
+const handleAddEventButtonClick = () => {
+  if (statisticsComponent) {
+    remove(statisticsComponent);
+  }
+  tripPresenter.destroy();
+  filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+  tripPresenter.init();
+  siteMenuComponent.setMenuItem(MenuItem.TABLE);
+  tripPresenter.createEvent(handleEventNewFormClose);
+  addEventButtonComponent.getElement().disabled = true;
+
+};
+
+siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+addEventButtonComponent.setAddEventButtonClickHandler(handleAddEventButtonClick);
 
 filterPresenter.init();
 tripPresenter.init();
-
-document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
-  evt.preventDefault();
-  tripPresenter.createEvent();
-});
