@@ -34,9 +34,6 @@ export default class Trip {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvt = this._handleModelEvt.bind(this);
 
-    this._eventsModel.addObserver(this._handleModelEvt);
-    this._filterModel.addObserver(this._handleModelEvt);
-
     this._eventNewPresenter = new EventNewPresenter(this._daysListComponent, this._getDestinations(), this._getOffers(), this._handleViewAction);
   }
 
