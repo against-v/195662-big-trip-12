@@ -29,20 +29,23 @@ const END_POINT = `https://12.ecmascript.pages.academy/big-trip/`;
 const destinations = DESTINATIONS.map((destinationName) => generateDestination(destinationName));
 const offers = EVENT_TYPES.map((offerType) => generateOffer(offerType));
 const events = new Array(EVENT_COUNT).fill().map(() => generateEvent(destinations, offers));
+console.log(`МОКИ`);
+console.log(destinations[0]);
 
 
 const api = new Api(END_POINT, AUTHORIZATION);
 
 api.getDestinations().then((destinations) => {
+  console.log(`Реальные`);
   console.log(destinations);
 });
 
 api.getOffers().then((offers) => {
-  console.log(offers);
+  // console.log(offers[0]);
 });
 
 api.getEvents().then((events) => {
-  console.log(events);
+  // console.log(events);
   // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
   // а ещё на сервере используется snake_case, а у нас camelCase.
   // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
