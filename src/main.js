@@ -16,15 +16,38 @@ import {generateEvent} from "./mock/event.js";
 import {generateDestination} from "./mock/destination";
 import {generateOffer} from "./mock/offer";
 
+import Api from "./api.js";
+
 import {render, RenderPosition, remove} from "./utils/render.js";
 
 import {DESTINATIONS, EVENT_TYPES, MenuItem, FilterType, UpdateType} from "./const";
 
 const EVENT_COUNT = 10;
+const AUTHORIZATION = `Basic kTy9gIdsz2317rD.`;
+const END_POINT = `https://12.ecmascript.pages.academy/big-trip/`;
 
 const destinations = DESTINATIONS.map((destinationName) => generateDestination(destinationName));
 const offers = EVENT_TYPES.map((offerType) => generateOffer(offerType));
 const events = new Array(EVENT_COUNT).fill().map(() => generateEvent(destinations, offers));
+
+
+const api = new Api(END_POINT, AUTHORIZATION);
+
+api.getDestinations().then((destinations) => {
+  console.log(destinations);
+});
+
+api.getOffers().then((offers) => {
+  console.log(offers);
+});
+
+api.getEvents().then((events) => {
+  console.log(events);
+  // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
+  // а ещё на сервере используется snake_case, а у нас camelCase.
+  // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
+  // Есть вариант получше - паттерн "Адаптер"
+});
 
 const destinationsModel = new DestinationsModel();
 const offersModel = new OffersModel();
