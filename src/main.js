@@ -39,7 +39,7 @@ const filterModel = new FilterModel();
 const siteMenuComponent = new MenuView(MenuItem.TABLE);
 const addEventButtonComponent = new AddEventButtonView();
 
-const tripPresenter = new TripPresenter(siteMainElement, eventsModel, destinationsModel, offersModel, filterModel);
+const tripPresenter = new TripPresenter(siteMainElement, eventsModel, destinationsModel, offersModel, filterModel, api);
 const filterPresenter = new FilterPresenter(siteFilterTitleElement, filterModel);
 
 
@@ -75,7 +75,6 @@ const handleAddEventButtonClick = () => {
   addEventButtonComponent.getElement().disabled = true;
 
 };
-
 
 
 // render(siteHeaderMainElement, new InfoView(events), RenderPosition.AFTERBEGIN);

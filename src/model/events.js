@@ -76,7 +76,7 @@ export default class Events extends Observer {
         {},
         event,
         {
-          "base_price": event.basePrice,
+          "base_price": Number(event.basePrice),
           "date_from": event.dateFrom.toISOString(),
           "date_to": event.dateTo.toISOString(),
           "is_favorite": event.isFavorite
