@@ -1,4 +1,4 @@
-import InfoView from "./view/info.js";
+// import InfoView from "./view/info.js";
 import MenuView from "./view/menu.js";
 import AddEventButtonView from "./view/add-event-button.js";
 import StatisticsView from "./view/statistics.js";
@@ -76,12 +76,17 @@ const handleAddEventButtonClick = () => {
 
 };
 
-siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-addEventButtonComponent.setAddEventButtonClickHandler(handleAddEventButtonClick);
+
 
 // render(siteHeaderMainElement, new InfoView(events), RenderPosition.AFTERBEGIN);
-render(siteMenuTitleElement, siteMenuComponent, RenderPosition.AFTEREND);
-render(siteHeaderMainElement, addEventButtonComponent, RenderPosition.BEFOREEND);
+const renderHeader = () => {
+  render(siteMenuTitleElement, siteMenuComponent, RenderPosition.AFTEREND);
+  siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+  render(siteHeaderMainElement, addEventButtonComponent, RenderPosition.BEFOREEND);
+  addEventButtonComponent.setAddEventButtonClickHandler(handleAddEventButtonClick);
+
+};
+
 
 filterPresenter.init();
 tripPresenter.init();
@@ -89,9 +94,11 @@ tripPresenter.init();
 api.getEvents()
   .then((events) => {
     eventsModel.setEvents(UpdateType.INIT, events);
+    renderHeader();
   })
   .catch(() => {
     eventsModel.setEvents(UpdateType.INIT, []);
+    renderHeader();
   });
 
 api.getDestinations()
