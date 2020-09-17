@@ -6,7 +6,7 @@ const createNoEventTemplate = () => {
   );
 };
 
-export default class Menu extends AbstractView {
+export default class NoEvent extends AbstractView {
   getTemplate() {
     return createNoEventTemplate();
   }

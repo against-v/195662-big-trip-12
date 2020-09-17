@@ -3,6 +3,7 @@ import SortView from "../view/sort.js";
 import DaysListView from "../view/days-list.js";
 import DayView from "../view/day.js";
 import EventsListView from "../view/events-list.js";
+import LoadingView from "../view/loading.js";
 import NoEventView from "../view/no-event.js";
 
 import EventPresenter from "./event.js";
@@ -18,10 +19,13 @@ export default class Trip {
     this._destinationsModel = destinationsModel;
     this._offersModel = offersModel;
     this._filterModel = filterModel;
+    this._isLoading = true;
     this._tripContainer = tripContainer;
     this._tripComponent = new TripView();
     this._daysListComponent = new DaysListView();
     this._noEventComponent = new NoEventView();
+    this._loadingComponent = new LoadingView();
+
 
     this._sortComponent = null;
 
@@ -118,6 +122,11 @@ export default class Trip {
         this._clearTrip({resetSortType: true});
         this._renderTrip();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderTrip();
+        break;
 
     }
   }
@@ -171,6 +180,10 @@ export default class Trip {
     this._eventPresenter[event.id] = eventPresenter;
   }
 
+  _renderLoading() {
+    render(this._tripComponent, this._loadingComponent, RenderPosition.BEFOREEND);
+  }
+
   _renderNoEvent() {
     render(this._tripComponent, this._noEventComponent, RenderPosition.BEFOREEND);
   }
@@ -183,6 +196,7 @@ export default class Trip {
     this._eventPresenter = {};
 
     remove(this._sortComponent);
+    remove(this._loadingComponent);
     remove(this._noEventComponent);
     remove(this._daysListComponent);
 
@@ -192,6 +206,10 @@ export default class Trip {
   }
 
   _renderTrip() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
     if (this._getEvents().length === 0) {
       this._renderNoEvent();
       return;
