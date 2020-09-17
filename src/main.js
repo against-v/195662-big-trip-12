@@ -43,7 +43,6 @@ const tripPresenter = new TripPresenter(siteMainElement, eventsModel, destinatio
 const filterPresenter = new FilterPresenter(siteFilterTitleElement, filterModel);
 
 
-
 let statisticsComponent = null;
 
 const handleSiteMenuClick = (menuItem) => {
@@ -87,12 +86,25 @@ render(siteHeaderMainElement, addEventButtonComponent, RenderPosition.BEFOREEND)
 filterPresenter.init();
 tripPresenter.init();
 
-api.getEvents().then((events) => {
-  eventsModel.setEvents(events);
-});
-api.getDestinations().then((destinations) => {
-  destinationsModel.setDestinations(destinations);
-});
-api.getOffers().then((offers) => {
-  offersModel.setOffers(offers);
-});
+api.getEvents()
+  .then((events) => {
+    eventsModel.setEvents(UpdateType.INIT, events);
+  })
+  .catch(() => {
+    eventsModel.setEvents(UpdateType.INIT, []);
+  });
+
+api.getDestinations()
+  .then((destinations) => {
+    destinationsModel.setDestinations(UpdateType.INIT, destinations);
+  })
+  .catch(() => {
+    destinationsModel.setDestinations(UpdateType.INIT, []);
+  });
+api.getOffers()
+  .then((offers) => {
+    offersModel.setOffers(UpdateType.INIT, offers);
+  })
+  .catch(() => {
+    offersModel.setOffers(UpdateType.INIT, []);
+  });
