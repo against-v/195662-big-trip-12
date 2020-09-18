@@ -14,14 +14,22 @@ import {sortByPrice, sortByTime, groupEventsByDay, groupEventsIntoOneList} from 
 import {SortType, UpdateType, UserAction, FilterType} from "../const.js";
 
 export default class Trip {
-  constructor(tripContainer, eventsModel, destinationsModel, offersModel, filterModel, api) {
+  constructor(params) {
+    const {
+      siteMainElement,
+      eventsModel,
+      destinationsModel,
+      offersModel,
+      filterModel,
+      api
+    } = params;
     this._eventsModel = eventsModel;
     this._destinationsModel = destinationsModel;
     this._offersModel = offersModel;
     this._filterModel = filterModel;
     this._isLoading = true;
     this._api = api;
-    this._tripContainer = tripContainer;
+    this._tripContainer = siteMainElement;
     this._tripComponent = new TripView();
     this._daysListComponent = new DaysListView();
     this._noEventComponent = new NoEventView();
