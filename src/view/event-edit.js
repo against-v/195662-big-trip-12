@@ -391,7 +391,7 @@ export default class EventEdit extends SmartView {
   _eventOffersChangeHandler(evt) {
     const changedOffer = {
       title: evt.target.dataset.title,
-      price: evt.target.dataset.price,
+      price: Number(evt.target.dataset.price),
     };
     const offers = this._data.offers.slice();
     if (evt.target.checked) {

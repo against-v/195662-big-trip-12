@@ -1,4 +1,4 @@
-import InfoView from "./view/info.js";
+// import InfoView from "./view/info.js";
 import MenuView from "./view/menu.js";
 import AddEventButtonView from "./view/add-event-button.js";
 import StatisticsView from "./view/statistics.js";
@@ -11,29 +11,14 @@ import DestinationsModel from "./model/destinations.js";
 import OffersModel from "./model/offers.js";
 import FilterModel from "./model/filter.js";
 
-
-import {generateEvent} from "./mock/event.js";
-import {generateDestination} from "./mock/destination";
-import {generateOffer} from "./mock/offer";
+import Api from "./api.js";
 
 import {render, RenderPosition, remove} from "./utils/render.js";
 
-import {DESTINATIONS, EVENT_TYPES, MenuItem, FilterType, UpdateType} from "./const";
+import {MenuItem, FilterType, UpdateType} from "./const";
 
-const EVENT_COUNT = 10;
-
-const destinations = DESTINATIONS.map((destinationName) => generateDestination(destinationName));
-const offers = EVENT_TYPES.map((offerType) => generateOffer(offerType));
-const events = new Array(EVENT_COUNT).fill().map(() => generateEvent(destinations, offers));
-
-const destinationsModel = new DestinationsModel();
-const offersModel = new OffersModel();
-const eventsModel = new EventsModel();
-const filterModel = new FilterModel();
-
-destinationsModel.setDestinations(destinations);
-offersModel.setOffers(offers);
-eventsModel.setEvents(events);
+const AUTHORIZATION = `Basic kTy9gIdsz2317rD.`;
+const END_POINT = `https://12.ecmascript.pages.academy/big-trip/`;
 
 const siteHeaderMainElement = document.querySelector(`.trip-main`);
 const siteHeaderControlsElement = siteHeaderMainElement.querySelector(`.trip-controls`);
@@ -41,15 +26,30 @@ const siteMenuTitleElement = siteHeaderControlsElement.querySelector(`h2:first-c
 const siteFilterTitleElement = siteHeaderControlsElement.querySelector(`h2:last-child`);
 const siteMainElement = document.querySelector(`.page-main .page-body__container`);
 
+
+const api = new Api(END_POINT, AUTHORIZATION);
+
+
+const destinationsModel = new DestinationsModel();
+const offersModel = new OffersModel();
+const eventsModel = new EventsModel();
+const filterModel = new FilterModel();
+
+
 const siteMenuComponent = new MenuView(MenuItem.TABLE);
 const addEventButtonComponent = new AddEventButtonView();
 
-const tripPresenter = new TripPresenter(siteMainElement, eventsModel, destinationsModel, offersModel, filterModel);
+const tripPresenterParams = {
+  siteMainElement,
+  eventsModel,
+  destinationsModel,
+  offersModel,
+  filterModel,
+  api,
+};
+const tripPresenter = new TripPresenter(tripPresenterParams);
 const filterPresenter = new FilterPresenter(siteFilterTitleElement, filterModel);
 
-render(siteHeaderMainElement, new InfoView(events), RenderPosition.AFTERBEGIN);
-render(siteMenuTitleElement, siteMenuComponent, RenderPosition.AFTEREND);
-render(siteHeaderMainElement, addEventButtonComponent, RenderPosition.BEFOREEND);
 
 let statisticsComponent = null;
 
@@ -84,8 +84,41 @@ const handleAddEventButtonClick = () => {
 
 };
 
-siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
-addEventButtonComponent.setAddEventButtonClickHandler(handleAddEventButtonClick);
+
+// render(siteHeaderMainElement, new InfoView(events), RenderPosition.AFTERBEGIN);
+const renderHeader = () => {
+  render(siteMenuTitleElement, siteMenuComponent, RenderPosition.AFTEREND);
+  siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+  render(siteHeaderMainElement, addEventButtonComponent, RenderPosition.BEFOREEND);
+  addEventButtonComponent.setAddEventButtonClickHandler(handleAddEventButtonClick);
+
+};
+
 
 filterPresenter.init();
 tripPresenter.init();
+
+api.getEvents()
+  .then((events) => {
+    eventsModel.setEvents(UpdateType.INIT, events);
+    renderHeader();
+  })
+  .catch(() => {
+    eventsModel.setEvents(UpdateType.INIT, []);
+    renderHeader();
+  });
+
+api.getDestinations()
+  .then((destinations) => {
+    destinationsModel.setDestinations(UpdateType.INIT, destinations);
+  })
+  .catch(() => {
+    destinationsModel.setDestinations(UpdateType.INIT, []);
+  });
+api.getOffers()
+  .then((offers) => {
+    offersModel.setOffers(UpdateType.INIT, offers);
+  })
+  .catch(() => {
+    offersModel.setOffers(UpdateType.INIT, []);
+  });

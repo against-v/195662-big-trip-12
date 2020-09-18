@@ -3,6 +3,7 @@ import SortView from "../view/sort.js";
 import DaysListView from "../view/days-list.js";
 import DayView from "../view/day.js";
 import EventsListView from "../view/events-list.js";
+import LoadingView from "../view/loading.js";
 import NoEventView from "../view/no-event.js";
 
 import EventPresenter from "./event.js";
@@ -13,15 +14,27 @@ import {sortByPrice, sortByTime, groupEventsByDay, groupEventsIntoOneList} from 
 import {SortType, UpdateType, UserAction, FilterType} from "../const.js";
 
 export default class Trip {
-  constructor(tripContainer, eventsModel, destinationsModel, offersModel, filterModel) {
+  constructor(params) {
+    const {
+      siteMainElement,
+      eventsModel,
+      destinationsModel,
+      offersModel,
+      filterModel,
+      api
+    } = params;
     this._eventsModel = eventsModel;
     this._destinationsModel = destinationsModel;
     this._offersModel = offersModel;
     this._filterModel = filterModel;
-    this._tripContainer = tripContainer;
+    this._isLoading = true;
+    this._api = api;
+    this._tripContainer = siteMainElement;
     this._tripComponent = new TripView();
     this._daysListComponent = new DaysListView();
     this._noEventComponent = new NoEventView();
+    this._loadingComponent = new LoadingView();
+
 
     this._sortComponent = null;
 
@@ -33,9 +46,6 @@ export default class Trip {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvt = this._handleModelEvt.bind(this);
-
-    this._eventsModel.addObserver(this._handleModelEvt);
-    this._filterModel.addObserver(this._handleModelEvt);
 
     this._eventNewPresenter = new EventNewPresenter(this._daysListComponent, this._getDestinations(), this._getOffers(), this._handleViewAction);
   }
@@ -97,7 +107,9 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case (UserAction.UPDATE_EVENT):
-        this._eventsModel.updateEvent(updateType, update);
+        this._api.updateEvent(update).then((response) => {
+          this._eventsModel.updateEvent(updateType, response);
+        });
         break;
       case (UserAction.ADD_EVENT):
         this._eventsModel.addEvent(updateType, update);
@@ -119,6 +131,11 @@ export default class Trip {
         break;
       case UpdateType.MAJOR:
         this._clearTrip({resetSortType: true});
+        this._renderTrip();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
         this._renderTrip();
         break;
 
@@ -174,6 +191,10 @@ export default class Trip {
     this._eventPresenter[event.id] = eventPresenter;
   }
 
+  _renderLoading() {
+    render(this._tripComponent, this._loadingComponent, RenderPosition.BEFOREEND);
+  }
+
   _renderNoEvent() {
     render(this._tripComponent, this._noEventComponent, RenderPosition.BEFOREEND);
   }
@@ -186,6 +207,7 @@ export default class Trip {
     this._eventPresenter = {};
 
     remove(this._sortComponent);
+    remove(this._loadingComponent);
     remove(this._noEventComponent);
     remove(this._daysListComponent);
 
@@ -195,6 +217,10 @@ export default class Trip {
   }
 
   _renderTrip() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
     if (this._getEvents().length === 0) {
       this._renderNoEvent();
       return;
