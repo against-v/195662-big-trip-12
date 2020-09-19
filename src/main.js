@@ -98,7 +98,15 @@ const renderHeader = () => {
 filterPresenter.init();
 tripPresenter.init();
 
-api.getEvents()
+api.getDestinations()
+  .then((destinations) => {
+    destinationsModel.setDestinations(UpdateType.INIT, destinations);
+    return api.getOffers();
+  })
+  .then((offers) => {
+    offersModel.setOffers(UpdateType.INIT, offers);
+    return api.getEvents();
+  })
   .then((events) => {
     eventsModel.setEvents(UpdateType.INIT, events);
     renderHeader();
@@ -106,19 +114,4 @@ api.getEvents()
   .catch(() => {
     eventsModel.setEvents(UpdateType.INIT, []);
     renderHeader();
-  });
-
-api.getDestinations()
-  .then((destinations) => {
-    destinationsModel.setDestinations(UpdateType.INIT, destinations);
-  })
-  .catch(() => {
-    destinationsModel.setDestinations(UpdateType.INIT, []);
-  });
-api.getOffers()
-  .then((offers) => {
-    offersModel.setOffers(UpdateType.INIT, offers);
-  })
-  .catch(() => {
-    offersModel.setOffers(UpdateType.INIT, []);
   });
