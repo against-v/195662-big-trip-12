@@ -18,7 +18,7 @@ const BLANK_EVENT = {
   type: EVENT_TYPES[0],
 };
 
-const generateEventOffersTemplate = (eventType, eventOffers, offersList) => {
+const generateEventOffersTemplate = (eventType, eventOffers, offersList, isDisabled) => {
   const offersByType = offersList.find((offer) => offer.type === eventType);
   const setChecked = (offer) => {
     const isChecked = eventOffers.some((currentEventOffer) => {
@@ -40,6 +40,7 @@ const generateEventOffersTemplate = (eventType, eventOffers, offersList) => {
           id="event-offer-luggage-${index + 1}"
           type="checkbox"
           name="event-offer-luggage"
+          ${isDisabled ? `disabled` : ``}
           data-title="${offer.title}"
           data-price="${offer.price}"
           ${setChecked(offer)}>
@@ -128,18 +129,42 @@ const generateDestinationTemplate = (eventDestination, destinationsList) => {
   return ``;
 
 };
-const generateEventRollupButtonTemplate = (mode) => {
+const generateEventRollupButtonTemplate = (mode, isDisabled) => {
   if (mode === EditingModes.UPDATE) {
     return (
-      `<button class="event__rollup-btn" type="button">
+      `<button
+        class="event__rollup-btn"
+        type="button"
+        ${isDisabled ? `disabled` : ``}>
         <span class="visually-hidden">Open event</span>
       </button>`
     );
   }
   return ``;
 };
+const generateEventFavoriteButtonTemplate = (mode, isFavorite, isDisabled) => {
+  if (mode === EditingModes.UPDATE) {
+    return (
+      `<input
+          id="event-favorite-1"
+          class="event__favorite-checkbox  visually-hidden"
+          type="checkbox"
+          name="event-favorite"
+          ${isDisabled ? `disabled` : ``}
+          ${isFavorite ? `checked` : ``}>
+      <label class="event__favorite-btn" for="event-favorite-1">
+        <span class="visually-hidden">Add to favorite</span>
+        <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+          <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+        </svg>
+      </label>`
+    );
+  }
+  return ``;
+};
 const generateEventHeaderTemplate = (data) => {
   const {
+    mode,
     type,
     eventTypeListTemplate,
     typeTitle,
@@ -148,11 +173,18 @@ const generateEventHeaderTemplate = (data) => {
     dateTimeStartValue,
     dateTimeEndValue,
     basePrice,
-    isSubmitDisabled,
-    favoriteCheckboxIsChecked,
-    resetButtonLabel,
-    eventRollupButtonTemplate
+    eventFavoriteButtonTemplate,
+    eventRollupButtonTemplate,
+    isDisabled,
+    isSaving,
+    isDeleting
   } = data;
+  const setResetButtonLabel = () => {
+    if (mode === EditingModes.UPDATE) {
+      return isDeleting ? `Deleting...` : `Delete`;
+    }
+    return `Cancel`;
+  };
   return (
     `<header class="event__header">
           <div class="event__type-wrapper">
@@ -160,7 +192,11 @@ const generateEventHeaderTemplate = (data) => {
               <span class="visually-hidden">Choose event type</span>
               <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+            <input
+                class="event__type-toggle  visually-hidden"
+                id="event-type-toggle-1"
+                type="checkbox"
+                ${isDisabled ? `disabled` : ``}>
             ${eventTypeListTemplate}
           </div>
 
@@ -168,7 +204,14 @@ const generateEventHeaderTemplate = (data) => {
             <label class="event__label  event__type-output" for="event-destination-1">
               ${typeTitle}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+            <input
+                class="event__input  event__input--destination"
+                id="event-destination-1"
+                type="text"
+                name="event-destination"
+                value="${destination.name}"
+                list="destination-list-1"
+                ${isDisabled ? `disabled` : ``}>
               ${eventDestinationListTemplate}
           </div>
 
@@ -176,12 +219,22 @@ const generateEventHeaderTemplate = (data) => {
             <label class="visually-hidden" for="event-start-time-1">
               From
             </label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateTimeStartValue}">
+            <input
+                class="event__input  event__input--time"
+                id="event-start-time-1"
+                type="text"
+                name="event-start-time"
+                value="${dateTimeStartValue}"
+                ${isDisabled ? `disabled` : ``}>
               &mdash;
-              <label class="visually-hidden" for="event-end-time-1">
-                To
-              </label>
-              <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTimeEndValue}">
+            <label class="visually-hidden" for="event-end-time-1">To</label>
+            <input
+                class="event__input  event__input--time"
+                id="event-end-time-1"
+                type="text"
+                name="event-end-time"
+                value="${dateTimeEndValue}"
+                ${isDisabled ? `disabled` : ``}>
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -189,20 +242,30 @@ const generateEventHeaderTemplate = (data) => {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+            <input
+                class="event__input  event__input--price"
+                id="event-price-1"
+                type="text"
+                name="event-price"
+                value="${basePrice}"
+                ${isDisabled ? `disabled` : ``}>
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>
-          <button class="event__reset-btn" type="reset">${resetButtonLabel}</button>
+          <button
+            class="event__save-btn  btn  btn--blue"
+            type="submit"
+            ${isDisabled ? `disabled` : ``}>
+            ${isSaving ? `Saving...` : `Save`}
+          </button>
+          <button
+            class="event__reset-btn"
+            type="reset"
+            ${isDisabled ? `disabled` : ``}>
+            ${setResetButtonLabel()}
+          </button>
 
-          <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${favoriteCheckboxIsChecked}>
-            <label class="event__favorite-btn" for="event-favorite-1">
-              <span class="visually-hidden">Add to favorite</span>
-              <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
-                <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
-              </svg>
-            </label>
-            ${eventRollupButtonTemplate}
+          ${eventFavoriteButtonTemplate}
+          ${eventRollupButtonTemplate}
         </header>`
   );
 };
@@ -224,18 +287,20 @@ const createEventEditTemplate = (data, destinationsList, offersList, mode) => {
     dateFrom,
     dateTo,
     destination,
-    // id,
     isFavorite,
     offers,
     type,
     typeCapitalized,
     isStopping,
+    isDisabled,
+    isSaving,
+    isDeleting,
   } = data;
 
   const dateTimeStartValue = formatDate(dateFrom, DateFormat.DATEPICKER);
   const dateTimeEndValue = formatDate(dateTo, DateFormat.DATEPICKER);
   const eventDestinationTemplate = generateDestinationTemplate(destination, destinationsList);
-  const eventOffersTemplate = generateEventOffersTemplate(type, offers, offersList);
+  const eventOffersTemplate = generateEventOffersTemplate(type, offers, offersList, isDisabled);
   const eventDestinationListTemplate = (
     `<datalist id="destination-list-1">
       ${destinationsList.map((currentDestination) => `<option value="${currentDestination.name}"></option>`)}
@@ -243,12 +308,11 @@ const createEventEditTemplate = (data, destinationsList, offersList, mode) => {
   );
   const typeTitle = `${typeCapitalized} ${isStopping ? `in` : `to`}`;
   const eventTypeListTemplate = generateEventTypeListTemplate(type);
-  const favoriteCheckboxIsChecked = isFavorite ? `checked` : ``;
-  const isSubmitDisabled = false;
-  const resetButtonLabel = mode === EditingModes.CREATE ? `Cancel` : `Delete`;
-  const eventRollupButtonTemplate = generateEventRollupButtonTemplate(mode);
+  const eventRollupButtonTemplate = generateEventRollupButtonTemplate(mode, isDisabled);
+  const eventFavoriteButtonTemplate = generateEventFavoriteButtonTemplate(mode, isFavorite, isDisabled);
 
   const eventHeaderTemplate = generateEventHeaderTemplate({
+    mode,
     type,
     eventTypeListTemplate,
     typeTitle,
@@ -257,10 +321,11 @@ const createEventEditTemplate = (data, destinationsList, offersList, mode) => {
     dateTimeStartValue,
     dateTimeEndValue,
     basePrice,
-    isSubmitDisabled,
-    favoriteCheckboxIsChecked,
-    resetButtonLabel,
+    eventFavoriteButtonTemplate,
     eventRollupButtonTemplate,
+    isDisabled,
+    isSaving,
+    isDeleting
   });
   const eventDetailsTemplate = generateEventDetailsTemplate({
     eventOffersTemplate,
@@ -496,7 +561,10 @@ export default class EventEdit extends SmartView {
         event,
         {
           typeCapitalized: capitalizeString(event.type),
-          isStopping: isEventStopping(event.type)
+          isStopping: isEventStopping(event.type),
+          isDisabled: false,
+          isSaving: false,
+          isDeleting: false,
         }
     );
   }
@@ -506,6 +574,9 @@ export default class EventEdit extends SmartView {
 
     delete data.typeCapitalized;
     delete data.isStopping;
+    delete data.isDisabled;
+    delete data.isSaving;
+    delete data.isDeleting;
 
     return data;
   }
