@@ -47,7 +47,7 @@ export default class Trip {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvt = this._handleModelEvt.bind(this);
 
-    this._eventNewPresenter = new EventNewPresenter(this._daysListComponent, this._getDestinations(), this._getOffers(), this._handleViewAction);
+    this._eventNewPresenter = new EventNewPresenter(this._daysListComponent, this._handleViewAction);
   }
 
   init() {
@@ -72,7 +72,7 @@ export default class Trip {
   createEvent(callback) {
     this._currentSortType = SortType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._eventNewPresenter.init(callback);
+    this._eventNewPresenter.init(callback, this._getDestinations(), this._getOffers());
   }
 
   _getEvents() {

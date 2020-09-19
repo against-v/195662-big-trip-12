@@ -91,7 +91,6 @@ const renderHeader = () => {
   siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
   render(siteHeaderMainElement, addEventButtonComponent, RenderPosition.BEFOREEND);
   addEventButtonComponent.setAddEventButtonClickHandler(handleAddEventButtonClick);
-
 };
 
 
@@ -100,11 +99,11 @@ tripPresenter.init();
 
 api.getDestinations()
   .then((destinations) => {
-    destinationsModel.setDestinations(UpdateType.INIT, destinations);
+    destinationsModel.setDestinations(destinations);
     return api.getOffers();
   })
   .then((offers) => {
-    offersModel.setOffers(UpdateType.INIT, offers);
+    offersModel.setOffers(offers);
     return api.getEvents();
   })
   .then((events) => {

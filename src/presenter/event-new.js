@@ -2,15 +2,10 @@ import EventEditView from "../view/event-edit.js";
 import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType, EditingModes} from "../const.js";
 
-const ID_LENGTH = 3;
-
 export default class EventNew {
-  constructor(daysListContainer, destinations, offers, changeData) {
+  constructor(daysListContainer, changeData) {
     this._daysListContainer = daysListContainer;
-    this._destinations = destinations;
-    this._offers = offers;
     this._changeData = changeData;
-
     this._eventEditComponent = null;
     this._destroyCallback = null;
 
@@ -19,8 +14,10 @@ export default class EventNew {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(callback) {
+  init(callback, destinations, offers) {
     this._destroyCallback = callback;
+    this._destinations = destinations;
+    this._offers = offers;
 
     if (this._eventEditComponent !== null) {
       return;
