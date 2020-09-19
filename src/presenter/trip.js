@@ -6,7 +6,7 @@ import EventsListView from "../view/events-list.js";
 import LoadingView from "../view/loading.js";
 import NoEventView from "../view/no-event.js";
 
-import EventPresenter from "./event.js";
+import EventPresenter, {State as EventPresenterViewState} from "./event.js";
 import EventNewPresenter from "./event-new.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
 import {filter} from "../utils/filter.js";
@@ -107,16 +107,19 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case (UserAction.UPDATE_EVENT):
+        this._eventPresenter[update.id].setViewState(EventPresenterViewState.SAVING);
         this._api.updateEvent(update).then((response) => {
           this._eventsModel.updateEvent(updateType, response);
         });
         break;
       case (UserAction.ADD_EVENT):
+        this._eventNewPresenter.setSaving();
         this._api.addEvent(update).then((response) => {
           this._eventsModel.addEvent(updateType, response);
         });
         break;
       case (UserAction.DELETE_EVENT):
+        this._eventPresenter[update.id].setViewState(EventPresenterViewState.DELETING);
         this._api.deleteEvent(update).then(() => {
           this._eventsModel.deleteEvent(updateType, update);
         });
