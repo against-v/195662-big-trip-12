@@ -547,7 +547,9 @@ export default class EventEdit extends SmartView {
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`change`, this._favoriteClickHandler);
+    if (this._mode === EditingModes.UPDATE) {
+      this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`change`, this._favoriteClickHandler);
+    }
   }
 
   setDeleteClickHandler(callback) {
