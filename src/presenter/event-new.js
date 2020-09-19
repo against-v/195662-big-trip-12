@@ -1,7 +1,6 @@
 import EventEditView from "../view/event-edit.js";
 import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType, EditingModes} from "../const.js";
-import {nanoid} from 'nanoid';
 
 const ID_LENGTH = 3;
 
@@ -55,7 +54,7 @@ export default class EventNew {
     this._changeData(
         UserAction.ADD_EVENT,
         UpdateType.MINOR,
-        Object.assign({id: nanoid(ID_LENGTH)}, event)
+        event
     );
     this.destroy();
   }
