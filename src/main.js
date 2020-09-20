@@ -12,6 +12,8 @@ import OffersModel from "./model/offers.js";
 import FilterModel from "./model/filter.js";
 
 import Api from "./api/index.js";
+import Store from "./api/store.js";
+import Provider from "./api/provider.js";
 
 import {render, RenderPosition, remove} from "./utils/render.js";
 
@@ -19,6 +21,9 @@ import {MenuItem, FilterType, UpdateType} from "./const";
 
 const AUTHORIZATION = `Basic kTy9gIdsz2317rD.`;
 const END_POINT = `https://12.ecmascript.pages.academy/big-trip/`;
+const STORE_PREFIX = `big-trip-localstorage`;
+const STORE_VER = `v12`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const siteHeaderMainElement = document.querySelector(`.trip-main`);
 const siteHeaderControlsElement = siteHeaderMainElement.querySelector(`.trip-controls`);
@@ -28,7 +33,8 @@ const siteMainElement = document.querySelector(`.page-main .page-body__container
 
 
 const api = new Api(END_POINT, AUTHORIZATION);
-
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
 const destinationsModel = new DestinationsModel();
 const offersModel = new OffersModel();
@@ -45,7 +51,7 @@ const tripPresenterParams = {
   destinationsModel,
   offersModel,
   filterModel,
-  api,
+  api: apiWithProvider,
 };
 const tripPresenter = new TripPresenter(tripPresenterParams);
 const filterPresenter = new FilterPresenter(siteFilterTitleElement, filterModel);
@@ -98,14 +104,14 @@ const renderHeader = () => {
 filterPresenter.init();
 tripPresenter.init();
 
-api.getDestinations()
+apiWithProvider.getDestinations()
   .then((destinations) => {
     destinationsModel.setDestinations(destinations);
-    return api.getOffers();
+    return apiWithProvider.getOffers();
   })
   .then((offers) => {
     offersModel.setOffers(offers);
-    return api.getEvents();
+    return apiWithProvider.getEvents();
   })
   .then((events) => {
     eventsModel.setEvents(UpdateType.INIT, events);
@@ -123,4 +129,13 @@ window.addEventListener(`load`, () => {
     }).catch(() => {
       console.error(`ServiceWorker isn't available`); // eslint-disable-line
     });
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
 });
