@@ -277,6 +277,9 @@ const generateEventDetailsTemplate = (data) => {
     eventOffersTemplate,
     eventDestinationTemplate,
   } = data;
+  if (!eventOffersTemplate && !eventDestinationTemplate) {
+    return ``;
+  }
   return (
     `<section class="event__details">
       ${eventOffersTemplate}
