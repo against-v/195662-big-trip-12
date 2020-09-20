@@ -77,7 +77,8 @@ const handleAddEventButtonClick = () => {
   }
   tripPresenter.destroy();
   filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-  tripPresenter.init();
+  const isCreateFirstEvent = eventsModel.getEvents().length === 0;
+  tripPresenter.init(isCreateFirstEvent);
   siteMenuComponent.setMenuItem(MenuItem.TABLE);
   tripPresenter.createEvent(handleEventNewFormClose);
   addEventButtonComponent.getElement().disabled = true;
