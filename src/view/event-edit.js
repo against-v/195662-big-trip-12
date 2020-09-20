@@ -20,6 +20,9 @@ const BLANK_EVENT = {
 
 const generateEventOffersTemplate = (eventType, eventOffers, offersList, isDisabled) => {
   const offersByType = offersList.find((offer) => offer.type === eventType);
+  if (offersByType.offers.length === 0) {
+    return ``;
+  }
   const setChecked = (offer) => {
     const isChecked = eventOffers.some((currentEventOffer) => {
       return currentEventOffer.title === offer.title;
@@ -395,7 +398,10 @@ export default class EventEdit extends SmartView {
   }
 
   _setInnerHandlers() {
-    this.getElement().querySelector(`.event__section--offers`).addEventListener(`change`, this._eventOffersChangeHandler);
+    const offersElement = this.getElement().querySelector(`.event__section--offers`);
+    if (offersElement) {
+      offersElement.addEventListener(`change`, this._eventOffersChangeHandler);
+    }
     this.getElement().querySelector(`.event__type-list`).addEventListener(`change`, this._eventTypeChangeHandler);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._eventDestinationChangeHandler);
     this.getElement().querySelector(`.event__input--price`).addEventListener(`input`, this._eventPriceChangeHandler);
