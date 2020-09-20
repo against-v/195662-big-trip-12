@@ -225,7 +225,9 @@ export default class Trip {
       .forEach((presenter) => presenter.destroy());
     this._eventPresenter = {};
 
-    remove(this._sortComponent);
+    if (this._sortComponent) {
+      remove(this._sortComponent);
+    }
     remove(this._loadingComponent);
     remove(this._noEventComponent);
     remove(this._daysListComponent);
