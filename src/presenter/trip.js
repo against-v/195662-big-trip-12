@@ -50,9 +50,10 @@ export default class Trip {
     this._eventNewPresenter = new EventNewPresenter(this._daysListComponent, this._handleViewAction);
   }
 
-  init() {
+  init(isCreateFirstEvent) {
     render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
 
+    this._isCreateFirstEvent = isCreateFirstEvent;
     this._eventsModel.addObserver(this._handleModelEvt);
     this._filterModel.addObserver(this._handleModelEvt);
 
@@ -120,6 +121,7 @@ export default class Trip {
         this._eventNewPresenter.setSaving();
         this._api.addEvent(update)
           .then((response) => {
+            this._isCreateFirstEvent = false;
             this._eventsModel.addEvent(updateType, response);
           })
           .catch(() => {
@@ -242,12 +244,13 @@ export default class Trip {
       this._renderLoading();
       return;
     }
-    if (this._getEvents().length === 0) {
+    if (this._getEvents().length === 0 && !this._isCreateFirstEvent) {
       this._renderNoEvent();
       return;
     }
-
-    this._renderSort();
+    if (!this._isCreateFirstEvent) {
+      this._renderSort();
+    }
     this._renderDaysList();
   }
 }
