@@ -494,7 +494,7 @@ export default class EventEdit extends SmartView {
     }
     this.updateData({
       destination
-    }, true);
+    });
   }
 
   _eventPriceChangeHandler(evt) {
