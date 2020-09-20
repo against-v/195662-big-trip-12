@@ -11,7 +11,7 @@ import DestinationsModel from "./model/destinations.js";
 import OffersModel from "./model/offers.js";
 import FilterModel from "./model/filter.js";
 
-import Api from "./api.js";
+import Api from "./api/index.js";
 
 import {render, RenderPosition, remove} from "./utils/render.js";
 

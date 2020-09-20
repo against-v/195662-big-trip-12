@@ -1,4 +1,4 @@
-import EventsModel from "./model/events.js";
+import EventsModel from "../model/events.js";
 
 const Method = {
   GET: `GET`,
@@ -12,7 +12,7 @@ const SuccessHTTPStatusRange = {
   MAX: 299
 };
 
-export default class Api {
+export default class Index {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
@@ -20,17 +20,17 @@ export default class Api {
 
   getDestinations() {
     return this._load({url: `destinations`})
-      .then(Api.toJSON);
+      .then(Index.toJSON);
   }
 
   getOffers() {
     return this._load({url: `offers`})
-      .then(Api.toJSON);
+      .then(Index.toJSON);
   }
 
   getEvents() {
     return this._load({url: `points`})
-      .then(Api.toJSON)
+      .then(Index.toJSON)
       .then((events) => events.map(EventsModel.adaptToClient));
   }
 
@@ -41,7 +41,7 @@ export default class Api {
       body: JSON.stringify(EventsModel.adaptToServer(event)),
       headers: new Headers({"Content-Type": `application/json`})
     })
-      .then(Api.toJSON)
+      .then(Index.toJSON)
       .then(EventsModel.adaptToClient);
   }
 
@@ -52,7 +52,7 @@ export default class Api {
       body: JSON.stringify(EventsModel.adaptToServer(event)),
       headers: new Headers({"Content-Type": `application/json`})
     })
-      .then(Api.toJSON)
+      .then(Index.toJSON)
       .then(EventsModel.adaptToClient);
   }
 
@@ -75,8 +75,8 @@ export default class Api {
         `${this._endPoint}/${url}`,
         {method, body, headers}
     )
-      .then(Api.checkStatus)
-      .catch(Api.catchError);
+      .then(Index.checkStatus)
+      .catch(Index.catchError);
   }
 
   static checkStatus(response) {
