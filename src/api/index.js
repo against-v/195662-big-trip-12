@@ -12,7 +12,7 @@ const SuccessHTTPStatusRange = {
   MAX: 299
 };
 
-export default class Index {
+export default class Api {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
@@ -20,17 +20,17 @@ export default class Index {
 
   getDestinations() {
     return this._load({url: `destinations`})
-      .then(Index.toJSON);
+      .then(Api.toJSON);
   }
 
   getOffers() {
     return this._load({url: `offers`})
-      .then(Index.toJSON);
+      .then(Api.toJSON);
   }
 
   getEvents() {
     return this._load({url: `points`})
-      .then(Index.toJSON)
+      .then(Api.toJSON)
       .then((events) => events.map(EventsModel.adaptToClient));
   }
 
@@ -41,7 +41,7 @@ export default class Index {
       body: JSON.stringify(EventsModel.adaptToServer(event)),
       headers: new Headers({"Content-Type": `application/json`})
     })
-      .then(Index.toJSON)
+      .then(Api.toJSON)
       .then(EventsModel.adaptToClient);
   }
 
@@ -52,7 +52,7 @@ export default class Index {
       body: JSON.stringify(EventsModel.adaptToServer(event)),
       headers: new Headers({"Content-Type": `application/json`})
     })
-      .then(Index.toJSON)
+      .then(Api.toJSON)
       .then(EventsModel.adaptToClient);
   }
 
@@ -61,6 +61,16 @@ export default class Index {
       url: `points/${event.id}`,
       method: Method.DELETE
     });
+  }
+
+  sync(data) {
+    return this._load({
+      url: `tasks/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON);
   }
 
   _load({
@@ -75,8 +85,8 @@ export default class Index {
         `${this._endPoint}/${url}`,
         {method, body, headers}
     )
-      .then(Index.checkStatus)
-      .catch(Index.catchError);
+      .then(Api.checkStatus)
+      .catch(Api.catchError);
   }
 
   static checkStatus(response) {
