@@ -424,7 +424,6 @@ export default class EventEdit extends SmartView {
         {
           dateFormat: `d/m/y H:i`,
           defaultDate: this._data.dateFrom,
-          maxDate: this._data.dateTo,
           onChange: this._eventDateFromChangeHandler,
           enableTime: true,
           // eslint-disable-next-line camelcase
@@ -506,9 +505,13 @@ export default class EventEdit extends SmartView {
   }
 
   _eventDateFromChangeHandler([userDate]) {
-    this.updateData({
+    const newData = {
       dateFrom: userDate
-    }, true);
+    };
+    if (userDate > this._data.dateTo) {
+      newData.dateTo = userDate;
+    }
+    this.updateData(newData, true);
     this._removeDatepicker(this._dateToPicker);
     this._setDateToPicker();
   }
