@@ -8,7 +8,7 @@ const StoreTitle = {
 
 const getSyncedEvents = (items) => {
   return items.filter(({success}) => success)
-    .map(({payload}) => payload.event);
+    .map(({payload}) => payload.point);
 };
 
 const createStoreStructure = (items) => {
@@ -112,9 +112,9 @@ export default class Provider {
 
       return this._api.sync(storeEvents)
         .then((response) => {
+          console.log(response)
           const createdEvents = getSyncedEvents(response.created);
           const updatedEvents = getSyncedEvents(response.updated);
-
           const items = createStoreStructure([...createdEvents, ...updatedEvents]);
 
           this._store.setItems(items);
