@@ -4,6 +4,7 @@ export const SortType = {
   PRICE: `sort-price`,
 };
 export const UserAction = {
+  CHANGE_FAVORITE: `CHANGE_FAVORITE`,
   UPDATE_EVENT: `UPDATE_EVENT`,
   ADD_EVENT: `ADD_EVENT`,
   DELETE_EVENT: `DELETE_EVENT`
