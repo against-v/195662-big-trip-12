@@ -1,7 +1,10 @@
 import {nanoid} from "nanoid";
 import EventsModel from "../model/events.js";
-// import DestinationsModel from "../model/destinations.js";
-// import OffersModel from "../model/offers.js";
+
+const StoreTitle = {
+  DESTINATIONS: `Destinations`,
+  OFFERS: `Offers`,
+};
 
 const getSyncedEvents = (items) => {
   return items.filter(({success}) => success)
@@ -20,34 +23,6 @@ export default class Provider {
   constructor(api, store) {
     this._api = api;
     this._store = store;
-  }
-
-  getDestinations() {
-    if (Provider.isOnline()) {
-      return this._api.getDestinations()
-        .then((destinations) => {
-          const items = createStoreStructure(destinations);
-          this._store.setItems(items);
-          return destinations;
-        });
-    }
-    const storeDestinations = Object.values(this._store.getItems());
-
-    return Promise.resolve(storeDestinations);
-  }
-
-  getOffers() {
-    if (Provider.isOnline()) {
-      return this._api.getOffers()
-        .then((offers) => {
-          const items = createStoreStructure(offers);
-          this._store.setItems(items);
-          return offers;
-        });
-    }
-    const storeOffers = Object.values(this._store.getItems());
-
-    return Promise.resolve(storeOffers);
   }
 
   getEvents() {
@@ -105,6 +80,30 @@ export default class Provider {
     this._store.removeItem(event.id);
 
     return Promise.resolve();
+  }
+
+  getDestinations() {
+    if (Provider.isOnline()) {
+      return this._api.getDestinations()
+        .then((destinations) => {
+          this._store.setStaticDataByKey(StoreTitle.DESTINATIONS, destinations);
+          return destinations;
+        });
+    }
+
+    return Promise.resolve(this._store.getStaticDataByKey(StoreTitle.DESTINATIONS));
+  }
+
+  getOffers() {
+    if (Provider.isOnline()) {
+      return this._api.getOffers()
+        .then((offers) => {
+          this._store.setStaticDataByKey(StoreTitle.OFFERS, offers);
+          return offers;
+        });
+    }
+
+    return Promise.resolve(this._store.getStaticDataByKey(StoreTitle.OFFERS));
   }
 
   sync() {

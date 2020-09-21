@@ -42,4 +42,19 @@ export default class Store {
         JSON.stringify(store)
     );
   }
+
+  setStaticDataByKey(key, data) {
+    this._storage.setItem(
+        key,
+        JSON.stringify(data)
+    );
+  }
+
+  getStaticDataByKey(key) {
+    try {
+      return JSON.parse(this._storage.getItem(key)) || [];
+    } catch (err) {
+      return [];
+    }
+  }
 }
