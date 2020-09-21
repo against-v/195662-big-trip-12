@@ -107,6 +107,16 @@ export default class Trip {
 
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
+      case (UserAction.CHANGE_FAVORITE):
+        this._api.updateEvent(update)
+          .then((response) => {
+            this._eventsModel.updateEvent(updateType, response);
+          })
+          .catch(() => {
+            this._eventPresenter[update.id].setViewState(EventPresenterViewState.ABORTING);
+            this._eventPresenter[update.id].resetIsFavorite();
+          });
+        break;
       case (UserAction.UPDATE_EVENT):
         this._eventPresenter[update.id].setViewState(EventPresenterViewState.SAVING);
         this._api.updateEvent(update)
@@ -144,7 +154,7 @@ export default class Trip {
   _handleModelEvt(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._eventPresenter[data.id].init(data);
+        this._eventPresenter[data.id].init(data, updateType);
         break;
       case UpdateType.MINOR:
         this._clearTrip();
