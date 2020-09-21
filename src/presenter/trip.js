@@ -6,7 +6,7 @@ import EventsListView from "../view/events-list.js";
 import LoadingView from "../view/loading.js";
 import NoEventView from "../view/no-event.js";
 
-import EventPresenter from "./event.js";
+import EventPresenter, {State as EventPresenterViewState} from "./event.js";
 import EventNewPresenter from "./event-new.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
 import {filter} from "../utils/filter.js";
@@ -47,12 +47,13 @@ export default class Trip {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvt = this._handleModelEvt.bind(this);
 
-    this._eventNewPresenter = new EventNewPresenter(this._daysListComponent, this._getDestinations(), this._getOffers(), this._handleViewAction);
+    this._eventNewPresenter = new EventNewPresenter(this._daysListComponent, this._handleViewAction);
   }
 
-  init() {
+  init(isCreateFirstEvent) {
     render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
 
+    this._isCreateFirstEvent = isCreateFirstEvent;
     this._eventsModel.addObserver(this._handleModelEvt);
     this._filterModel.addObserver(this._handleModelEvt);
 
@@ -72,7 +73,7 @@ export default class Trip {
   createEvent(callback) {
     this._currentSortType = SortType.DEFAULT;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._eventNewPresenter.init(callback);
+    this._eventNewPresenter.init(callback, this._getDestinations(), this._getOffers());
   }
 
   _getEvents() {
@@ -107,15 +108,35 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case (UserAction.UPDATE_EVENT):
-        this._api.updateEvent(update).then((response) => {
-          this._eventsModel.updateEvent(updateType, response);
-        });
+        this._eventPresenter[update.id].setViewState(EventPresenterViewState.SAVING);
+        this._api.updateEvent(update)
+          .then((response) => {
+            this._eventsModel.updateEvent(updateType, response);
+          })
+          .catch(() => {
+            this._eventPresenter[update.id].setViewState(EventPresenterViewState.ABORTING);
+          });
         break;
       case (UserAction.ADD_EVENT):
-        this._eventsModel.addEvent(updateType, update);
+        this._eventNewPresenter.setSaving();
+        this._api.addEvent(update)
+          .then((response) => {
+            this._isCreateFirstEvent = false;
+            this._eventsModel.addEvent(updateType, response);
+          })
+          .catch(() => {
+            this._eventNewPresenter.setAborting();
+          });
         break;
       case (UserAction.DELETE_EVENT):
-        this._eventsModel.deleteEvent(updateType, update);
+        this._eventPresenter[update.id].setViewState(EventPresenterViewState.DELETING);
+        this._api.deleteEvent(update)
+          .then(() => {
+            this._eventsModel.deleteEvent(updateType, update);
+          })
+          .catch(() => {
+            this._eventPresenter[update.id].setViewState(EventPresenterViewState.ABORTING);
+          });
         break;
     }
   }
@@ -206,7 +227,9 @@ export default class Trip {
       .forEach((presenter) => presenter.destroy());
     this._eventPresenter = {};
 
-    remove(this._sortComponent);
+    if (this._sortComponent) {
+      remove(this._sortComponent);
+    }
     remove(this._loadingComponent);
     remove(this._noEventComponent);
     remove(this._daysListComponent);
@@ -221,12 +244,13 @@ export default class Trip {
       this._renderLoading();
       return;
     }
-    if (this._getEvents().length === 0) {
+    if (this._getEvents().length === 0 && !this._isCreateFirstEvent) {
       this._renderNoEvent();
       return;
     }
-
-    this._renderSort();
+    if (!this._isCreateFirstEvent) {
+      this._renderSort();
+    }
     this._renderDaysList();
   }
 }
