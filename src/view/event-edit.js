@@ -359,8 +359,6 @@ const createEventEditTemplate = (data, destinationsList, offersList, mode) => {
 
 export default class EventEdit extends SmartView {
 
-  // todo ТУТ НУЖНА ПОМОЩЬ: если изменить данные в редактировании события, а потом изменить isFavorite, то данные сбросятся к последним сохраненным
-
   constructor(mode, destinations, offers, event = BLANK_EVENT) {
     super();
     this._mode = mode;
