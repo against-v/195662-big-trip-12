@@ -381,11 +381,14 @@ export default class EventEdit extends SmartView {
     this._eventOffersChangeHandler = this._eventOffersChangeHandler.bind(this);
 
     this._setInnerHandlers();
-    this._setDatepicker();
   }
 
   removeElement() {
     super.removeElement();
+    this.removeDatepickers();
+  }
+
+  removeDatepickers() {
     this._removeDatepicker(this._dateFromPicker);
     this._removeDatepicker(this._dateToPicker);
   }
@@ -411,7 +414,7 @@ export default class EventEdit extends SmartView {
   restoreHandlers() {
     this._setInnerHandlers();
 
-    this._setDatepicker();
+    this.setDatepickers();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setDeleteClickHandler(this._callback.deleteClick);
     this.setCloseEditClickHandler(this._callback.closeEditClick);
@@ -454,7 +457,7 @@ export default class EventEdit extends SmartView {
     }
   }
 
-  _setDatepicker() {
+  setDatepickers() {
     this._setDateFromPicker();
     this._setDateToPicker();
   }
