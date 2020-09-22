@@ -6,7 +6,6 @@ const Method = {
   POST: `POST`,
   DELETE: `DELETE`,
 };
-
 const SuccessHTTPStatusRange = {
   MIN: 200,
   MAX: 299
