@@ -24,6 +24,7 @@ export default class Event {
 
     this._eventComponent = null;
     this._eventEditComponent = null;
+
     this._mode = Mode.DEFAULT;
 
     this._handleEditClick = this._handleEditClick.bind(this);
@@ -45,7 +46,6 @@ export default class Event {
     const prevEventEditComponent = this._eventEditComponent;
 
     this._eventComponent = new EventView(event);
-
     this._eventEditComponent = new EventEditView(EditingModes.UPDATE, this._destinations, this._offers, event);
 
     this._eventComponent.setEditClickHandler(this._handleEditClick);
