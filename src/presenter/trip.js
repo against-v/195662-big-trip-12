@@ -5,9 +5,8 @@ import DayView from "../view/day.js";
 import EventsListView from "../view/events-list.js";
 import LoadingView from "../view/loading.js";
 import NoEventView from "../view/no-event.js";
-
-import EventPresenter, {State as EventPresenterViewState} from "./event.js";
 import EventNewPresenter from "./event-new.js";
+import EventPresenter, {State as EventPresenterViewState} from "./event.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
 import {filter} from "../utils/filter.js";
 import {sortByPrice, sortByTime, groupEventsByDay, groupEventsIntoOneList} from "../utils/trip-board";
@@ -23,6 +22,7 @@ export default class Trip {
       filterModel,
       api
     } = params;
+
     this._eventsModel = eventsModel;
     this._destinationsModel = destinationsModel;
     this._offersModel = offersModel;
@@ -34,12 +34,8 @@ export default class Trip {
     this._daysListComponent = new DaysListView();
     this._noEventComponent = new NoEventView();
     this._loadingComponent = new LoadingView();
-
-
     this._sortComponent = null;
-
     this._eventPresenter = {};
-
     this._currentSortType = SortType.DEFAULT;
 
     this._handleModeChange = this._handleModeChange.bind(this);
