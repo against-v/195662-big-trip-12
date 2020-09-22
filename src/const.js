@@ -42,12 +42,12 @@ export const MenuItem = {
   STATISTICS: `statistics`
 };
 export const ChartSettings = {
-  POSITION: {
+  Position: {
     START: `start`,
     END: `end`,
     LEFT: `left`,
   },
-  COLOR: {
+  Color: {
     WHITE: `#ffffff`,
     BLACK: `#000000`,
   },

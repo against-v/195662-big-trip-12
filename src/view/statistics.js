@@ -26,9 +26,9 @@ const renderMoneyChart = (moneyCtx, events) => {
       labels: chartData.labels,
       datasets: [{
         data: chartData.data,
-        backgroundColor: ChartSettings.COLOR.WHITE,
-        hoverBackgroundColor: ChartSettings.COLOR.WHITE,
-        anchor: ChartSettings.POSITION.START,
+        backgroundColor: ChartSettings.Color.WHITE,
+        hoverBackgroundColor: ChartSettings.Color.WHITE,
+        anchor: ChartSettings.Position.START,
       }]
     },
     options: {
@@ -37,23 +37,23 @@ const renderMoneyChart = (moneyCtx, events) => {
           font: {
             size: 13
           },
-          color: ChartSettings.COLOR.BLACK,
-          anchor: ChartSettings.POSITION.END,
-          align: ChartSettings.POSITION.START,
+          color: ChartSettings.Color.BLACK,
+          anchor: ChartSettings.Position.END,
+          align: ChartSettings.Position.START,
           formatter: (val) => `€ ${val}`
         }
       },
       title: {
         display: true,
         text: `MONEY`,
-        fontColor: ChartSettings.COLOR.BLACK,
+        fontColor: ChartSettings.Color.BLACK,
         fontSize: 23,
-        position: ChartSettings.POSITION.LEFT
+        position: ChartSettings.Position.LEFT
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: ChartSettings.COLOR.BLACK,
+            fontColor: ChartSettings.Color.BLACK,
             padding: 5,
             fontSize: 13,
           },
@@ -101,9 +101,9 @@ const renderTransportChart = (transportCtx, events) => {
       labels: chartData.labels,
       datasets: [{
         data: chartData.data,
-        backgroundColor: ChartSettings.COLOR.WHITE,
-        hoverBackgroundColor: ChartSettings.COLOR.WHITE,
-        anchor: ChartSettings.POSITION.START,
+        backgroundColor: ChartSettings.Color.WHITE,
+        hoverBackgroundColor: ChartSettings.Color.WHITE,
+        anchor: ChartSettings.Position.START,
       }]
     },
     options: {
@@ -112,23 +112,23 @@ const renderTransportChart = (transportCtx, events) => {
           font: {
             size: 13
           },
-          color: ChartSettings.COLOR.BLACK,
-          anchor: ChartSettings.POSITION.END,
-          align: ChartSettings.POSITION.START,
+          color: ChartSettings.Color.BLACK,
+          anchor: ChartSettings.Position.END,
+          align: ChartSettings.Position.START,
           formatter: (val) => `${val}x`
         }
       },
       title: {
         display: true,
         text: `TRANSPORT`,
-        fontColor: ChartSettings.COLOR.BLACK,
+        fontColor: ChartSettings.Color.BLACK,
         fontSize: 23,
-        position: ChartSettings.POSITION.LEFT
+        position: ChartSettings.Position.LEFT
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: ChartSettings.COLOR.BLACK,
+            fontColor: ChartSettings.Color.BLACK,
             padding: 5,
             fontSize: 13,
           },
@@ -174,9 +174,9 @@ const renderTimeChart = (timeCtx, events) => {
       labels: chartData.labels,
       datasets: [{
         data: chartData.data,
-        backgroundColor: ChartSettings.COLOR.WHITE,
-        hoverBackgroundColor: ChartSettings.COLOR.WHITE,
-        anchor: ChartSettings.POSITION.START,
+        backgroundColor: ChartSettings.Color.WHITE,
+        hoverBackgroundColor: ChartSettings.Color.WHITE,
+        anchor: ChartSettings.Position.START,
       }]
     },
     options: {
@@ -185,23 +185,23 @@ const renderTimeChart = (timeCtx, events) => {
           font: {
             size: 13
           },
-          color: ChartSettings.COLOR.BLACK,
-          anchor: ChartSettings.POSITION.END,
-          align: ChartSettings.POSITION.START,
+          color: ChartSettings.Color.BLACK,
+          anchor: ChartSettings.Position.END,
+          align: ChartSettings.Position.START,
           formatter: (val) => `${humanizeDuration(val)}`
         }
       },
       title: {
         display: true,
         text: `TIME SPENT`,
-        fontColor: ChartSettings.COLOR.BLACK,
+        fontColor: ChartSettings.Color.BLACK,
         fontSize: 23,
-        position: ChartSettings.POSITION.LEFT
+        position: ChartSettings.Position.LEFT
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: ChartSettings.COLOR.BLACK,
+            fontColor: ChartSettings.Color.BLACK,
             padding: 5,
             fontSize: 13,
           },
