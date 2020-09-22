@@ -1,22 +1,16 @@
-// import InfoView from "./view/info.js";
 import MenuView from "./view/menu.js";
 import AddEventButtonView from "./view/add-event-button.js";
 import StatisticsView from "./view/statistics.js";
-
 import TripPresenter from "./presenter/trip.js";
 import FilterPresenter from "./presenter/filter.js";
-
 import EventsModel from "./model/events.js";
 import DestinationsModel from "./model/destinations.js";
 import OffersModel from "./model/offers.js";
 import FilterModel from "./model/filter.js";
-
 import Api from "./api/index.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
-
 import {render, RenderPosition, remove} from "./utils/render.js";
-
 import {MenuItem, FilterType, UpdateType} from "./const";
 
 const AUTHORIZATION = `Basic kTy9gIdsz2317rD.`;
@@ -30,33 +24,6 @@ const siteHeaderControlsElement = siteHeaderMainElement.querySelector(`.trip-con
 const siteMenuTitleElement = siteHeaderControlsElement.querySelector(`h2:first-child`);
 const siteFilterTitleElement = siteHeaderControlsElement.querySelector(`h2:last-child`);
 const siteMainElement = document.querySelector(`.page-main .page-body__container`);
-
-
-const api = new Api(END_POINT, AUTHORIZATION);
-const store = new Store(STORE_NAME, window.localStorage);
-const apiWithProvider = new Provider(api, store);
-
-const destinationsModel = new DestinationsModel();
-const offersModel = new OffersModel();
-const eventsModel = new EventsModel();
-const filterModel = new FilterModel();
-
-
-const siteMenuComponent = new MenuView(MenuItem.TABLE);
-const addEventButtonComponent = new AddEventButtonView();
-
-const tripPresenterParams = {
-  siteMainElement,
-  eventsModel,
-  destinationsModel,
-  offersModel,
-  filterModel,
-  api: apiWithProvider,
-};
-const tripPresenter = new TripPresenter(tripPresenterParams);
-const filterPresenter = new FilterPresenter(siteFilterTitleElement, filterModel);
-
-
 let statisticsComponent = null;
 
 const handleSiteMenuClick = (menuItem) => {
@@ -72,11 +39,9 @@ const handleSiteMenuClick = (menuItem) => {
       break;
   }
 };
-
 const handleEventNewFormClose = () => {
   addEventButtonComponent.getElement().disabled = false;
 };
-
 const handleAddEventButtonClick = () => {
   if (statisticsComponent) {
     remove(statisticsComponent);
@@ -90,9 +55,6 @@ const handleAddEventButtonClick = () => {
   addEventButtonComponent.getElement().disabled = true;
 
 };
-
-
-// render(siteHeaderMainElement, new InfoView(events), RenderPosition.AFTERBEGIN);
 const renderHeader = () => {
   render(siteMenuTitleElement, siteMenuComponent, RenderPosition.AFTEREND);
   siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
@@ -100,6 +62,28 @@ const renderHeader = () => {
   addEventButtonComponent.setAddEventButtonClickHandler(handleAddEventButtonClick);
 };
 
+const api = new Api(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
+
+const destinationsModel = new DestinationsModel();
+const offersModel = new OffersModel();
+const eventsModel = new EventsModel();
+const filterModel = new FilterModel();
+
+const siteMenuComponent = new MenuView(MenuItem.TABLE);
+const addEventButtonComponent = new AddEventButtonView();
+
+const tripPresenterParams = {
+  siteMainElement,
+  eventsModel,
+  destinationsModel,
+  offersModel,
+  filterModel,
+  api: apiWithProvider,
+};
+const tripPresenter = new TripPresenter(tripPresenterParams);
+const filterPresenter = new FilterPresenter(siteFilterTitleElement, filterModel);
 
 filterPresenter.init();
 tripPresenter.init();
