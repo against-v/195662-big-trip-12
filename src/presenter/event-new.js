@@ -26,6 +26,7 @@ export default class EventNew {
     this._eventEditComponent = new EventEditView(EditingModes.CREATE, this._destinations, this._offers);
     this._eventEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._eventEditComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._eventEditComponent.setDatepickers();
 
     render(this._daysListContainer, this._eventEditComponent, RenderPosition.BEFOREBEGIN);
 
