@@ -34,8 +34,12 @@ export default class Event {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(event) {
+  init(event, updateType) {
     this._event = event;
+
+    if (updateType === UpdateType.PATCH) {
+      return;
+    }
 
     const prevEventComponent = this._eventComponent;
     const prevEventEditComponent = this._eventEditComponent;
@@ -77,6 +81,10 @@ export default class Event {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceFormToEvent();
     }
+  }
+
+  resetIsFavorite() {
+    this._updateIsFavorite(this._event.isFavorite);
   }
 
   setViewState(state) {
@@ -141,21 +149,19 @@ export default class Event {
   }
 
   _handleFavoriteClick() {
+    this._updateIsFavorite(!this._event.isFavorite);
     this._changeData(
-        UserAction.UPDATE_EVENT,
+        UserAction.CHANGE_FAVORITE,
         UpdateType.PATCH,
         Object.assign(
             {},
             this._event,
-            {
-              isFavorite: !this._event.isFavorite
-            }
+            {isFavorite: !this._event.isFavorite}
         )
     );
   }
 
   _handleFormSubmit(event) {
-    // todo сделать разветвление на минор и патч (или не делать)
     this._changeData(
         UserAction.UPDATE_EVENT,
         UpdateType.MINOR,
@@ -168,6 +174,15 @@ export default class Event {
         UserAction.DELETE_EVENT,
         UpdateType.MINOR,
         event
+    );
+  }
+
+  _updateIsFavorite(value) {
+    this._eventEditComponent.updateData(
+        {
+          isFavorite: value
+        },
+        true
     );
   }
 }
