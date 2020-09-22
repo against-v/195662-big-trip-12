@@ -8,7 +8,6 @@ const createDayInfoTemplate = (index, dateAttribute, formattedDate) => {
       <time class="day__date" datetime="${dateAttribute}">${formattedDate}</time>`
   );
 };
-
 const createDayTemplate = (day, i) => {
   let dayInfoTemplate = ``;
   if (day) {
