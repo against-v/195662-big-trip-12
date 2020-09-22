@@ -13,7 +13,6 @@ import {
   getChartData,
 } from "../utils/statistics.js";
 
-
 const renderMoneyChart = (moneyCtx, events) => {
   const uniqEventsTypes = getUniqTypes(events);
   const eventsPriceByEventType = uniqEventsTypes.map((type) => countEventsPriceByEventType(events, type));
@@ -233,7 +232,6 @@ const renderTimeChart = (timeCtx, events) => {
     }
   });
 };
-
 const createStatisticsTemplate = () => {
   return (
     `<section class="statistics">
