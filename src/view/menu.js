@@ -23,15 +23,6 @@ export default class Menu extends AbstractView {
     return createMenuTemplate();
   }
 
-  _menuClickHandler(evt) {
-    evt.preventDefault();
-    const menuItem = evt.target.dataset.value;
-    if (menuItem && menuItem !== this._currentActiveButton) {
-      this.setMenuItem(menuItem);
-      this._callback.menuClick(menuItem);
-    }
-  }
-
   setMenuClickHandler(callback) {
     this._callback.menuClick = callback;
     this.getElement().addEventListener(`click`, this._menuClickHandler);
@@ -41,5 +32,14 @@ export default class Menu extends AbstractView {
     this.getElement().querySelector(`.trip-tabs__btn[data-value=${this._currentActiveButton}]`).classList.remove(ACTIVE_CLASS);
     this.getElement().querySelector(`.trip-tabs__btn[data-value=${menuItem}]`).classList.add(ACTIVE_CLASS);
     this._currentActiveButton = menuItem;
+  }
+
+  _menuClickHandler(evt) {
+    evt.preventDefault();
+    const menuItem = evt.target.dataset.value;
+    if (menuItem && menuItem !== this._currentActiveButton) {
+      this.setMenuItem(menuItem);
+      this._callback.menuClick(menuItem);
+    }
   }
 }
