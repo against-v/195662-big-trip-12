@@ -7,7 +7,6 @@ export default class Filter {
     this._filterTitleElement = filterTitleElement;
     this._filterModel = filterModel;
     this._currentFilter = null;
-
     this._filterComponent = null;
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -18,7 +17,6 @@ export default class Filter {
 
   init() {
     this._currentFilter = this._filterModel.getFilter();
-
     const filters = this._getFilters();
     const prevFilterComponent = this._filterComponent;
 

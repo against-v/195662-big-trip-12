@@ -24,6 +24,7 @@ export default class Event {
 
     this._eventComponent = null;
     this._eventEditComponent = null;
+
     this._mode = Mode.DEFAULT;
 
     this._handleEditClick = this._handleEditClick.bind(this);
@@ -45,7 +46,6 @@ export default class Event {
     const prevEventEditComponent = this._eventEditComponent;
 
     this._eventComponent = new EventView(event);
-
     this._eventEditComponent = new EventEditView(EditingModes.UPDATE, this._destinations, this._offers, event);
 
     this._eventComponent.setEditClickHandler(this._handleEditClick);
@@ -118,6 +118,7 @@ export default class Event {
 
   _replaceEventToForm() {
     replace(this._eventEditComponent, this._eventComponent);
+    this._eventEditComponent.setDatepickers();
     this._eventEditComponent.setCloseEditClickHandler(this._handleCloseEditClick);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
@@ -126,6 +127,7 @@ export default class Event {
 
   _replaceFormToEvent() {
     replace(this._eventComponent, this._eventEditComponent);
+    this._eventEditComponent.removeDatepickers();
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
   }

@@ -83,7 +83,6 @@ export default class Events extends Observer {
         }
     );
 
-    // Ненужные ключи мы удаляем
     delete adaptedEvent.basePrice;
     delete adaptedEvent.dateFrom;
     delete adaptedEvent.dateTo;

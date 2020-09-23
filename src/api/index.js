@@ -6,7 +6,6 @@ const Method = {
   POST: `POST`,
   DELETE: `DELETE`,
 };
-
 const SuccessHTTPStatusRange = {
   MIN: 200,
   MAX: 299
@@ -82,7 +81,7 @@ export default class Api {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(
-        `${this._endPoint}/${url}`,
+        `${this._endPoint}${url}`,
         {method, body, headers}
     )
       .then(Api.checkStatus)

@@ -9,7 +9,6 @@ export const UserAction = {
   ADD_EVENT: `ADD_EVENT`,
   DELETE_EVENT: `DELETE_EVENT`
 };
-
 export const UpdateType = {
   PATCH: `PATCH`,
   MINOR: `MINOR`,
@@ -28,7 +27,6 @@ export const EditingModes = {
   CREATE: `create`,
   UPDATE: `update`,
 };
-
 export const DateFormat = {
   MONTH_DAY: `MMM D`,
   DATE_TIME: `YYYY-MM-DDTHH:mm`,
@@ -36,47 +34,31 @@ export const DateFormat = {
   YEAR_MONTH_DAY: `YYYY-MM-DD`,
   HOURS_MINUTES: `HH:mm`,
 };
-
 export const RegEx = {
   PRICE: /^[^1-9]$|\D+/,
 };
-
 export const MenuItem = {
   TABLE: `table`,
   STATISTICS: `statistics`
 };
-
 export const ChartSettings = {
-  POSITION: {
+  Position: {
     START: `start`,
     END: `end`,
     LEFT: `left`,
   },
-  COLOR: {
+  Color: {
     WHITE: `#ffffff`,
     BLACK: `#000000`,
   },
   BAR_HEIGHT: 55
 };
-
 export const ChartDataPropertyName = {
   PRICE: `price`,
   COUNT: `count`,
   DURATION: `duration`,
 };
 
-export const DESTINATIONS = [
-  `The Hague`,
-  `Delft`,
-  `Leiden`,
-  `Rotterdam`,
-  `Helmond`,
-  `Eindhoven`,
-  `Tilburg`,
-  `Venlo`,
-  `Gouda`,
-  `Breda`,
-];
 export const EVENT_TYPES = [
   `taxi`,
   `bus`,

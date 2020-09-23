@@ -3,8 +3,11 @@ import {isEventStopping} from "../utils/event.js";
 import {capitalizeString, formatDate, getDuration, humanizeDuration} from "../utils/common.js";
 import {DateFormat} from "../const.js";
 
+const AMOUNT_OFFERS_IN_PREVIEW = 3;
+
 const createOffersTemplate = (items) => {
-  const trimmedItems = items.slice(0, 3);
+  const trimmedItems = items.slice(0, AMOUNT_OFFERS_IN_PREVIEW);
+
   return (
     `<ul class="event__selected-offers">
         ${trimmedItems.map((offer) => {
@@ -19,7 +22,6 @@ const createOffersTemplate = (items) => {
       </ul>`
   );
 };
-
 const createEventTemplate = (event) => {
   const {
     basePrice,
@@ -80,13 +82,13 @@ export default class Event extends AbstractView {
     return createEventTemplate(this._event);
   }
 
-  _editClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.editClick();
-  }
-
   setEditClickHandler(callback) {
     this._callback.editClick = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editClickHandler);
+  }
+
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 }

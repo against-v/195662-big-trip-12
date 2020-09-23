@@ -11,6 +11,7 @@ export default class AddEventButton extends AbstractView {
     super();
     this._addEventButtonClickHandler = this._addEventButtonClickHandler.bind(this);
   }
+
   getTemplate() {
     return createAddEventButtonTemplate();
   }
