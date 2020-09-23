@@ -452,12 +452,11 @@ export default class EventEdit extends SmartView {
     this._dateFromPicker = flatpickr(
         this.getElement().querySelector(`.event__input--time[name="event-start-time"]`),
         {
-          dateFormat: `d/m/y H:i`,
-          defaultDate: this._data.dateFrom,
-          onChange: this._eventDateFromChangeHandler,
-          enableTime: true,
-          // eslint-disable-next-line camelcase
-          time_24hr: true
+          "dateFormat": `d/m/y H:i`,
+          "defaultDate": this._data.dateFrom,
+          "onChange": this._eventDateFromChangeHandler,
+          "enableTime": true,
+          "time_24hr": true,
         }
     );
   }
@@ -466,13 +465,12 @@ export default class EventEdit extends SmartView {
     this._dateToPicker = flatpickr(
         this.getElement().querySelector(`.event__input--time[name="event-end-time"]`),
         {
-          dateFormat: `d/m/y H:i`,
-          defaultDate: this._data.dateTo,
-          minDate: this._data.dateFrom,
-          onChange: this._eventDateToChangeHandler,
-          enableTime: true,
-          // eslint-disable-next-line camelcase
-          time_24hr: true
+          "dateFormat": `d/m/y H:i`,
+          "defaultDate": this._data.dateTo,
+          "minDate": this._data.dateFrom,
+          "onChange": this._eventDateToChangeHandler,
+          "enableTime": true,
+          "time_24hr": true,
         }
     );
   }
