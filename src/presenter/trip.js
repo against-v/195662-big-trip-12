@@ -186,9 +186,10 @@ export default class Trip {
 
   _renderDaysList() {
     render(this._tripComponent, this._daysListComponent, RenderPosition.BEFOREEND);
-    for (let i = 0; i < this._getEvents().length; i++) {
-      this._renderDay(this._getEvents()[i], i);
-    }
+    const events = this._getEvents();
+    events.forEach((event, index) => {
+      this._renderDay(event, index);
+    });
   }
 
   _renderDay(tripDay, index) {
@@ -200,9 +201,9 @@ export default class Trip {
   _renderEventsList(dayElement, dayEvents) {
     const eventsListComponent = new EventsListView();
     render(dayElement, eventsListComponent, RenderPosition.BEFOREEND);
-    for (let i = 0; i < dayEvents.length; i++) {
-      this._renderEvent(eventsListComponent, dayEvents[i]);
-    }
+    dayEvents.forEach((dayEvent) => {
+      this._renderEvent(eventsListComponent, dayEvent);
+    });
   }
 
   _renderEvent(eventsListElement, event) {
