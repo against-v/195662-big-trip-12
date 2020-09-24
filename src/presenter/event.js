@@ -132,15 +132,6 @@ export default class Event {
     this._mode = Mode.DEFAULT;
   }
 
-  _escKeyDownHandler(evt) {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
-      evt.preventDefault();
-      evt.target.blur();
-      this._eventEditComponent.reset(this._event);
-      this._replaceFormToEvent();
-    }
-  }
-
   _handleEditClick() {
     this._replaceEventToForm();
   }
@@ -186,5 +177,14 @@ export default class Event {
         },
         true
     );
+  }
+
+  _escKeyDownHandler(evt) {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
+      evt.target.blur();
+      this._eventEditComponent.reset(this._event);
+      this._replaceFormToEvent();
+    }
   }
 }

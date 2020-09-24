@@ -386,6 +386,20 @@ export default class EventEdit extends SmartView {
     this.removeDatepickers();
   }
 
+  getTemplate() {
+    return createEventEditTemplate(this._data, this._destinationsList, this._offersList, this._mode);
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+
+    this.setDatepickers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
+    this.setCloseEditClickHandler(this._callback.closeEditClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+  }
+
   removeDatepickers() {
     this._removeDatepicker(this._dateFromPicker);
     this._removeDatepicker(this._dateToPicker);
@@ -393,10 +407,6 @@ export default class EventEdit extends SmartView {
 
   reset(event) {
     this.updateData(EventEdit.parseEventToData(event));
-  }
-
-  getTemplate() {
-    return createEventEditTemplate(this._data, this._destinationsList, this._offersList, this._mode);
   }
 
   setDatepickers() {
@@ -426,16 +436,6 @@ export default class EventEdit extends SmartView {
   setDeleteClickHandler(callback) {
     this._callback.deleteClick = callback;
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._deleteClickHandler);
-  }
-
-  restoreHandlers() {
-    this._setInnerHandlers();
-
-    this.setDatepickers();
-    this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setDeleteClickHandler(this._callback.deleteClick);
-    this.setCloseEditClickHandler(this._callback.closeEditClick);
-    this.setFavoriteClickHandler(this._callback.favoriteClick);
   }
 
   _setInnerHandlers() {
