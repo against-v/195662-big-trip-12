@@ -1,5 +1,11 @@
 import moment from "moment";
 
+const DURATION_SYMBOLS_AMOUNT = 2;
+
+const formatDurationValue = (value) => {
+  return (`0${value}`).slice(-DURATION_SYMBOLS_AMOUNT);
+};
+
 export const formatDate = (date, format) => {
   if (!(date instanceof Date)) {
     return ``;
@@ -12,9 +18,10 @@ export const getDuration = (dateFrom, dateTo) => {
 };
 
 export const humanizeDuration = (duration) => {
-  const day = moment.duration(duration).days();
-  const hours = moment.duration(duration).hours();
-  const minutes = moment.duration(duration).minutes();
+  const day = formatDurationValue(moment.duration(duration).days());
+  const hours = formatDurationValue(moment.duration(duration).hours());
+  const minutes = formatDurationValue(moment.duration(duration).minutes());
+
   if (day > 0) {
     return `${day}D ${hours}H ${minutes}M`;
   }
